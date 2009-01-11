@@ -1,0 +1,33 @@
+=====================
+     Paint Ideas
+=====================
+
+Image filters
+-------------
+
+BufferedImage -> | Filter | -> BufferedImage
+
+
+
+How it works
+------------
+
+( Canvas ) => BufferedImage -> | ImageRenderer | -> BufferedImage ->
+	| Filter | -> BufferedImage (result)
+	
+Take an image from Canvas, give it to ImageRenderer, which returns BufferedImage
+That is given to the Filter which returns BufferedImage
+
+
+Other Thoughts
+--------------
+
+* Think about multiple instances of Canvas
+
+* Allow multiple threads to render single/multiple images at once.
+(Think about concurrency)
+
+-> batch processing support
+-> command line?
+-> scripting?
+-> Dont assume single-thread app!!     
