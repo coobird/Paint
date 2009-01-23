@@ -30,4 +30,9 @@ Other Thoughts
 -> batch processing support
 -> command line?
 -> scripting?
--> Dont assume single-thread app!!     
+-> Dont assume single-thread app!!
+
+*@Undo
+-> from mousePress to mouseRelease, store the movements and action of
+mouse so it can be undo/redo later
+-> store the name of brush and positions   
