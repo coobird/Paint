@@ -64,13 +64,14 @@ public class ImageLayer
 	public ImageLayer(int width, int height)
 	{
 		initInstance();
-		setImage(image);
 
 		image = new BufferedImage(
 				width,
 				height,
 				BufferedImage.TYPE_INT_ARGB
 		);
+
+		setImage(image);
 		
 		thumbImage = new BufferedImage(
 				width / THUMBNAIL_SCALE,
