@@ -9,11 +9,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
-import net.coobird.paint.image.ImageLayer;
+import net.coobird.paint.brush.Brush;
+import net.coobird.paint.brush.RegularCircularBrush;
 
-public class ImageLayerListCellRenderer implements ListCellRenderer
+public class BrushListCellRenderer 
+	extends JPanel
+	implements ListCellRenderer
 {
-
 	@Override
 	public Component getListCellRendererComponent(
 			JList list,
@@ -23,13 +25,14 @@ public class ImageLayerListCellRenderer implements ListCellRenderer
 			boolean cellHasFocus
 	)
 	{
-		JPanel p = new JPanel();
+//		JPanel p = new JPanel();
+		this.removeAll();
 		
-		if (value instanceof ImageLayer)
+		if (value instanceof Brush)
 		{
-			ImageLayer il = (ImageLayer)value;
-			JLabel l = new JLabel(il.getCaption());
-			l.setIcon(new ImageIcon(il.getThumbImage()));
+			Brush b = (Brush)value;
+			JLabel l = new JLabel(b.getName());
+			l.setIcon(new ImageIcon(b.getThumbBrush()));
 			
 			if (isSelected)
 			{
@@ -44,14 +47,17 @@ public class ImageLayerListCellRenderer implements ListCellRenderer
 				l.setForeground(SystemColor.textText);
 			}
 			
-			p.add(l);
+//			p.add(l);
+			add(l);
 		}
 		else
 		{
-			p.add(new JLabel("Not an ImageLayer"));
+//			p.add(new JLabel("Not a Brush."));
+			add(new JLabel("Not a Brush."));
 		}
 		
-		return p;
+//		return p;
+		return this;
 	}
 
 }

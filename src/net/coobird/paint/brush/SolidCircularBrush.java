@@ -43,5 +43,7 @@ public class SolidCircularBrush extends Brush
 		g.setColor(brushColor);
 		g.fillOval(0, 0, size, size);
 		g.dispose();
+		
+		makeBrushThumbnail();
 	}
 }

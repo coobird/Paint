@@ -11,7 +11,6 @@ import net.coobird.paint.image.ImageLayer;
 
 public class JavaSupportedImageInput extends ImageInput
 {
-
 	@Override
 	public Canvas read(File f)
 	{
@@ -29,12 +28,9 @@ public class JavaSupportedImageInput extends ImageInput
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return c;
 	}
-	
-
 }

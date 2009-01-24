@@ -1,5 +1,6 @@
 package net.coobird.paint.brush;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public abstract class Brush
@@ -38,7 +39,7 @@ public abstract class Brush
 	 * Gets the name of the Brush.
 	 * @return	The name of the Brush.
 	 */
-	protected String getName()
+	public String getName()
 	{
 		return name;
 	}
@@ -47,7 +48,7 @@ public abstract class Brush
 	 * Sets the name of the Brush.
 	 * @param name	The name of the Brush.
 	 */
-	protected void setName(String name)
+	public void setName(String name)
 	{
 		this.name = name;
 	}
@@ -59,5 +60,26 @@ public abstract class Brush
 	public BufferedImage getBrush()
 	{
 		return this.brush;
+	}
+	
+	public BufferedImage getThumbBrush()
+	{
+		return this.thumbBrush;
+	}
+
+	/**
+	 * 
+	 * @param size
+	 * @param brushColor
+	 */
+	protected void makeBrushThumbnail()
+	{
+		int size = Brush.THUMB_SIZE;
+	
+		thumbBrush = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+	
+		Graphics g = thumbBrush.createGraphics();
+		g.drawImage(brush, 0, 0, size, size, null);
+		g.dispose();
 	}
 }

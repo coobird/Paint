@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import net.coobird.paint.BlendingMode;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRenderer;
@@ -60,7 +61,6 @@ public class SampleApp
 		layer2.getGraphics().fillRect(60,60,60,30);
 		layer3.getGraphics().fillRect(80,80,60,30);
 		
-
 		layer1.update();
 		layer2.update();
 		layer3.update();

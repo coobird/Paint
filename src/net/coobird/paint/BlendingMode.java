@@ -5,7 +5,14 @@ import java.awt.AlphaComposite;
 public enum BlendingMode
 {
 	LAYER_NORMAL (AlphaComposite.SrcOver),
-	LAYER_SRC_OVER (AlphaComposite.SrcOver);
+	LAYER_SRC_OVER (AlphaComposite.SrcOver),
+	LAYER_SRC_IN (AlphaComposite.SrcIn),
+	LAYER_SRC_OUT (AlphaComposite.SrcOut),
+	LAYER_DST_OVER (AlphaComposite.DstOver),
+	LAYER_DST_IN (AlphaComposite.DstIn),
+	LAYER_DST_OUT (AlphaComposite.DstOut)
+	;
+	
 	
 	private AlphaComposite ac;
 	

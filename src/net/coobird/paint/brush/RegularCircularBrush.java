@@ -1,7 +1,6 @@
 package net.coobird.paint.brush;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -102,21 +101,4 @@ public class RegularCircularBrush extends Brush
 		}
 		g.dispose();
 	}
-	
-	/**
-	 * 
-	 * @param size
-	 * @param brushColor
-	 */
-	private void makeBrushThumbnail()
-	{
-		int size = Brush.THUMB_SIZE;
-	
-		thumbBrush = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-
-		Graphics g = thumbBrush.createGraphics();
-		g.drawImage(brush, 0, 0, size, size, null);
-		g.dispose();
-	}
-
 }

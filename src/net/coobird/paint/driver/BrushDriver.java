@@ -1,5 +1,6 @@
 package net.coobird.paint.driver;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -7,10 +8,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+import net.coobird.paint.application.BrushListCellRenderer;
+import net.coobird.paint.application.ImageLayerListCellRenderer;
 import net.coobird.paint.brush.Brush;
 import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.SolidCircularBrush;
@@ -21,6 +27,7 @@ public class BrushDriver
 	{
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.getContentPane().setLayout(new BorderLayout());
 		
 		Brush rcb1 = new RegularCircularBrush(null, 80, new Color(0,0,255,32));
 		Brush rcb2 = new SolidCircularBrush(null, 80, Color.red);
@@ -28,7 +35,23 @@ public class BrushDriver
 		final BufferedImage brush1 = rcb1.getBrush();
 		final BufferedImage brush2 = rcb2.getBrush();
 		
-		final BufferedImage img = new BufferedImage(400, 400, BufferedImage.TYPE_INT_ARGB);
+		final JList list = new JList();
+		list.setCellRenderer(new BrushListCellRenderer());
+		final DefaultListModel listModel = new DefaultListModel();
+		listModel.addElement(rcb1);
+		listModel.addElement(rcb2);
+		listModel.addElement(new RegularCircularBrush(null, 40, new Color(0,0,0,32)));
+		list.setModel(listModel);
+		final JScrollPane listSp = new JScrollPane(list);
+		f.getContentPane().add(listSp, BorderLayout.EAST);
+		
+		
+		final BufferedImage img = new BufferedImage(
+				600,
+				600,
+				BufferedImage.TYPE_INT_ARGB
+		);
+		
 		Graphics ig = img.createGraphics();
 		
 		for (int i = 20; i < 100; i+=10)
@@ -50,26 +73,33 @@ public class BrushDriver
 		MouseAdapter ma = new MouseAdapter()
 		{
 			Graphics2D g = img.createGraphics();
+			BufferedImage b;
 			
 			public void mouseDragged(MouseEvent e)
 			{
-				g.drawImage(brush1, e.getX()- (brush1.getWidth()/2), e.getY()-(brush1.getHeight()/2), null);
-//				if (e.getButton() == MouseEvent.BUTTON1)
-//					g.drawImage(brush1, e.getX()- (brush1.getWidth()/2), e.getY()-(brush1.getHeight()/2), null);
-//				else if (e.getButton() == MouseEvent.BUTTON3)
-//					g.drawImage(brush2, e.getX()- (brush2.getWidth()/2), e.getY()-(brush2.getHeight()/2), null);
+				g.drawImage(
+						b,
+						e.getX()- (b.getWidth() / 2),
+						e.getY()-(b.getHeight() / 2),
+						null
+				);
 				
 				p.repaint();
 			}
 
 			public void mousePressed(MouseEvent e)
 			{
-				//Graphics2D g = img.createGraphics();
+				b = ((Brush)list.getSelectedValue()).getBrush();
 				
 				if (e.getButton() == MouseEvent.BUTTON1)
-					g.drawImage(brush1, e.getX()- (brush1.getWidth()/2), e.getY()-(brush1.getHeight()/2), null);
-				else if (e.getButton() == MouseEvent.BUTTON3)
-					g.drawImage(brush2, e.getX()- (brush2.getWidth()/2), e.getY()-(brush2.getHeight()/2), null);
+				{
+					g.drawImage(
+							b,
+							e.getX()- (b.getWidth() / 2),
+							e.getY()-(b.getHeight() / 2),
+							null
+					);
+				}
 				
 				//g.dispose();
 				p.repaint();

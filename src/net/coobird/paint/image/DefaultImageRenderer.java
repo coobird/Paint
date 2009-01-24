@@ -10,6 +10,8 @@ import java.util.List;
 
 public final class DefaultImageRenderer implements ImageRenderer
 {
+	private boolean drawBackground = true;
+	
 	/**
 	 * 
 	 */
@@ -36,7 +38,10 @@ public final class DefaultImageRenderer implements ImageRenderer
 		Graphics2D g = img.createGraphics();
 		Composite originalComposite = g.getComposite();
 		
-		//drawBackground(img);
+		if (drawBackground)
+		{
+			drawBackground(img);
+		}
 		
 		for (ImageLayer layer : layerList)
 		{
@@ -67,7 +72,7 @@ public final class DefaultImageRenderer implements ImageRenderer
 			for (int j = 0; j < height; j += 20)
 			{
 				if ((i + j) % 40 == 0)
-					g.setColor(Color.black);
+					g.setColor(Color.gray);
 				else
 					g.setColor(Color.white);
 			
