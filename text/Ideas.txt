@@ -36,3 +36,20 @@ Other Thoughts
 -> from mousePress to mouseRelease, store the movements and action of
 mouse so it can be undo/redo later
 -> store the name of brush and positions   
+
+
+Drawing
+-------
+Depending on the selected tool, swap out the MouseListener
+for the panel that the drawing processing occurs on --> simplify things
+
+Todo: Eraser!!
+
+Request a brush draw through a BrushController
+-> do not directly draw by using Graphics context
+
+Request a rendering of the screen through CanvasView
+-> do not directly invoke Canvas.render
+-> add a zoom functionality to either Canvas or CanvasView
+-> the CanvasView will send a rectangle region of image to show with appropriate
+magnification.
