@@ -5,13 +5,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -25,12 +31,14 @@ import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRenderer;
 import net.coobird.paint.image.ImageRendererFactory;
+import net.coobird.paint.io.DefaultImageInput;
+import net.coobird.paint.io.DefaultImageOutput;
 
-public class SampleApp
+public class DemoApp1
 {
-	public void makeGUI()
+	private void makeGUI()
 	{
-		JFrame f = new JFrame();
+		JFrame f = new JFrame("Paint Dot Jar Demonstration");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.getContentPane().setLayout(new BorderLayout());
 		
@@ -54,10 +62,12 @@ public class SampleApp
 		final DefaultListModel ilListModel = new DefaultListModel();
 		ilList.setModel(ilListModel);
 		
-		final Canvas c = new Canvas(400, 400);
+		final CanvasHolder ch = new CanvasHolder();
+		Canvas c = new Canvas(400, 400);
 		c.addLayer(new ImageLayer(400, 400));
 		c.addLayer(new ImageLayer(400, 400));
 		c.addLayer(new ImageLayer(400, 400));
+		ch.setCanvas(c);
 		
 		for (ImageLayer il : c.getLayers())
 		{
@@ -76,7 +86,7 @@ public class SampleApp
 			public void paintComponent(Graphics g)
 			{
 				super.paintComponent(g);
-				g.drawImage(renderer.render(c), 0, 0, null);
+				g.drawImage(renderer.render(ch.getCanvas()), 0, 0, null);
 			}
 		};
 		
@@ -115,7 +125,6 @@ public class SampleApp
 						null
 				);
 				
-				//g.dispose();
 				p.repaint();
 			}
 		};
@@ -123,6 +132,34 @@ public class SampleApp
 		p.addMouseListener(ma);
 		p.addMouseMotionListener(ma);
 		
+		final JMenuBar menubar = new JMenuBar();
+		final JMenu fileMenu = new JMenu("File");
+		final JMenuItem openMenu = new JMenuItem("Open");
+		openMenu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0)
+			{
+				ilListModel.removeAllElements();
+				System.out.println("open");
+				ch.setCanvas(new DefaultImageInput().read(new File("output.zip")));
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(il);
+				}
+				p.repaint();
+			}
+		});
+		final JMenuItem saveMenu = new JMenuItem("Save");
+		saveMenu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0)
+			{
+				System.out.println("save");
+				new DefaultImageOutput().write(ch.getCanvas(), new File("output.zip"));
+			}
+		});
+		fileMenu.add(openMenu);
+		fileMenu.add(saveMenu);
+		menubar.add(fileMenu);
+		f.setJMenuBar(menubar);
 		
 		f.setSize(600,450);
 		f.setLocation(200, 100);
@@ -138,8 +175,23 @@ public class SampleApp
 		{
 			public void run()
 			{
-				new SampleApp().makeGUI();
+				new DemoApp1().makeGUI();
 			}
 		});
+	}
+	
+	class CanvasHolder
+	{
+		Canvas c;
+		
+		public Canvas getCanvas()
+		{
+			return c;
+		}
+		
+		public void setCanvas(Canvas c)
+		{
+			this.c = c;
+		}
 	}
 }

@@ -26,7 +26,11 @@ public final class DefaultImageRenderer implements ImageRenderer
 	 */
 	public BufferedImage render(Canvas c)
 	{
-//		List<ImageLayer> layerList = c.getLayers();
+		if (c == null)
+		{
+			throw new NullPointerException("Canvas not initialized.");
+		}
+		
 		List<ImageLayer> layerList = c.getRenderOrder();
 		
 		BufferedImage img = new BufferedImage(

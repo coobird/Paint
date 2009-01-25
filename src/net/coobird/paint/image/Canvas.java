@@ -1,7 +1,6 @@
 package net.coobird.paint.image;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public final class Canvas
@@ -50,6 +49,11 @@ public final class Canvas
 	public void setHeight(int height)
 	{
 		this.height = height;
+	}
+	
+	public void clear()
+	{
+		layers.clear();
 	}
 
 	/**
