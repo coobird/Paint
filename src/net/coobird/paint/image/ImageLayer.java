@@ -17,6 +17,7 @@ import net.coobird.paint.BlendingMode;
 public class ImageLayer
 {
 	private static final int THUMBNAIL_SCALE = 8;
+	private static final int DEFAULT_IMAGE_TYPE = BufferedImage.TYPE_INT_ARGB;
 	
 	private BufferedImage image;
 	private BufferedImage thumbImage;
@@ -50,7 +51,7 @@ public class ImageLayer
 		thumbImage = new BufferedImage(
 				this.width / THUMBNAIL_SCALE,
 				this.height / THUMBNAIL_SCALE,
-				BufferedImage.TYPE_INT_ARGB
+				DEFAULT_IMAGE_TYPE
 		);
 	
 		renderThumbnail();
@@ -68,7 +69,7 @@ public class ImageLayer
 		image = new BufferedImage(
 				width,
 				height,
-				BufferedImage.TYPE_INT_ARGB
+				DEFAULT_IMAGE_TYPE
 		);
 
 		setImage(image);
@@ -76,7 +77,7 @@ public class ImageLayer
 		thumbImage = new BufferedImage(
 				width / THUMBNAIL_SCALE,
 				height / THUMBNAIL_SCALE,
-				BufferedImage.TYPE_INT_ARGB
+				DEFAULT_IMAGE_TYPE
 		);
 		
 		renderThumbnail();
@@ -153,10 +154,32 @@ public class ImageLayer
 	 */
 	public void setImage(BufferedImage image)
 	{
-		this.image = image;
-		this.width = image.getWidth();
-		this.height = image.getHeight();
-		this.g = image.createGraphics();
+		/*
+		 * If the type of the given BufferedImage is not the DEFAULT_IMAGE_TYPE,
+		 * then create a new BufferedImage with the DEFAULT_IMAGE_TYPE, and
+		 * draw the given image onto the new BufferedImage.
+		 */
+		if (image.getType() == DEFAULT_IMAGE_TYPE)
+		{
+			this.image = image;
+			this.width = image.getWidth();
+			this.height = image.getHeight();
+			this.g = image.createGraphics();
+		}
+		else
+		{
+			this.width = image.getWidth();
+			this.height = image.getHeight();
+			
+			this.image = new BufferedImage(
+					this.width,
+					this.height,
+					DEFAULT_IMAGE_TYPE
+			);
+			this.g = this.image.createGraphics();
+			
+			g.drawImage(image, 0, 0, null);
+		}
 	}
 
 	/**

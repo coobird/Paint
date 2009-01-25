@@ -22,16 +22,24 @@ public final class DefaultImageOutput extends ImageOutput
 	@Override
 	public void write(Canvas c, File f)
 	{
+		if (c == null || f == null)
+		{
+			throw new NullPointerException();
+		}
+		
 		try
 		{
-			FileOutputStream fos = new FileOutputStream("output.zip");
+			FileOutputStream fos = new FileOutputStream(f);
 			ZipOutputStream zos = new ZipOutputStream(fos);
+			
+			int index = 0;
 			
 			for (ImageLayer l : c.getLayers())
 			{
-				zos.putNextEntry(new ZipEntry("" + System.currentTimeMillis()+".png"));
+				zos.putNextEntry(new ZipEntry("" + index + ".png"));
 				ImageIO.write(l.getImage(), "png", zos);
 				zos.closeEntry();
+				index++;
 			}
 			
 			zos.finish();
@@ -40,12 +48,10 @@ public final class DefaultImageOutput extends ImageOutput
 		}
 		catch (FileNotFoundException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
