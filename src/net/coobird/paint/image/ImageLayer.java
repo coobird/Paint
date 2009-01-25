@@ -16,7 +16,7 @@ import net.coobird.paint.BlendingMode;
  */
 public class ImageLayer
 {
-	private static final int THUMBNAIL_SCALE = 4;
+	private static final int THUMBNAIL_SCALE = 8;
 	
 	private BufferedImage image;
 	private BufferedImage thumbImage;

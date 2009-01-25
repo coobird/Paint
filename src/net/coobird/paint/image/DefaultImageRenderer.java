@@ -26,7 +26,8 @@ public final class DefaultImageRenderer implements ImageRenderer
 	 */
 	public BufferedImage render(Canvas c)
 	{
-		List<ImageLayer> layerList = c.getLayers();
+//		List<ImageLayer> layerList = c.getLayers();
+		List<ImageLayer> layerList = c.getRenderOrder();
 		
 		BufferedImage img = new BufferedImage(
 				c.getWidth(),

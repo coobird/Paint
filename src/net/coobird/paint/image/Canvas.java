@@ -1,6 +1,7 @@
 package net.coobird.paint.image;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class Canvas
@@ -8,6 +9,7 @@ public final class Canvas
 	private List<ImageLayer> layers;
 	private int width;
 	private int height;
+	// private LayerNamer --> names the new layer
 	
 	public Canvas(int width, int height)
 	{
@@ -56,6 +58,19 @@ public final class Canvas
 	public List<ImageLayer> getLayers()
 	{
 		return layers;
+	}
+	
+	public List<ImageLayer> getRenderOrder()
+	{
+		ImageLayer[] array = new ImageLayer[1];
+		array = layers.toArray(array);
+		
+		List<ImageLayer> renderOrderList = new ArrayList<ImageLayer>();
+		
+		for (int i = array.length - 1; i >= 0; i--)
+			renderOrderList.add(array[i]);
+		
+		return renderOrderList; 
 	}
 	
 	/**

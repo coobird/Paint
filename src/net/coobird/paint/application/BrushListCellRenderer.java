@@ -1,7 +1,7 @@
 package net.coobird.paint.application;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -10,12 +10,18 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 import net.coobird.paint.brush.Brush;
-import net.coobird.paint.brush.RegularCircularBrush;
 
 public class BrushListCellRenderer 
-	extends JPanel
+	extends JLabel
 	implements ListCellRenderer
 {
+	
+	public BrushListCellRenderer()
+	{
+		super();
+		this.setOpaque(true);
+	}
+	
 	@Override
 	public Component getListCellRendererComponent(
 			JList list,
@@ -25,39 +31,30 @@ public class BrushListCellRenderer
 			boolean cellHasFocus
 	)
 	{
-//		JPanel p = new JPanel();
-		this.removeAll();
-		
 		if (value instanceof Brush)
 		{
 			Brush b = (Brush)value;
-			JLabel l = new JLabel(b.getName());
-			l.setIcon(new ImageIcon(b.getThumbBrush()));
+			this.setText(b.getName());
+			this.setIcon(new ImageIcon(b.getThumbBrush()));
 			
 			if (isSelected)
 			{
-				l.setOpaque(true);
-				l.setBackground(SystemColor.textHighlight);
-				l.setForeground(SystemColor.textHighlightText);
+				this.setOpaque(true);
+				this.setBackground(list.getSelectionBackground());
+				this.setForeground(list.getSelectionForeground());
 			}
 			else
 			{
-				l.setOpaque(true);
-				l.setBackground(SystemColor.text);
-				l.setForeground(SystemColor.textText);
+				this.setOpaque(true);
+				this.setBackground(list.getBackground());
+				this.setForeground(list.getForeground());
 			}
-			
-//			p.add(l);
-			add(l);
 		}
 		else
 		{
-//			p.add(new JLabel("Not a Brush."));
-			add(new JLabel("Not a Brush."));
+			this.setText("Not a Brush.");
 		}
-		
-//		return p;
+
 		return this;
 	}
-
 }

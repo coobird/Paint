@@ -11,8 +11,15 @@ import javax.swing.ListCellRenderer;
 
 import net.coobird.paint.image.ImageLayer;
 
-public class ImageLayerListCellRenderer implements ListCellRenderer
+public class ImageLayerListCellRenderer
+	extends JLabel
+	implements ListCellRenderer
 {
+	public ImageLayerListCellRenderer()
+	{
+		super();
+		this.setOpaque(true);
+	}
 
 	@Override
 	public Component getListCellRendererComponent(
@@ -23,35 +30,31 @@ public class ImageLayerListCellRenderer implements ListCellRenderer
 			boolean cellHasFocus
 	)
 	{
-		JPanel p = new JPanel();
-		
 		if (value instanceof ImageLayer)
 		{
 			ImageLayer il = (ImageLayer)value;
-			JLabel l = new JLabel(il.getCaption());
-			l.setIcon(new ImageIcon(il.getThumbImage()));
+			this.setText(il.getCaption());
+			this.setIcon(new ImageIcon(il.getThumbImage()));
 			
 			if (isSelected)
 			{
-				l.setOpaque(true);
-				l.setBackground(SystemColor.textHighlight);
-				l.setForeground(SystemColor.textHighlightText);
+				this.setOpaque(true);
+				this.setBackground(SystemColor.textHighlight);
+				this.setForeground(SystemColor.textHighlightText);
 			}
 			else
 			{
-				l.setOpaque(true);
-				l.setBackground(SystemColor.text);
-				l.setForeground(SystemColor.textText);
+				this.setOpaque(true);
+				this.setBackground(SystemColor.text);
+				this.setForeground(SystemColor.textText);
 			}
-			
-			p.add(l);
 		}
 		else
 		{
-			p.add(new JLabel("Not an ImageLayer"));
+			this.setText("Not an ImageLayer");
 		}
 		
-		return p;
+		return this;
 	}
 
 }
