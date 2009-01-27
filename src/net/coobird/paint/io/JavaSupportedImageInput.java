@@ -44,12 +44,44 @@ public final class JavaSupportedImageInput extends ImageInput
 	}
 
 	/**
-	 * 
+	 * Determines whether the given {@link File} object is a supported image
+	 * format by the {@code JavaSupportedImageInput} class.
 	 * @param f				The file to check whether the format is supported.
 	 */
 	@Override
 	public boolean supportsFile(File f)
 	{
+		//FIXME getReaderFileSuffixes is from Java 1.6
+		String[] suffixes = ImageIO.getReaderFileSuffixes();
+		
+		//TODO check if this next line will fail if 
+		
+		for (String suffix : suffixes)
+		{
+			if (suffix.equals(getExtension(f)))
+			{
+				return true;
+			}
+		}
+		
 		return false;
+	}
+	
+	/**
+	 * Gets the file extension of the given {@link File} object.
+	 * @param f				The {@code File} object to determine the extension
+	 * 						for.
+	 * @return				The file extension.
+	 */
+	private String getExtension(File f)
+	{
+		int lastIndex = f.getName().lastIndexOf('.');
+		
+		if (lastIndex == -1)
+		{
+			return "";
+		}
+		
+		return f.getName().substring(lastIndex);
 	}
 }
