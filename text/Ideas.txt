@@ -47,6 +47,7 @@ Todo: Eraser!!
 
 Request a brush draw through a BrushController
 -> do not directly draw by using Graphics context
+-> place requests in a queue, and render one-by-one
 
 Request a rendering of the screen through CanvasView
 -> do not directly invoke Canvas.render
