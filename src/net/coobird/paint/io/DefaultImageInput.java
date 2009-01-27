@@ -1,6 +1,5 @@
 package net.coobird.paint.io;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,13 +40,7 @@ public final class DefaultImageInput extends ImageInput
 				ZipEntry ze = entries.nextElement();
 				InputStream is = zf.getInputStream(ze);
 				
-				// Copy image from img -> img2.
-				// Without copy, program will crawl. I hate ImageIO.
 				BufferedImage img = ImageIO.read(is);
-//				BufferedImage img2 = new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_ARGB);
-//				Graphics2D g = img2.createGraphics();
-//				g.drawImage(img, 0, 0, null);
-//				img = null;
 				c.addLayer(new ImageLayer(img));
 				is.close();
 			}
@@ -63,5 +56,15 @@ public final class DefaultImageInput extends ImageInput
 		}
 		
 		return c;
+	}
+
+	/**
+	 * 
+	 * @param f				File to open.
+	 */
+	@Override
+	public boolean supportsFile(File f)
+	{
+		return true;
 	}
 }

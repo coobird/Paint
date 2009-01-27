@@ -9,10 +9,19 @@ import javax.imageio.ImageIO;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 
-public class JavaSupportedImageInput extends ImageInput
+/**
+ * An image import filter for formats supported by the Java Image IO library.
+ * @author coobird
+ *
+ */
+public final class JavaSupportedImageInput extends ImageInput
 {
+	/**
+	 * Reads a file form a Java supported format.
+	 * @param f				The {@code File} object to read from.
+	 */
 	@Override
-	public Canvas read(File f)
+	public final Canvas read(File f)
 	{
 		BufferedImage img = null;
 		Canvas c = null;
@@ -32,5 +41,15 @@ public class JavaSupportedImageInput extends ImageInput
 		}
 		
 		return c;
+	}
+
+	/**
+	 * 
+	 * @param f				The file to check whether the format is supported.
+	 */
+	@Override
+	public boolean supportsFile(File f)
+	{
+		return false;
 	}
 }

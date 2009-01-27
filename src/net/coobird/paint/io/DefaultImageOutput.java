@@ -12,6 +12,11 @@ import javax.imageio.ImageIO;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 
+/**
+ * 
+ * @author coobird
+ *
+ */
 public final class DefaultImageOutput extends ImageOutput
 {
 	/**
