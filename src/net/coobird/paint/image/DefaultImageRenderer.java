@@ -50,6 +50,11 @@ public final class DefaultImageRenderer implements ImageRenderer
 		
 		for (ImageLayer layer : layerList)
 		{
+			if (!layer.isVisible())
+			{
+				continue;
+			}
+			
 			Composite layerComposite = AlphaComposite.getInstance(
 					layer.getMode().getComposite().getRule(),
 					layer.getAlpha()

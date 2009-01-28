@@ -14,10 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
-import net.coobird.paint.BlendingMode;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRenderer;
@@ -105,7 +102,6 @@ public class SampleApp
 			public void actionPerformed(ActionEvent e)
 			{
 				ImageLayer layer = (ImageLayer)list.getSelectedValue();
-//				layer.setAlpha(layer.getAlpha() * 0.9f);
 				layer.setX(layer.getX()+10);
 				layer.setY(layer.getY()+10);
 				f.repaint();

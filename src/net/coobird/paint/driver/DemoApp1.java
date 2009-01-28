@@ -25,6 +25,7 @@ import javax.swing.SwingUtilities;
 import net.coobird.paint.application.BrushListCellRenderer;
 import net.coobird.paint.application.ImageLayerListCellRenderer;
 import net.coobird.paint.brush.Brush;
+import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.SolidCircularBrush;
 import net.coobird.paint.image.Canvas;
@@ -54,6 +55,10 @@ public class DemoApp1
 		brushListModel.addElement(new RegularCircularBrush("Small black brush", 40, new Color(0,0,0,32)));
 		brushListModel.addElement(new RegularCircularBrush("Thin black brush", 80, new Color(0,0,0,4)));
 		brushListModel.addElement(new RegularCircularBrush("Emerald green 40 px brush", 40, new Color(0,255,96,32)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.67, 0.3, new Color(0,0,128,4)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.67, 0.5, new Color(0,0,128,4)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.8, 0.8, new Color(0,0,128,4)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 120, Math.PI * 0.4, 0.8, new Color(0,0,0,16)));
 		final JScrollPane brushListSp = new JScrollPane(brushList);
 		listPanels.add(brushListSp);
 		

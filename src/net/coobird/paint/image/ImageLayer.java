@@ -25,6 +25,10 @@ public class ImageLayer
 	private String caption;
 	private boolean visible;
 	
+	{
+		visible = true;
+	}
+	
 	// TODO
 	// Location of ImageLayer wrt some origin
 	private int x;

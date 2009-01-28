@@ -54,3 +54,10 @@ Request a rendering of the screen through CanvasView
 -> add a zoom functionality to either Canvas or CanvasView
 -> the CanvasView will send a rectangle region of image to show with appropriate
 magnification.
+
+
+File format
+-----------
+-> Need a way to store location, name and other attributes of ImageLayer.
+-> is serializing going to work?
+-> have thumbnail as one of zip entries in miage file.
