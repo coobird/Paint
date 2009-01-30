@@ -6,6 +6,9 @@ import java.awt.image.BufferedImage;
 
 public class SolidCircularBrush extends Brush
 {
+	private int size;
+	private Color brushColor;
+	
 	/**
 	 * Cannot instantiate with default constructor.
 	 */
@@ -37,8 +40,20 @@ public class SolidCircularBrush extends Brush
 		}
 
 		this.setName("Circular Brush (" + size + " px)");
-		
-		brush = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.coobird.paint.brush.Brush#makeBrushImage()
+	 */
+	@Override
+	protected void makeBrushImage()
+	{
+		brush = new BufferedImage(
+				size,
+				size,
+				BufferedImage.TYPE_INT_ARGB
+		);
+
 		Graphics2D g = brush.createGraphics();
 		g.setColor(brushColor);
 		g.fillOval(0, 0, size, size);

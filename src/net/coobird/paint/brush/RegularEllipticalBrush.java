@@ -6,12 +6,17 @@ import java.awt.image.BufferedImage;
 
 public class RegularEllipticalBrush extends Brush
 {
-	private final static int DEFAULT_STEPS_DIVISOR = 2;
+	protected final static int DEFAULT_STEPS_DIVISOR = 2;
 
 	private int size;
 	private double angle;
 	private int steps;
-	private double squash;
+	
+	/** 
+	 * The ratio between the semiminor axis and the semimajor axis of the
+	 * ellipse. Must be in the range (0, 1].
+	 */
+	private double ratio;
 	private Color brushColor;
 	
 	/**
@@ -29,9 +34,15 @@ public class RegularEllipticalBrush extends Brush
 		
 	}
 	
-	public RegularEllipticalBrush(String name, int size, double angle, double squash, Color brushColor)
+	public RegularEllipticalBrush(
+			String name,
+			int size,
+			double angle,
+			double ratio,
+			Color brushColor
+	)
 	{
-		this(null, size, size / DEFAULT_STEPS_DIVISOR, angle, squash, brushColor);
+		this(null, size, size / DEFAULT_STEPS_DIVISOR, angle, ratio, brushColor);
 	}
 	
 	public RegularEllipticalBrush(
@@ -61,14 +72,13 @@ public class RegularEllipticalBrush extends Brush
 		this.size = size;
 		this.steps = steps;
 		this.angle = angle;
-		this.squash = squash;
+		this.ratio = squash;
 		this.brushColor = brushColor;
 		
 		makeBrushImage();
-		makeBrushThumbnail();
 	}
 	
-	private void makeBrushImage()
+	protected void makeBrushImage()
 	{
 		brush = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = brush.createGraphics();
@@ -93,12 +103,14 @@ public class RegularEllipticalBrush extends Brush
 			
 			g.fillOval(
 					center - (int)Math.round((sizeInc * i) / 2.0),
-					center - (int)Math.round((sizeInc * i) / 2.0 * squash),
+					center - (int)Math.round((sizeInc * i) / 2.0 * ratio),
 					(int)Math.round(sizeInc * i),
-					(int)Math.round(sizeInc * i * squash)
+					(int)Math.round(sizeInc * i * ratio)
 			);
 		}
 		g.dispose();
+
+		makeBrushThumbnail();
 	}
 
 }

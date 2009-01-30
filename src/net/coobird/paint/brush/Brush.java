@@ -10,6 +10,7 @@ public abstract class Brush
 	protected String name;
 	
 	public static final int THUMB_SIZE = 20;
+	protected final int DEFAULT_BRUSH_TYPE = BufferedImage.TYPE_INT_ARGB;
 	
 	/**
 	 * Creates a thumbnail of the Brush.
@@ -18,9 +19,10 @@ public abstract class Brush
 	 */
 	protected void makeThumbnail()
 	{
-		// TODO
-		// Resize the brush to create thumbnail
-		throw new IllegalStateException("Brush not initialized.");
+		if (brush == null)
+		{
+			throw new IllegalStateException("Brush not initialized.");
+		}
 	}
 	
 	/**
@@ -54,18 +56,50 @@ public abstract class Brush
 	}
 	
 	/**
-	 * 
+	 * Returns a copy of the brush.
+	 * Returns null if brush is not initialized.
 	 * @return
 	 */
 	public BufferedImage getBrush()
 	{
-		return this.brush;
+		if (brush == null)
+		{
+			return null;
+		}
+		
+		BufferedImage brushCopy = new BufferedImage(
+				brush.getWidth(),
+				brush.getHeight(),
+				brush.getType()
+		);
+		
+		return brushCopy;
 	}
 	
+	/**
+	 * Returns a copy of the thumbnaila of the brush.
+	 * Returns null if thumbnail of the brush is not initialized.
+	 * @return
+	 */
 	public BufferedImage getThumbBrush()
 	{
-		return this.thumbBrush;
+		if (thumbBrush == null)
+		{
+			return null;
+		}
+
+		BufferedImage thumbBrushCopy = new BufferedImage(
+				thumbBrush.getWidth(),
+				thumbBrush.getHeight(),
+				thumbBrush.getType()
+		);
+		return thumbBrushCopy;
 	}
+	
+	/**
+	 * 
+	 */
+	protected abstract void makeBrushImage();
 
 	/**
 	 * 
