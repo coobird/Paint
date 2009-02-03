@@ -21,12 +21,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import net.coobird.paint.application.BrushListCellRenderer;
 import net.coobird.paint.application.ImageLayerListCellRenderer;
 import net.coobird.paint.brush.Brush;
-import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.RegularCircularBrush;
+import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.SolidCircularBrush;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
@@ -67,11 +69,13 @@ public class DemoApp1
 		final DefaultListModel ilListModel = new DefaultListModel();
 		ilList.setModel(ilListModel);
 		
+		final int SIZE = 400;
+		
 		final CanvasHolder ch = new CanvasHolder();
-		Canvas c = new Canvas(400, 400);
-		c.addLayer(new ImageLayer(400, 400));
-		c.addLayer(new ImageLayer(400, 400));
-		c.addLayer(new ImageLayer(400, 400));
+		Canvas c = new Canvas(SIZE, SIZE);
+		c.addLayer(new ImageLayer(SIZE, SIZE));
+		c.addLayer(new ImageLayer(SIZE, SIZE));
+		c.addLayer(new ImageLayer(SIZE, SIZE));
 		ch.setCanvas(c);
 		
 		for (ImageLayer il : c.getLayers())
@@ -139,9 +143,27 @@ public class DemoApp1
 		
 		final JMenuBar menubar = new JMenuBar();
 		final JMenu fileMenu = new JMenu("File");
+		final JMenuItem newMenu = new JMenuItem("New");
+		newMenu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+				ilListModel.removeAllElements();
+				System.out.println("new");
+				Canvas c = new Canvas(SIZE, SIZE);
+				c.addLayer(new ImageLayer(SIZE, SIZE));
+				c.addLayer(new ImageLayer(SIZE, SIZE));
+				c.addLayer(new ImageLayer(SIZE, SIZE));
+				ch.setCanvas(c);
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(il);
+				}
+				p.repaint();
+			}
+		});
 		final JMenuItem openMenu = new JMenuItem("Open");
 		openMenu.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0)
+			public void actionPerformed(ActionEvent e)
 			{
 				ilListModel.removeAllElements();
 				System.out.println("open");
@@ -161,6 +183,8 @@ public class DemoApp1
 				new DefaultImageOutput().write(ch.getCanvas(), new File("output.zip"));
 			}
 		});
+
+		fileMenu.add(newMenu);
 		fileMenu.add(openMenu);
 		fileMenu.add(saveMenu);
 		menubar.add(fileMenu);
@@ -171,11 +195,31 @@ public class DemoApp1
 		f.getContentPane().add(p);
 		f.validate();
 		f.setVisible(true);
-
 	}
 	
 	public static void main(String[] args)
 	{
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (UnsupportedLookAndFeelException e)
+		{
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InstantiationException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
