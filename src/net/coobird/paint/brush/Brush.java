@@ -1,6 +1,7 @@
 package net.coobird.paint.brush;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public abstract class Brush
@@ -73,11 +74,15 @@ public abstract class Brush
 				brush.getType()
 		);
 		
+		Graphics2D g = brushCopy.createGraphics();
+		g.drawImage(brush, 0, 0, null);
+		g.dispose();
+		
 		return brushCopy;
 	}
 	
 	/**
-	 * Returns a copy of the thumbnaila of the brush.
+	 * Returns a copy of the thumbnail of the brush.
 	 * Returns null if thumbnail of the brush is not initialized.
 	 * @return
 	 */
@@ -93,6 +98,11 @@ public abstract class Brush
 				thumbBrush.getHeight(),
 				thumbBrush.getType()
 		);
+		
+		Graphics2D g = thumbBrushCopy.createGraphics();
+		g.drawImage(thumbBrush, 0, 0, null);
+		g.dispose();
+
 		return thumbBrushCopy;
 	}
 	

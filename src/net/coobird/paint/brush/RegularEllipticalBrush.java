@@ -50,7 +50,7 @@ public class RegularEllipticalBrush extends Brush
 			int size,
 			int steps,
 			double angle,
-			double squash,
+			double ratio,
 			Color brushColor
 	)
 	{
@@ -72,7 +72,7 @@ public class RegularEllipticalBrush extends Brush
 		this.size = size;
 		this.steps = steps;
 		this.angle = angle;
-		this.ratio = squash;
+		this.ratio = ratio;
 		this.brushColor = brushColor;
 		
 		makeBrushImage();
@@ -112,5 +112,4 @@ public class RegularEllipticalBrush extends Brush
 
 		makeBrushThumbnail();
 	}
-
 }

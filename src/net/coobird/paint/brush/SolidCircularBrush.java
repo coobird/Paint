@@ -40,6 +40,10 @@ public class SolidCircularBrush extends Brush
 		}
 
 		this.setName("Circular Brush (" + size + " px)");
+		this.size = size;
+		this.brushColor = brushColor;
+		
+		makeBrushImage();
 	}
 
 	/* (non-Javadoc)
