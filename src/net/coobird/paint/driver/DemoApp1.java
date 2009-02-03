@@ -31,9 +31,12 @@ import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.SolidCircularBrush;
 import net.coobird.paint.image.Canvas;
+import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRenderer;
 import net.coobird.paint.image.ImageRendererFactory;
+import net.coobird.paint.image.PartialImageRenderer;
+import net.coobird.paint.image.ProgressiveImageRenderer;
 import net.coobird.paint.io.DefaultImageInput;
 import net.coobird.paint.io.DefaultImageOutput;
 
@@ -69,7 +72,7 @@ public class DemoApp1
 		final DefaultListModel ilListModel = new DefaultListModel();
 		ilList.setModel(ilListModel);
 		
-		final int SIZE = 400;
+		final int SIZE = 1200;
 		
 		final CanvasHolder ch = new CanvasHolder();
 		Canvas c = new Canvas(SIZE, SIZE);
@@ -89,13 +92,21 @@ public class DemoApp1
 		f.getContentPane().add(listPanels, BorderLayout.EAST);
 		
 
-		final ImageRenderer renderer = ImageRendererFactory.getInstance();
+//		final ImageRenderer renderer = ImageRendererFactory.getInstance();
+//		final PartialImageRenderer renderer = new ClippableImageRenderer();
+		final ProgressiveImageRenderer renderer = new ProgressiveImageRenderer();
 		
 		final JPanel p = new JPanel() {
 			public void paintComponent(Graphics g)
 			{
 				super.paintComponent(g);
 				g.drawImage(renderer.render(ch.getCanvas()), 0, 0, null);
+//				g.drawImage(
+//						renderer.render(ch.getCanvas(), 0, 0, 200, 200),
+//						0,
+//						0,
+//						null
+//				);
 			}
 		};
 		

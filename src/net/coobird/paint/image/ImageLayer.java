@@ -19,6 +19,11 @@ public class ImageLayer
 	private static final int THUMBNAIL_SCALE = 8;
 	private static final int DEFAULT_IMAGE_TYPE = BufferedImage.TYPE_INT_ARGB;
 	
+	public static int getDefaultType()
+	{
+		return DEFAULT_IMAGE_TYPE;
+	}
+	
 	private BufferedImage image;
 	private BufferedImage thumbImage;
 	private Graphics2D g;

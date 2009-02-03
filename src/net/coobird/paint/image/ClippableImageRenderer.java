@@ -8,30 +8,32 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public final class DefaultImageRenderer implements ImageRenderer
+public class ClippableImageRenderer 
+	implements ImageRenderer, PartialImageRenderer
 {
-	private boolean drawBackground = true;
-	
-	/*
-	 * Performance issues:
-	 * Large Canvases will take a long time to render
-	 * think of a way to reduce the time it takes to render
-	 * think of a way to clip the area where the image is to be rendered
+	/**
+	 * Indicates whether or not to draw a checkered background.
 	 */
+	private boolean drawBackground = true;
 	
 	/**
 	 * 
 	 */
-	public DefaultImageRenderer()
+	public BufferedImage render(Canvas c)
 	{
-		
+		return render(c, 0, 0, c.getWidth(), c.getHeight());
 	}
 	
 	/**
-	 * Renders the ImageLayers in the given Canvas to a single BufferedImage.
-	 * @param c		Canvas to render.
+	 * 
 	 */
-	public BufferedImage render(Canvas c)
+	public BufferedImage render(
+			Canvas c,
+			int x,
+			int y,
+			int width,
+			int height
+	)
 	{
 		if (c == null)
 		{
@@ -40,14 +42,20 @@ public final class DefaultImageRenderer implements ImageRenderer
 		
 		List<ImageLayer> layerList = c.getRenderOrder();
 		
+//		BufferedImage img = new BufferedImage(
+//				c.getWidth(),
+//				c.getHeight(),
+//				BufferedImage.TYPE_INT_ARGB
+//		);
 		BufferedImage img = new BufferedImage(
-				c.getWidth(),
-				c.getHeight(),
+				width,
+				height,
 				ImageLayer.getDefaultType()
 		);
-
 		
 		Graphics2D g = img.createGraphics();
+//		g.setClip(x, y, width, height);
+		
 		Composite originalComposite = g.getComposite();
 		
 		if (drawBackground)
@@ -68,7 +76,8 @@ public final class DefaultImageRenderer implements ImageRenderer
 			);
 			
 			g.setComposite(layerComposite);
-			g.drawImage(layer.getImage(), layer.getX(), layer.getY(), null);
+			BufferedImage bi = layer.getImage().getSubimage(x, y, width, height);
+			g.drawImage(bi, layer.getX(), layer.getY(), null);
 		}
 		
 		g.setComposite(originalComposite);
@@ -77,6 +86,10 @@ public final class DefaultImageRenderer implements ImageRenderer
 		return img;
 	}
 	
+	/**
+	 * Draws a checkered white and gray background.
+	 * @param img			The {@code BufferedImage}Å@to draw the background on.
+	 */
 	private void drawBackground(BufferedImage img)
 	{
 		Graphics g = img.getGraphics();
