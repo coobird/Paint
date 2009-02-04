@@ -210,6 +210,8 @@ public class ProgressiveImageRenderer implements ImageRenderer
 	public void terminateRendering()
 	{
 		// TODO implement method
+		// does this work?
+		es.shutdownNow();
 	}
 	
 	private void drawBackground(BufferedImage img)
