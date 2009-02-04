@@ -67,7 +67,7 @@ public class ProgressiveImageRenderer implements ImageRenderer
 			Graphics2D g = i.createGraphics();
 			Composite originalComposite = g.getComposite();
 			
-			for (ImageLayer layer : c.getLayers())
+			for (ImageLayer layer : c.getRenderOrder())
 			{
 				if (!layer.isVisible())
 				{

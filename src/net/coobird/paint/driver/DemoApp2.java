@@ -53,6 +53,7 @@ public class DemoApp2
 		brushListModel.addElement(new RegularCircularBrush(null, 80, new Color(0,0,255,32)));
 		brushListModel.addElement(new SolidCircularBrush(null, 80, Color.red));
 		brushListModel.addElement(new SolidCircularBrush(null, 40, Color.orange));
+		brushListModel.addElement(new SolidCircularBrush(null, 120, Color.white));
 		brushListModel.addElement(new RegularCircularBrush("Small black brush", 40, new Color(0,0,0,32)));
 		brushListModel.addElement(new RegularCircularBrush("Thin black brush", 80, new Color(0,0,0,4)));
 		brushListModel.addElement(new RegularCircularBrush("Emerald green 40 px brush", 40, new Color(0,255,96,32)));
@@ -63,6 +64,7 @@ public class DemoApp2
 		brushListModel.addElement(new RegularEllipticalBrush(null, 240, Math.PI * 0.4, 0.8, new Color(255,0,0,16)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 240, Math.PI * 0.2, 0.6, new Color(255,0,0,4)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 40, Math.PI * 0.9, 0.2, new Color(0,255,128,4)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.0, 0.4, new Color(0,0,128,4)));
 		final JScrollPane brushListSp = new JScrollPane(brushList);
 		listPanels.add(brushListSp);
 		

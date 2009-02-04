@@ -38,8 +38,6 @@ public class BrushController
 		}
 	}
 	
-	// queue of events
-	// angle of brush
 	Queue<BrushEvent> queue = new LinkedList<BrushEvent>(); 
 	
 	private double theta;
@@ -112,12 +110,20 @@ public class BrushController
 			
 			int intSteps = (int)Math.round(steps);
 			
+
 			for (int i = 0; i < intSteps; i++)
 			{
 				x += incX;
 				y += incY;
 				
-				g.drawImage(b, (int)x, (int)y, null);			
+				BufferedImage bb = new BufferedImage(b.getWidth(), b.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				Graphics2D g2 = bb.createGraphics();
+//				g2.clearRect(0, 0, bb.getWidth(), bb.getHeight());
+				g2.rotate(-theta / steps, bb.getWidth()/2, bb.getHeight()/2);
+				g2.drawImage(b, 0, 0, null);
+				g2.dispose();
+				
+				g.drawImage(bb, (int)x, (int)y, null);			
 			}
 		}
 		else
