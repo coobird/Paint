@@ -3,13 +3,11 @@ package net.coobird.paint.driver;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.swing.DefaultListModel;
@@ -32,12 +30,9 @@ import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.SolidCircularBrush;
 import net.coobird.paint.image.Canvas;
-import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRenderer;
 import net.coobird.paint.image.ImageRendererFactory;
-import net.coobird.paint.image.PartialImageRenderer;
-import net.coobird.paint.image.ProgressiveImageRenderer;
 import net.coobird.paint.io.DefaultImageInput;
 import net.coobird.paint.io.DefaultImageOutput;
 
@@ -65,6 +60,9 @@ public class DemoApp2
 		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.67, 0.5, new Color(0,0,128,4)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.8, 0.8, new Color(0,0,128,4)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 120, Math.PI * 0.4, 0.8, new Color(0,0,0,16)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 240, Math.PI * 0.4, 0.8, new Color(255,0,0,16)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 240, Math.PI * 0.2, 0.6, new Color(255,0,0,4)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 40, Math.PI * 0.9, 0.2, new Color(0,255,128,4)));
 		final JScrollPane brushListSp = new JScrollPane(brushList);
 		listPanels.add(brushListSp);
 		
@@ -127,7 +125,7 @@ public class DemoApp2
 				);
 				
 				long timePast = System.currentTimeMillis() - lastTime;
-				if (timePast > 100)
+				if (timePast > 50)
 				{
 					p.repaint();
 					lastTime = System.currentTimeMillis();
@@ -138,6 +136,9 @@ public class DemoApp2
 			{
 				((ImageLayer)ilList.getSelectedValue()).update();
 				ilList.repaint();
+				
+				bc.releaseBrush();
+				
 				p.repaint();
 			}
 

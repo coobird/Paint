@@ -9,12 +9,19 @@ import net.coobird.paint.image.ImageLayer;
 
 public class BrushController
 {
-	class BrushEvent
+	static class BrushEvent
 	{
 		private Brush b;
 		private ImageLayer il;
 		private int x;
 		private int y;
+		private State state;
+
+		private enum State
+		{
+			DRAW,
+			RELEASE;
+		}
 		
 		private BrushEvent(ImageLayer il, Brush b, int x, int y)
 		{
@@ -22,6 +29,12 @@ public class BrushController
 			this.il = il;
 			this.x = x;
 			this.y = y;
+			this.state = State.DRAW;
+		}
+		
+		private BrushEvent()
+		{
+			this.state = State.RELEASE;
 		}
 	}
 	
@@ -62,9 +75,16 @@ public class BrushController
 	{
 		BrushEvent e = queue.remove();
 		
-		if (lastBrush != e.b)
+		if (lastBrush != e.b || e.state == BrushEvent.State.RELEASE)
 		{
 			clearTheta();
+		}
+		
+		if (e.state == BrushEvent.State.RELEASE)
+		{
+			lastX = UNDEFINED;
+			lastY = UNDEFINED;
+			return;
 		}
 		
 		calcTheta(e.x, e.y);
@@ -72,12 +92,44 @@ public class BrushController
 		Graphics2D g = e.il.getGraphics();
 		BufferedImage b = e.b.getBrush();
 		
-		g.drawImage(
-				b,
-				e.x - (b.getWidth() / 2),
-				e.y - (b.getHeight() / 2),
-				null
-		);		
+		
+		if (lastX != UNDEFINED)
+		{
+			double distX = lastX - e.x;
+			double distY = lastY - e.y;
+
+			System.out.println(distX);
+			System.out.println(distY);
+			
+			double dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+			double steps = dist / ((b.getWidth())/ 8);
+			
+			double incX = -distX / steps;
+			double incY = -distY / steps;
+			
+			double x = lastX - (b.getWidth() / 2);
+			double y = lastY - (b.getHeight() / 2);
+			
+			int intSteps = (int)Math.round(steps);
+			
+			for (int i = 0; i < intSteps; i++)
+			{
+				x += incX;
+				y += incY;
+				
+				g.drawImage(b, (int)x, (int)y, null);			
+			}
+		}
+		else
+		{
+			int x = e.x - (b.getWidth() / 2);
+			int y = e.y - (b.getHeight() / 2);
+			
+			g.drawImage(b, x, y, null);
+		}
+		
+		lastX = e.x;
+		lastY = e.y;
 		
 		lastBrush = e.b;
 	}
@@ -96,6 +148,11 @@ public class BrushController
 			new DrawingThread().start();
 			lastTime = System.currentTimeMillis();
 		}
+	}
+	
+	public void releaseBrush()
+	{
+		queue.add(new BrushEvent());
 	}
 	
 	private void calcTheta(int x, int y)
