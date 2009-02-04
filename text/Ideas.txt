@@ -55,6 +55,8 @@ Request a rendering of the screen through CanvasView
 -> the CanvasView will send a rectangle region of image to show with appropriate
 magnification.
 
+-> Magnification via Graphics2D.scale
+
 
 File format
 -----------
