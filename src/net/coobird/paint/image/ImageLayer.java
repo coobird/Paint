@@ -1,5 +1,6 @@
 package net.coobird.paint.image;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -97,9 +98,10 @@ public class ImageLayer
 	 */
 	private void renderThumbnail()
 	{
-		// TODO
-		//Å@resize "image" to "thumbImage"
 		Graphics2D g = thumbImage.createGraphics();
+		
+		// Set Composite mode to draw source image directly onto thumbImage.
+		g.setComposite(AlphaComposite.Src);
 		
 		g.drawImage(image,
 				0,
