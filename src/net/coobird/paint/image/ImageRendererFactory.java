@@ -1,7 +1,16 @@
 package net.coobird.paint.image;
 
+/**
+ * The {@code ImageRendererFactory} class will return a suitable 
+ * {@link ImageRenderer} for rendering in [[$insert_name_here]].
+ * @author coobird
+ *
+ */
 public class ImageRendererFactory
 {
+	/**
+	 * Single instance of {@code ImageRenderer}.
+	 */
 	private static ImageRenderer renderer;
 	
 	/**

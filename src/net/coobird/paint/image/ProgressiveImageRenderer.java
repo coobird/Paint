@@ -26,26 +26,25 @@ import java.util.concurrent.Future;
  */
 public class ProgressiveImageRenderer implements ImageRenderer
 {
-	/*
-	 * (non-Javadoc)
-	 * Look into using the concurrency ?
-	 * @see net.coobird.paint.image.ImageRenderer#render(net.coobird.paint.image.Canvas)
-	 */
-	
 	private ExecutorService es;
 	
+	/**
+	 * Instantiates an instance of {@code ProgressiveImageRenderer}.
+	 */
+	public ProgressiveImageRenderer()
 	{
+		// TODO adjust the number of threads in thread pool?
 		es = Executors.newFixedThreadPool(4);
 	}
 	
-	class ImageCallable implements Callable<BufferedImage>
+	private class ImageCallable implements Callable<BufferedImage>
 	{
 		int x,y,w,h; 
-		BufferedImage i;
+		BufferedImage img;
 		Canvas c;
 		
 		public ImageCallable(
-				BufferedImage i,
+				BufferedImage img,
 				Canvas c,
 				int x,
 				int y,
@@ -53,7 +52,7 @@ public class ProgressiveImageRenderer implements ImageRenderer
 				int height
 		)
 		{
-			this.i = i;
+			this.img = img;
 			this.c = c;
 			this.x = x;
 			this.y = y;
@@ -64,7 +63,7 @@ public class ProgressiveImageRenderer implements ImageRenderer
 		@Override
 		public BufferedImage call() throws Exception
 		{
-			Graphics2D g = i.createGraphics();
+			Graphics2D g = img.createGraphics();
 			Composite originalComposite = g.getComposite();
 			
 			for (ImageLayer layer : c.getRenderOrder())
@@ -87,15 +86,27 @@ public class ProgressiveImageRenderer implements ImageRenderer
 			g.setComposite(originalComposite);
 			g.dispose();
 			
-			return i;
+			return img;
 		}
 	}
 
+	/**
+	 * Renders a canvas.
+	 * 
+	 * Current implementation will section the canvas into four sections and
+	 * renders them in four (4) separate Threads, using the 
+	 * {@link ExecutorService} with a thread pool of 4 threads.
+	 * 
+	 * @param c				The canvas to render.
+	 * @return				The rendered image of the canvas.
+	 */
+	/*
+	 * (non-Javadoc)
+	 * @see net.coobird.paint.image.ImageRenderer#render(net.coobird.paint.image.Canvas)
+	 */
 	@Override
 	public BufferedImage render(Canvas c)
 	{
-		//System.out.println("progressive render start: " + System.currentTimeMillis());
-		
 		final BufferedImage img = new BufferedImage(
 			c.getWidth(),
 			c.getHeight(),
@@ -162,19 +173,6 @@ public class ProgressiveImageRenderer implements ImageRenderer
 		Future<BufferedImage> f3 = es.submit(c3);
 		Future<BufferedImage> f4 = es.submit(c4);
 		
-//		while (!es.isShutdown())
-//		{
-//			try
-//			{
-//				System.out.println("waiting for ExecutorService to shutdown");
-//				Thread.sleep(100);
-//			}
-//			catch (InterruptedException e)
-//			{
-//				e.printStackTrace();
-//			}
-//		}
-		
 		try
 		{
 			BufferedImage result1 = f1.get();
@@ -199,8 +197,6 @@ public class ProgressiveImageRenderer implements ImageRenderer
 			e.printStackTrace();
 		}
 		
-		//System.out.println("progressive render end: " + System.currentTimeMillis());
-		
 		return img;
 	}
 	
@@ -210,31 +206,43 @@ public class ProgressiveImageRenderer implements ImageRenderer
 	public void terminateRendering()
 	{
 		// TODO implement method
+		// TODO test this.
 		// does this work?
 		es.shutdownNow();
 	}
 	
+	/**
+	 * Draws a checkered background.
+	 * @param img			The {@code BufferedImage} object to render a
+	 * 						checkered background on.
+	 */
 	private void drawBackground(BufferedImage img)
 	{
+		final int SIZE = 20;
+		final int DOUBLE_SIZE = SIZE * 2;
+		
 		Graphics g = img.getGraphics();
 
 		int width = img.getWidth();
 		int height = img.getHeight();
 		
-		for (int i = 0; i < width; i += 20)
+		for (int i = 0; i < width; i += SIZE)
 		{
-			for (int j = 0; j < height; j += 20)
+			for (int j = 0; j < height; j += SIZE)
 			{
-				if ((i + j) % 40 == 0)
+				if ((i + j) % DOUBLE_SIZE == 0)
+				{
 					g.setColor(Color.gray);
+				}
 				else
+				{
 					g.setColor(Color.white);
+				}
 			
-				g.fillRect(i, j, 20, 20);
+				g.fillRect(i, j, SIZE, SIZE);
 			}
 		}
 		
 		g.dispose();
 	}
-
 }

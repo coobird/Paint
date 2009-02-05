@@ -20,20 +20,11 @@ public class ImageLayer
 	private static final int THUMBNAIL_SCALE = 8;
 	private static final int DEFAULT_IMAGE_TYPE = BufferedImage.TYPE_INT_ARGB;
 	
-	public static int getDefaultType()
-	{
-		return DEFAULT_IMAGE_TYPE;
-	}
-	
 	private BufferedImage image;
 	private BufferedImage thumbImage;
 	private Graphics2D g;
 	private String caption;
-	private boolean visible;
-	
-	{
-		visible = true;
-	}
+	private boolean visible = true;
 	
 	// TODO
 	// Location of ImageLayer wrt some origin
@@ -46,13 +37,18 @@ public class ImageLayer
 	private BlendingMode mode = BlendingMode.LAYER_NORMAL;
 	
 	/**
-	 * ImageLayer must be constructed with a width and height parameter.
+	 * {@code ImageLayer} must be constructed with a width and height parameter.
 	 * TODO fix this javadoc:
 	 * @see ImageLayer(int,int)
 	 */
 	@SuppressWarnings("unused")
 	private ImageLayer() {};
 	
+	/**
+	 * Instantiate a new {@code ImageLayer}.
+	 * @param width		The width of the ImageLayer.
+	 * @param height	The height of the ImageLayer.
+	 */
 	public ImageLayer(BufferedImage image)
 	{
 		initInstance();
@@ -68,7 +64,7 @@ public class ImageLayer
 	}
 	
 	/**
-	 * Instantiate a new ImageLayer.
+	 * Instantiate a new {@code ImageLayer} from an existing image.
 	 * @param width		The width of the ImageLayer.
 	 * @param height	The height of the ImageLayer.
 	 */
@@ -83,27 +79,41 @@ public class ImageLayer
 		);
 
 		setImage(image);
-		
+
 		thumbImage = new BufferedImage(
-				width / THUMBNAIL_SCALE,
-				height / THUMBNAIL_SCALE,
+				this.width / THUMBNAIL_SCALE,
+				this.height / THUMBNAIL_SCALE,
 				DEFAULT_IMAGE_TYPE
 		);
-		
+	
 		renderThumbnail();
 	}
 	
 	/**
-	 * Creates a thumbnail image
+	 * Initializes the instance of {@code ImageLayer}.
+	 */
+	private void initInstance()
+	{
+		this.x = 0;
+		this.y = 0;
+		this.setCaption("Untitled Layer");
+	}
+
+	/**
+	 * Creates a thumbnail image.
 	 */
 	private void renderThumbnail()
 	{
 		Graphics2D g = thumbImage.createGraphics();
 		
-		// Set Composite mode to draw source image directly onto thumbImage.
+		/*
+		 *  Use AlphaComposite.Src as the Composite mode to draw source image
+		 *  directly onto thumbImage.
+		 */
 		g.setComposite(AlphaComposite.Src);
 		
-		g.drawImage(image,
+		g.drawImage(
+				image,
 				0,
 				0,
 				thumbImage.getWidth(),
@@ -115,7 +125,7 @@ public class ImageLayer
 	}
 	
 	/**
-	 * Updates the state of the ImageLayer
+	 * Updates the state of the ImageLayer.
 	 */
 	public void update()
 	{
@@ -125,18 +135,10 @@ public class ImageLayer
 	}
 	
 	/**
-	 * Initializes the instance of ImageLayer.
-	 */
-	private void initInstance()
-	{
-		this.x = 0;
-		this.y = 0;
-		this.setCaption("Untitled Layer");
-	}
-	
-	/**
-	 * TODO
-	 * @return
+	 * Returns the {@link Graphics2D} object associated with the image contained
+	 * in the {@code ImageLayer} object.
+	 * @return				The {@code Graphics2D} object associated with the
+	 * 						image contained in the {@code ImageLayer} object.
 	 */
 	public Graphics2D getGraphics()
 	{
@@ -144,8 +146,14 @@ public class ImageLayer
 	}
 
 	/**
-	 * Checks if this ImageLayer is set as visible.
-	 * @return	The visibility of this ImageLayer.
+	 * Checks if this {@code ImageLayer} is set as visible.
+	 * 
+	 * When an {@code ImageLayer} object is marked as visible, the image layer
+	 * will be rendered when it is included in a {@link Canvas} object which is
+	 * being rendered by an {@link ImageRenderer}.
+	 * 
+	 * @return				{@code true} if the {@code ImageLayer} object is
+	 * 						visible, {@code false} otherwise.
 	 */
 	public boolean isVisible()
 	{
@@ -153,6 +161,7 @@ public class ImageLayer
 	}
 
 	/**
+	 * TODO
 	 * @return the image
 	 */
 	public BufferedImage getImage()
@@ -161,6 +170,7 @@ public class ImageLayer
 	}
 
 	/**
+	 * TODO
 	 * @param image the image to set
 	 */
 	public void setImage(BufferedImage image)
@@ -194,6 +204,7 @@ public class ImageLayer
 	}
 
 	/**
+	 * TODO
 	 * @return the thumbImage
 	 */
 	public BufferedImage getThumbImage()
@@ -202,6 +213,7 @@ public class ImageLayer
 	}
 
 	/**
+	 * TODO
 	 * @param thumbImage the thumbImage to set
 	 */
 	public void setThumbImage(BufferedImage thumbImage)
@@ -340,5 +352,10 @@ public class ImageLayer
 			", width: " + this.width + ", height: " + this.height; 
 		
 		return msg;
+	}
+
+	public static int getDefaultType()
+	{
+		return DEFAULT_IMAGE_TYPE;
 	}
 }

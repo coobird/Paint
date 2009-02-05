@@ -8,6 +8,14 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+/**
+ * The {@code ClippableImageRenderer} class is an {@code PartialImageRenderer}
+ * which supports rendering of a certain section of a {@link Canvas} object
+ * in addition to rendering an entire {@code Canvas} object.
+ * 
+ * @author coobird
+ *
+ */
 public class ClippableImageRenderer 
 	implements ImageRenderer, PartialImageRenderer
 {
@@ -17,7 +25,8 @@ public class ClippableImageRenderer
 	private boolean drawBackground = true;
 	
 	/**
-	 * 
+	 * Render the canvas.
+	 * @param c				The canvas to render.
 	 */
 	public BufferedImage render(Canvas c)
 	{
@@ -25,7 +34,9 @@ public class ClippableImageRenderer
 	}
 	
 	/**
-	 * 
+	 * TODO write javadoc
+	 * TODO implement this class completely and test.
+	 * renders a part of an canvas
 	 */
 	public BufferedImage render(
 			Canvas c,
@@ -42,11 +53,6 @@ public class ClippableImageRenderer
 		
 		List<ImageLayer> layerList = c.getRenderOrder();
 		
-//		BufferedImage img = new BufferedImage(
-//				c.getWidth(),
-//				c.getHeight(),
-//				BufferedImage.TYPE_INT_ARGB
-//		);
 		BufferedImage img = new BufferedImage(
 				width,
 				height,
