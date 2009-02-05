@@ -6,11 +6,26 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.coobird.paint.image.ImageLayer;
 
+/**
+ * The {@code BrushController} handles the drawing of brushes onto an image.
+ * @author coobird
+ *
+ */
 public class BrushController
 {
+	/**
+	 * The {@code BrushAction} class represents an event to process.
+	 * Events such as drawing and releasing a brush is represented as an
+	 * instance of {@code BrushAction}, and is processed by the 
+	 * {@code BrushController}.
+	 * @author coobird
+	 *
+	 */
 	static class BrushAction
 	{
 		private final Brush b;
@@ -83,7 +98,12 @@ public class BrushController
 	private long lastTime = System.currentTimeMillis();
 
 	private DrawingThread drawingThread = new DrawingThread();
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
 	
+	
+	/**
+	 * Constructs an instance of the {@code BrushController}.
+	 */
 	public BrushController()
 	{
 		actionQueue = new LinkedList<BrushAction>();
@@ -92,7 +112,7 @@ public class BrushController
 	
 	/**
 	 * Draws the brush between last draw point and current draw point.
-	 * @param action
+	 * @param action		The {@code BrushAction} containing the draw action.
 	 */
 	private void interpolatedDraw(BrushAction action)
 	{
@@ -107,12 +127,12 @@ public class BrushController
 		double distX = lastX - action.getX();
 		double distY = lastY - action.getY();
 	
-		System.out.println(distX);
-		System.out.println(distY);
+//		System.out.println(distX);
+//		System.out.println(distY);
 		
 		double dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
 		
-		double steps = dist / (double)(brushImage.getWidth() / STEP_DIVISION);
+		double steps = dist / (double)(brushImage.getWidth() / (double)STEP_DIVISION);
 		
 		double incX = -distX / steps;
 		double incY = -distY / steps;
@@ -137,8 +157,8 @@ public class BrushController
 			{
 				brushg.rotate(
 						theta,
-						rotatedBrushImage.getWidth() / 2,
-						rotatedBrushImage.getHeight() / 2
+						rotatedBrushImage.getWidth() / 2.0d,
+						rotatedBrushImage.getHeight() / 2.0d
 				);
 			}
 	
@@ -189,7 +209,9 @@ public class BrushController
 		}
 	}
 
-	
+	/**
+	 * Processes a {@code BrushAction} in the queue.
+	 */
 	private void processBrush()
 	{
 		BrushAction action = actionQueue.remove();
@@ -214,7 +236,8 @@ public class BrushController
 		Graphics2D g = action.getLayer().getGraphics();
 		
 		// TODO Setting Composite for g should be fine.
-		// if so, remove one setComposite... from interpolateDraw and here 
+		// if so, remove one setComposite... from interpolateDraw and here.
+		// uncomment below:
 		// setCompositeForBrush(g, action.getBrush());
 
 		BufferedImage brushImage = action.getBrush().getBrush();
@@ -246,6 +269,15 @@ public class BrushController
 		lastBrush = action.getBrush();
 	}
 	
+	/**
+	 * Sets the {@link Composite} of the given {@link Graphics2D} object. Used
+	 * for setting the composite mode of the {@code Graphics2D} object to allow
+	 * switching modes between a regular brush and an eraser.
+	 * @param g				The {@code Graphics2D} object to change the
+	 * 						composite mode of.
+	 * @param b				The {@code Brush} object from which the composite
+	 * 						mode to set to should be retrieved.
+	 */
 	private void setCompositeForBrush(Graphics2D g, Brush b)
 	{
 		Composite layerComposite = AlphaComposite.getInstance(
@@ -256,6 +288,16 @@ public class BrushController
 		g.setComposite(layerComposite);
 	}
 	
+	/**
+	 * Draws the on the specified {@link ImageLayer} object, using the specified
+	 * {@link Brush} object at the location {@code x, y}.
+	 * @param il			The {@code ImageLayer} object to draw on.
+	 * @param b				The {@code Brush} object to draw with.
+	 * @param x				The {@code x} coordinate of the {@code ImageLayer}
+	 * 						to draw the brush at.
+	 * @param y				The {@code y} coordinate of the {@code ImageLayer}
+	 * 						to draw the brush at.
+	 */
 	public void drawBrush(ImageLayer il, Brush b, int x, int y)
 	{
 		actionQueue.add(new BrushAction(il, b, x, y));
@@ -265,7 +307,9 @@ public class BrushController
 		if (!drawingThread.running && timePast > 100)
 		{
 			System.out.println("start thread");
-			new DrawingThread().start();
+			//new DrawingThread().start();
+			//drawingThread.start();
+			executor.execute(drawingThread);
 			lastTime = System.currentTimeMillis();
 		}
 	}
@@ -275,6 +319,11 @@ public class BrushController
 		actionQueue.add(new BrushAction());
 	}
 	
+	/**
+	 * Calculate the angle to rotate the brush.
+	 * @param x			The x coordinate of the brush.
+	 * @param y			The y coordinate of the brush.
+	 */
 	private void calcTheta(int x, int y)
 	{
 		if (lastX == UNDEFINED && lastY == UNDEFINED)
@@ -290,6 +339,9 @@ public class BrushController
 		theta = Math.atan2(diffX, diffY);
 	}
 	
+	/**
+	 * Clears the stored location and angle of the last brush action.
+	 */
 	private void clearTheta()
 	{
 		lastX = UNDEFINED;
@@ -297,20 +349,38 @@ public class BrushController
 		lastTheta = UNDEFINED_THETA;
 	}
 	
+	/**
+	 * Sets the state for allowing the brush to rotate depending on the movement
+	 * of the brush.
+	 * @param b				Whether or not to allow rotation of the brush.
+	 */
 	public void setMovable(boolean b)
 	{
 		this.rotatable = b;
 	}
 	
+	/**
+	 * Returns whether or not brush rotation is currently enabled.
+	 * @return				Returns {@code true} if brush rotation is allowed,
+	 * 						{@code false} otherwise.
+	 */
 	public boolean getMovable()
 	{
 		return this.rotatable;
 	}
 
+	/**
+	 * Thread for processing the {@link BrushAction} queue.
+	 * @author coobird
+	 *
+	 */
 	class DrawingThread extends Thread
 	{
 		boolean running = false;
 		
+		/**
+		 * Processes the {@link BrushAction} queue.
+		 */
 		public void run()
 		{
 			running = true;
