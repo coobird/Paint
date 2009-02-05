@@ -35,7 +35,10 @@ Other Thoughts
 *@Undo
 -> from mousePress to mouseRelease, store the movements and action of
 mouse so it can be undo/redo later
--> store the name of brush and positions   
+-> store the name of brush and positions
+-> Store the BrushEvents between DRAW and RELEASE and store it
+---> Store current Canvas on RELEASE
+---> Then, store the bundles of BrushEvents?
 
 
 Drawing
