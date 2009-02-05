@@ -11,7 +11,7 @@ public abstract class Brush
 	protected BufferedImage brush;
 	protected BufferedImage thumbBrush;
 	protected String name;
-	protected BlendingMode mode = BlendingMode.LAYER_NORMAL;
+	protected BlendingMode mode = BlendingMode.BRUSH_NORMAL;
 	protected float alpha = 1f;
 	
 	public static final int THUMB_SIZE = 20;

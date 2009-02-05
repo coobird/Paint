@@ -10,7 +10,9 @@ public enum BlendingMode
 	LAYER_SRC_OUT (AlphaComposite.SrcOut),
 	LAYER_DST_OVER (AlphaComposite.DstOver),
 	LAYER_DST_IN (AlphaComposite.DstIn),
-	LAYER_DST_OUT (AlphaComposite.DstOut)
+	LAYER_DST_OUT (AlphaComposite.DstOut),
+	BRUSH_NORMAL (AlphaComposite.SrcOver),
+	BRUSH_ERASER (AlphaComposite.DstOut)
 	;
 	
 	
