@@ -4,11 +4,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import net.coobird.paint.BlendingMode;
+
 public abstract class Brush
 {
 	protected BufferedImage brush;
 	protected BufferedImage thumbBrush;
 	protected String name;
+	protected BlendingMode mode = BlendingMode.LAYER_NORMAL;
+	protected float alpha = 1f;
 	
 	public static final int THUMB_SIZE = 20;
 	protected final int DEFAULT_BRUSH_TYPE = BufferedImage.TYPE_INT_ARGB;
@@ -125,5 +129,15 @@ public abstract class Brush
 		Graphics g = thumbBrush.createGraphics();
 		g.drawImage(brush, 0, 0, size, size, null);
 		g.dispose();
+	}
+	
+	public BlendingMode getMode()
+	{
+		return this.mode;
+	}
+	
+	public float getAlpha()
+	{
+		return alpha;
 	}
 }
