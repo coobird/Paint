@@ -40,15 +40,24 @@ mouse so it can be undo/redo later
 ---> Store current Canvas on RELEASE
 ---> Then, store the bundles of BrushEvents?
 
+Filters
+-------
+-> Allow scripting engine to interactively test out filters.
+-> Or, have a matrix screen to test out filters.
+
+
+Layers
+------
+-> Allow multiple move of layers.
 
 Drawing
 -------
 Depending on the selected tool, swap out the MouseListener
 for the panel that the drawing processing occurs on --> simplify things
 
-Todo: Eraser!!
+*done* Todo: Eraser!!
 
-Request a brush draw through a BrushController
+*done* Request a brush draw through a BrushController
 -> do not directly draw by using Graphics context
 -> place requests in a queue, and render one-by-one
 
@@ -65,4 +74,4 @@ File format
 -----------
 -> Need a way to store location, name and other attributes of ImageLayer.
 -> is serializing going to work?
--> have thumbnail as one of zip entries in miage file.
+-> have thumbnail as one of zip entries in image file.
