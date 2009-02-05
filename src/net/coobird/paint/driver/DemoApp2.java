@@ -37,6 +37,7 @@ import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.RegularEllipticalEraser;
 import net.coobird.paint.brush.SolidCircularBrush;
+import net.coobird.paint.filter.TestImageFilter;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRenderer;
@@ -400,6 +401,23 @@ public class DemoApp2
 
 			}
 		});
+		
+		layerMenu.addSeparator();
+		
+		layerMenu.add(new ActionMenuItem("Test Filter") {
+			public void actionPerformed(ActionEvent e)
+			{
+				TestImageFilter filter = new TestImageFilter();
+				
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					il.setImage(filter.processImage(il.getImage()));
+				}
+				p.repaint();
+				
+			}
+		});
+		
 
 		menubar.add(fileMenu);
 		menubar.add(brushMenu);
