@@ -11,18 +11,28 @@ public final class Canvas
 	private int height;
 	// private LayerNamer --> names the new layer
 	
+	/**
+	 * Cannot instantiate a {@code Canvas} object without specification of size.
+	 */
+	@SuppressWarnings("unused")
+	private Canvas() {};
+	
+	/**
+	 * Instantiates a {@code Canvas} object with the specified dimensions.
+	 * @param width			The width of the canvas.
+	 * @param height		The height of the canvas.
+	 */
 	public Canvas(int width, int height)
 	{
-		// TODO
-		// Determine appropriate List to use.
+		// TODO Determine appropriate List to use.
 		layers = new ArrayList<ImageLayer>();
 		this.width = width;
 		this.height = height;
 	}
 
 	/**
-	 * TODO
-	 * @return the width
+	 * Returns the width of the {@link Canvas} object.
+	 * @return 				The width of the canvas.
 	 */
 	public int getWidth()
 	{
@@ -30,8 +40,8 @@ public final class Canvas
 	}
 
 	/**
-	 * TODO
-	 * @param width the width to set
+	 * Sets the width of the {@link Canvas} object.
+	 * @param width 		The width to set the canvas to.
 	 */
 	public void setWidth(int width)
 	{
@@ -39,8 +49,8 @@ public final class Canvas
 	}
 
 	/**
-	 * TODO
-	 * @return the height
+	 * Returns the height of the {@link Canvas} object.
+	 * @return 				The height of the canvas.
 	 */
 	public int getHeight()
 	{
@@ -48,8 +58,8 @@ public final class Canvas
 	}
 
 	/**
-	 * TODO
-	 * @param height the height to set
+	 * Sets the height of the {@link Canvas} object.
+	 * @param height 		The height to set the canvas to.
 	 */
 	public void setHeight(int height)
 	{
@@ -94,14 +104,6 @@ public final class Canvas
 	}
 	
 	/**
-	 * Clears the current contents of the {@link Canvas} object.
-	 */
-	public void clear()
-	{
-		layers.clear();
-	}
-
-	/**
 	 * Adds a specified layer to the canvas.
 	 * @param layer			The ImageLayer to add to the canvas.
 	 */
@@ -130,6 +132,19 @@ public final class Canvas
 		layers.add(toIndex, il);
 	}
 	
+	/**
+	 * Clears the current contents of the {@link Canvas} object.
+	 */
+	public void clear()
+	{
+		layers.clear();
+	}
+
+	/**
+	 * Returns a {@code String} representation of the {@code Canvas} object. 
+	 * @return				A {@code String} representation of the
+	 * 						{@code Canvas} object.
+	 */
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
