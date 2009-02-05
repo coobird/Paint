@@ -20,7 +20,7 @@ public final class DefaultImageRenderer implements ImageRenderer
 	 */
 	
 	/**
-	 * 
+	 * Instantiates a {@code DefaultImageRenderer}.
 	 */
 	public DefaultImageRenderer()
 	{
@@ -29,7 +29,7 @@ public final class DefaultImageRenderer implements ImageRenderer
 	
 	/**
 	 * Renders the ImageLayers in the given Canvas to a single BufferedImage.
-	 * @param c		Canvas to render.
+	 * @param c				Canvas to render.
 	 */
 	public BufferedImage render(Canvas c)
 	{
@@ -77,6 +77,11 @@ public final class DefaultImageRenderer implements ImageRenderer
 		return img;
 	}
 	
+	/**
+	 * Draws the checkered background.
+	 * @param img			The {@code BufferedImage} objec to draw the
+	 * 						background rendering to.
+	 */
 	private void drawBackground(BufferedImage img)
 	{
 		Graphics g = img.getGraphics();
