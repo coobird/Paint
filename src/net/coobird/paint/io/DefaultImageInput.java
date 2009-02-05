@@ -23,7 +23,7 @@ public final class DefaultImageInput extends ImageInput
 	@Override
 	public Canvas read(File f)
 	{
-		Canvas c = new Canvas(400,400);
+		Canvas c = null;
 		
 		if (f == null)
 		{
@@ -34,6 +34,14 @@ public final class DefaultImageInput extends ImageInput
 		{
 			ZipFile zf = new ZipFile(f);
 			Enumeration<? extends ZipEntry> entries = zf.entries();
+			
+			ZipEntry info = entries.nextElement();
+			String size = info.getComment();
+			String[] s = size.split(",");
+			int width = Integer.parseInt(s[0]);
+			int height = Integer.parseInt(s[1]);
+			
+			c = new Canvas(width, height);
 			
 			while (entries.hasMoreElements())
 			{
