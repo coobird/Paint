@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,12 +15,15 @@ import java.io.File;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -37,12 +43,13 @@ import net.coobird.paint.image.ImageRenderer;
 import net.coobird.paint.image.ImageRendererFactory;
 import net.coobird.paint.io.DefaultImageInput;
 import net.coobird.paint.io.DefaultImageOutput;
+import net.coobird.paint.io.JavaSupportedImageInput;
 
 public class DemoApp2
 {
 	private void makeGUI()
 	{
-		JFrame f = new JFrame("Paint Dot Jar Demonstration");
+		final JFrame f = new JFrame("Paint Dot Jar Demonstration 2");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.getContentPane().setLayout(new BorderLayout());
 		
@@ -80,7 +87,7 @@ public class DemoApp2
 		final DefaultListModel ilListModel = new DefaultListModel();
 		ilList.setModel(ilListModel);
 		
-		final int SIZE = 1200;
+		final int SIZE = 400;
 		
 		final CanvasHolder ch = new CanvasHolder();
 		Canvas c = new Canvas(SIZE, SIZE);
@@ -88,11 +95,13 @@ public class DemoApp2
 		c.addLayer(new ImageLayer(SIZE, SIZE));
 		c.addLayer(new ImageLayer(SIZE, SIZE));
 		ch.setCanvas(c);
-		
+
 		for (ImageLayer il : c.getLayers())
 		{
 			ilListModel.addElement(il);
 		}
+		
+
 		
 		final JScrollPane ilListSp = new JScrollPane(ilList);
 		listPanels.add(ilListSp);
@@ -124,9 +133,17 @@ public class DemoApp2
 			
 			public void mouseDragged(MouseEvent e)
 			{
+				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
+				Brush b = (Brush)brushList.getSelectedValue();
+				
+				if (il == null || b == null)
+				{
+					return;
+				}
+				
 				bc.drawBrush(
-						(ImageLayer)ilList.getSelectedValue(),
-						(Brush)brushList.getSelectedValue(),
+						il,
+						b,
 						e.getX(),
 						e.getY()
 				);
@@ -141,6 +158,11 @@ public class DemoApp2
 			
 			public void mouseReleased(MouseEvent e)
 			{
+				if (ilList.getSelectedValue() == null)
+				{
+					return;
+				}
+				
 				((ImageLayer)ilList.getSelectedValue()).update();
 				ilList.repaint();
 				
@@ -151,9 +173,17 @@ public class DemoApp2
 
 			public void mousePressed(MouseEvent e)
 			{
+				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
+				Brush b = (Brush)brushList.getSelectedValue();
+				
+				if (il == null || b == null)
+				{
+					return;
+				}
+				
 				bc.drawBrush(
-						(ImageLayer)ilList.getSelectedValue(),
-						(Brush)brushList.getSelectedValue(),
+						il,
+						b,
 						e.getX(),
 						e.getY()
 				);
@@ -162,20 +192,124 @@ public class DemoApp2
 		
 		p.addMouseListener(ma);
 		p.addMouseMotionListener(ma);
+
+		ilList.setDropTarget(new DropTarget()
+		{
+
+			/* (non-Javadoc)
+			 * @see java.awt.dnd.DropTarget#drop(java.awt.dnd.DropTargetDropEvent)
+			 */
+			@Override
+			public synchronized void drop(DropTargetDropEvent e)
+			{
+				super.drop(e);
+				Point pt = e.getLocation();
+				int fromIndex = ilList.getSelectedIndex();
+				int toIndex = ilList.locationToIndex(pt);
+				
+				ch.getCanvas().moveLayer(fromIndex, toIndex);
+
+				ilListModel.removeAllElements();
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(il);
+				}
+				p.repaint();
+			}
+		});
+		ilList.setDragEnabled(true);
+		
+		class ActionMenuItem extends JMenuItem implements ActionListener
+		{
+			public ActionMenuItem(String s)
+			{
+				addActionListener(this);
+				setText(s);
+			}
+			
+			public void actionPerformed(ActionEvent e) {};
+		}
+		final JPopupMenu menu = new JPopupMenu();
+		menu.add(new ActionMenuItem("Change Name...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				String s = JOptionPane.showInputDialog(f, "Name:");
+				((ImageLayer)ilList.getSelectedValue()).setCaption(s);
+				p.repaint();
+			}
+		});
+		menu.add(new ActionMenuItem("Change Alpha...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				String s = JOptionPane.showInputDialog(f, "Alpha:");
+				((ImageLayer)ilList.getSelectedValue()).setAlpha(Float.parseFloat(s));
+				p.repaint();
+			}
+		});
+		menu.add(new ActionMenuItem("Change Location...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				String s = JOptionPane.showInputDialog(f, "Location (x,y):");
+				String[] t = s.split(",");
+				int x = Integer.parseInt(t[0]);
+				int y = Integer.parseInt(t[1]);
+				
+				((ImageLayer)ilList.getSelectedValue()).setLocation(x, y);
+				p.repaint();
+			}
+		});
+		
+		ilList.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					menu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+			public void mouseReleased(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					menu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+		});
 		
 		final JMenuBar menubar = new JMenuBar();
 		final JMenu fileMenu = new JMenu("File");
-		final JMenuItem newMenu = new JMenuItem("New");
-		newMenu.addActionListener(new ActionListener(){
+		final JMenu brushMenu = new JMenu("Brush");
+		final JMenu layerMenu = new JMenu("Layer");
+		
+		fileMenu.add(new ActionMenuItem("New") {
 			public void actionPerformed(ActionEvent e)
 			{
-				ilListModel.removeAllElements();
 				System.out.println("new");
-				Canvas c = new Canvas(SIZE, SIZE);
-				c.addLayer(new ImageLayer(SIZE, SIZE));
-				c.addLayer(new ImageLayer(SIZE, SIZE));
-				c.addLayer(new ImageLayer(SIZE, SIZE));
+				
+				String s = JOptionPane.showInputDialog(f, "Enter dimensions in (w,h):");
+				
+				int width = SIZE;
+				int height = SIZE;
+				
+				String[] t = s.split(",");
+				
+				try
+				{
+					width = Integer.parseInt(t[0]);
+					height = Integer.parseInt(t[1]);
+				}
+				catch (Exception ex)
+				{
+					JOptionPane.showMessageDialog(f, "Invalid dimensions.\n" + ex);
+				}
+				
+				Canvas c = new Canvas(width, height);
+				c.addLayer(new ImageLayer(width, height));
+				c.addLayer(new ImageLayer(width, height));
+				c.addLayer(new ImageLayer(width, height));
 				ch.setCanvas(c);
+				
+				ilListModel.removeAllElements();
 				for (ImageLayer il : ch.getCanvas().getLayers())
 				{
 					ilListModel.addElement(il);
@@ -183,13 +317,16 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
-		final JMenuItem openMenu = new JMenuItem("Open");
-		openMenu.addActionListener(new ActionListener(){
+
+		fileMenu.addSeparator();
+		
+		fileMenu.add(new ActionMenuItem("Open") {
 			public void actionPerformed(ActionEvent e)
 			{
-				ilListModel.removeAllElements();
 				System.out.println("open");
 				ch.setCanvas(new DefaultImageInput().read(new File("output.zip")));
+
+				ilListModel.removeAllElements();
 				for (ImageLayer il : ch.getCanvas().getLayers())
 				{
 					ilListModel.addElement(il);
@@ -197,12 +334,44 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
-		final JMenuItem saveMenu = new JMenuItem("Save");
-		saveMenu.addActionListener(new ActionListener(){
+
+		fileMenu.add(new ActionMenuItem("Save") {
 			public void actionPerformed(ActionEvent arg0)
 			{
 				System.out.println("save");
 				new DefaultImageOutput().write(ch.getCanvas(), new File("output.zip"));
+			}
+		});
+		
+		fileMenu.addSeparator();
+		
+		fileMenu.add(new ActionMenuItem("Open Supported Image...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				JFileChooser fc = new JFileChooser();
+				int option = fc.showOpenDialog(f);
+				
+				if (option != JFileChooser.APPROVE_OPTION)
+					return;
+				
+				File f = fc.getSelectedFile();
+				
+				ch.setCanvas(new JavaSupportedImageInput().read(f));
+				ilListModel.removeAllElements();
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(il);
+				}
+				p.repaint();
+			}
+		});
+		
+		fileMenu.addSeparator();
+
+		fileMenu.add(new ActionMenuItem("Exit") {
+			public void actionPerformed(ActionEvent arg0)
+			{
+				f.setVisible(false);
 			}
 		});
 
@@ -215,16 +384,30 @@ public class DemoApp2
 				bcMenu.setSelected(bc.getMovable());
 			}
 		});
+		brushMenu.add(bcMenu);
+		
+		layerMenu.add(new ActionMenuItem("New Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				ch.getCanvas().addLayer(new ImageLayer(ch.getCanvas().getWidth(), ch.getCanvas().getHeight()));
+				
+				ilListModel.removeAllElements();
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(il);
+				}
+				p.repaint();
 
-		fileMenu.add(newMenu);
-		fileMenu.add(openMenu);
-		fileMenu.add(saveMenu);
-		fileMenu.add(bcMenu);
+			}
+		});
+
 		menubar.add(fileMenu);
+		menubar.add(brushMenu);
+		menubar.add(layerMenu);
 		f.setJMenuBar(menubar);
 
 		bcMenu.setSelected(bc.getMovable());
-		
+
 		f.setSize(600,450);
 		f.setLocation(200, 100);
 		f.getContentPane().add(p);
