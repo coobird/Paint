@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenu;
@@ -28,6 +29,7 @@ import net.coobird.paint.brush.Brush;
 import net.coobird.paint.brush.BrushController;
 import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.RegularEllipticalBrush;
+import net.coobird.paint.brush.RegularEllipticalEraser;
 import net.coobird.paint.brush.SolidCircularBrush;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
@@ -65,6 +67,9 @@ public class DemoApp2
 		brushListModel.addElement(new RegularEllipticalBrush(null, 240, Math.PI * 0.2, 0.6, new Color(255,0,0,4)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 40, Math.PI * 0.9, 0.2, new Color(0,255,128,4)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.0, 0.4, new Color(0,0,128,4)));
+		brushListModel.addElement(new RegularEllipticalEraser(null, 40, 0, 1, 1f));
+		brushListModel.addElement(new RegularEllipticalEraser(null, 80, 0, 1, 1f));
+		brushListModel.addElement(new RegularEllipticalEraser(null, 80, Math.PI * 0.25, 0.5, 0.5f));
 		final JScrollPane brushListSp = new JScrollPane(brushList);
 		listPanels.add(brushListSp);
 		
@@ -201,11 +206,24 @@ public class DemoApp2
 			}
 		});
 
+		final JCheckBoxMenuItem bcMenu = new JCheckBoxMenuItem("Movable Brush");
+		bcMenu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0)
+			{
+				System.out.println("movable toggle");
+				bc.setMovable(!bc.getMovable());
+				bcMenu.setSelected(bc.getMovable());
+			}
+		});
+
 		fileMenu.add(newMenu);
 		fileMenu.add(openMenu);
 		fileMenu.add(saveMenu);
+		fileMenu.add(bcMenu);
 		menubar.add(fileMenu);
 		f.setJMenuBar(menubar);
+
+		bcMenu.setSelected(bc.getMovable());
 		
 		f.setSize(600,450);
 		f.setLocation(200, 100);
