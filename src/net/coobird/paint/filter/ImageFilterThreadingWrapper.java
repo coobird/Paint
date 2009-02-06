@@ -8,15 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-
-// FIXME Not disposing thread pool.
-// Not disposing thread pool is leading to incredible amounts of threads to be
-// created by the time this filter is invoked several times.
-// This must be fixed URGENTLY.
-
 /**
+ * <p>
  * The {@code ImageFilterThreadingWrapper} class is a wrapper class to
- * 
+ * </p>
  * <p>
  * Note: An image with at least one dimension under 100 pixels will cause the
  * {@code ImageFilterThreadingWrapper} to bypass the multithreaded rendering
@@ -36,8 +31,8 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	 * Number of pixels to overlap between the rendered quadrants.
 	 */
 	private static final int OVERLAP = 5;
-	private ExecutorService es;
-	
+	private static ExecutorService es = Executors.newCachedThreadPool();
+
 	/**
 	 * The wrapped {@code ImageFilter}.
 	 */
@@ -70,11 +65,8 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 		{
 			bypass = true;
 		}
-		else
-		{
-			es = Executors.newFixedThreadPool(4);
-		}
 	}
+	
 	
 	@Override
 	public BufferedImage processImage(BufferedImage img)
@@ -143,7 +135,6 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 		 * filter is applied) which makes the resulting stitched up image to
 		 * have borders down the horizontal and vertical center of the image.
 		 */
-		
 		Future<BufferedImage> f1 = es.submit(new Callable<BufferedImage>() {
 			public BufferedImage call()
 			{
