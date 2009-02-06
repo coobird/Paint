@@ -21,4 +21,11 @@ public abstract class ImageOutput
 	 * @param f				The [@code File} object to write to.
 	 */
 	public abstract void write(Canvas c, File f);
+	
+	/**
+	 * 
+	 * @param f
+	 * @return
+	 */
+	public abstract boolean supportsFile(File f);
 }

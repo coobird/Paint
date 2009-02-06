@@ -65,4 +65,20 @@ public final class DefaultImageOutput extends ImageOutput
 			e.printStackTrace();
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see net.coobird.paint.io.ImageOutput#supportsFile(java.io.File)
+	 */
+	@Override
+	public boolean supportsFile(File f)
+	{
+		String name = f.getName();
+		
+		if (name.endsWith(".zip"))
+		{
+			return true;
+		}
+		
+		return false;
+	}
 }

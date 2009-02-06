@@ -30,6 +30,7 @@ public class FormatManager
 		inputList.add(new JavaSupportedImageInput());
 		
 		outputList.add(new DefaultImageOutput());
+		outputList.add(new JavaSupportedImageOutput());
 	}
 	
 	/**
@@ -56,7 +57,13 @@ public class FormatManager
 	
 	public static ImageOutput getImageOutput(File f)
 	{
-		//TODO implement!
+		for (ImageOutput imgOutput : outputList)
+		{
+			if (imgOutput.supportsFile(f))
+			{
+				return imgOutput;
+			}
+		}
 		return null;		
 	}
 }

@@ -82,6 +82,6 @@ public final class JavaSupportedImageInput extends ImageInput
 			return "";
 		}
 		
-		return f.getName().substring(lastIndex);
+		return f.getName().substring(lastIndex + 1);
 	}
 }
