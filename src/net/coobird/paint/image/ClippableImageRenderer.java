@@ -53,6 +53,8 @@ public class ClippableImageRenderer
 		
 		List<ImageLayer> layerList = c.getRenderOrder();
 		
+		// If the width or height is greater than the width or height of the
+		// source image, set the rendering width/height to source width/height.
 		if (width > c.getWidth())
 		{
 			width = c.getWidth();
@@ -69,7 +71,6 @@ public class ClippableImageRenderer
 		);
 		
 		Graphics2D g = img.createGraphics();
-//		g.setClip(x, y, width, height);
 		
 		Composite originalComposite = g.getComposite();
 		

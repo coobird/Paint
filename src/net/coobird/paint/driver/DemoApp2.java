@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -33,6 +34,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import net.coobird.paint.BlendingMode;
 import net.coobird.paint.application.BrushListCellRenderer;
 import net.coobird.paint.application.ImageLayerListCellRenderer;
 import net.coobird.paint.brush.Brush;
@@ -239,8 +241,10 @@ public class DemoApp2
 			
 			public void actionPerformed(ActionEvent e) {};
 		}
-		final JPopupMenu menu = new JPopupMenu();
-		menu.add(new ActionMenuItem("Change Name...") {
+		
+		final JPopupMenu popupMenu = new JPopupMenu();
+		
+		popupMenu.add(new ActionMenuItem("Change Name...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				String s = JOptionPane.showInputDialog(f, "Name:");
@@ -248,7 +252,7 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
-		menu.add(new ActionMenuItem("Change Alpha...") {
+		popupMenu.add(new ActionMenuItem("Change Alpha...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				String s = JOptionPane.showInputDialog(f, "Alpha:");
@@ -256,7 +260,7 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
-		menu.add(new ActionMenuItem("Change Location...") {
+		popupMenu.add(new ActionMenuItem("Change Location...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				String s = JOptionPane.showInputDialog(f, "Location (x,y):");
@@ -268,8 +272,19 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
-		menu.addSeparator();
-		menu.add(new ActionMenuItem("Delete Layer") {
+		popupMenu.add(new ActionMenuItem("Change Mode...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
+				JComboBox cb = new JComboBox(BlendingMode.values());
+				cb.setSelectedItem(il.getMode());
+				JOptionPane.showMessageDialog(f, cb);
+				il.setMode((BlendingMode)cb.getSelectedItem());
+				p.repaint();
+			}
+		});
+		popupMenu.addSeparator();
+		popupMenu.add(new ActionMenuItem("Delete Layer") {
 			public void actionPerformed(ActionEvent e)
 			{
 				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
@@ -290,14 +305,14 @@ public class DemoApp2
 			{
 				if (e.isPopupTrigger())
 				{
-					menu.show(e.getComponent(), e.getX(), e.getY());
+					popupMenu.show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
 			public void mouseReleased(MouseEvent e)
 			{
 				if (e.isPopupTrigger())
 				{
-					menu.show(e.getComponent(), e.getX(), e.getY());
+					popupMenu.show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
 		});
@@ -595,6 +610,7 @@ public class DemoApp2
 						d.dispose();
 						p.repaint();
 						ilList.repaint();
+						filter = null;
 					}
 				}).start();
 			}
