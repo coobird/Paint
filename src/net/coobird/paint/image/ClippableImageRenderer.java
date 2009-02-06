@@ -53,6 +53,15 @@ public class ClippableImageRenderer
 		
 		List<ImageLayer> layerList = c.getRenderOrder();
 		
+		if (width > c.getWidth())
+		{
+			width = c.getWidth();
+		}
+		if (height > c.getHeight())
+		{
+			height = c.getHeight();
+		}
+		
 		BufferedImage img = new BufferedImage(
 				width,
 				height,

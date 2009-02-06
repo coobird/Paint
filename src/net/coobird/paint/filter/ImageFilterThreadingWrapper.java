@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class ThreadedWrapperFilter extends ImageFilter
+public class ImageFilterThreadingWrapper extends ImageFilter
 {
 	/**
 	 * Number of pixels to overlap between the rendered quadrants.
@@ -20,14 +20,14 @@ public class ThreadedWrapperFilter extends ImageFilter
 	 * Cannot instantiate an {@code ThreadedWrapperFilter} without any
 	 * arguments.
 	 */
-	private ThreadedWrapperFilter() {}
+	private ImageFilterThreadingWrapper() {}
 	
 	/**
 	 * Instantiates a {@code ThreadedWrapperFilter} object with the specified
 	 * {@link ImageFilter}.
 	 * @param filter		The {@code ImageFilter} to wrap.
 	 */
-	public ThreadedWrapperFilter(ImageFilter filter)
+	public ImageFilterThreadingWrapper(ImageFilter filter)
 	{
 		this.filter = filter;
 	}

@@ -42,13 +42,13 @@ import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.RegularEllipticalEraser;
 import net.coobird.paint.brush.SolidCircularBrush;
 import net.coobird.paint.filter.ImageFilter;
+import net.coobird.paint.filter.ImageFilterThreadingWrapper;
 import net.coobird.paint.filter.MatrixImageFilter;
 import net.coobird.paint.filter.RepeatableMatrixFilter;
-import net.coobird.paint.filter.ThreadedWrapperFilter;
 import net.coobird.paint.image.Canvas;
+import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.image.ImageLayer;
-import net.coobird.paint.image.ImageRenderer;
-import net.coobird.paint.image.ImageRendererFactory;
+import net.coobird.paint.image.PartialImageRenderer;
 import net.coobird.paint.io.DefaultImageInput;
 import net.coobird.paint.io.DefaultImageOutput;
 import net.coobird.paint.io.FormatManager;
@@ -119,21 +119,21 @@ public class DemoApp2
 		f.getContentPane().add(listPanels, BorderLayout.EAST);
 		
 
-		final ImageRenderer renderer = ImageRendererFactory.getInstance();
-//		final PartialImageRenderer renderer = new ClippableImageRenderer();
+//		final ImageRenderer renderer = ImageRendererFactory.getInstance();
+		final PartialImageRenderer renderer = new ClippableImageRenderer();
 //		final ProgressiveImageRenderer renderer = new ProgressiveImageRenderer();
 		
 		final JPanel p = new JPanel() {
 			public void paintComponent(Graphics g)
 			{
 				super.paintComponent(g);
-				g.drawImage(renderer.render(ch.getCanvas()), 0, 0, null);
-//				g.drawImage(
-//						renderer.render(ch.getCanvas(), 0, 0, 200, 200),
-//						0,
-//						0,
-//						null
-//				);
+//				g.drawImage(renderer.render(ch.getCanvas()), 0, 0, null);
+				g.drawImage(
+						renderer.render(ch.getCanvas(), 0, 0, this.getWidth(), this.getHeight()),
+						0,
+						0,
+						null
+				);
 			}
 		};
 		
@@ -268,6 +268,22 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
+		menu.addSeparator();
+		menu.add(new ActionMenuItem("Delete Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
+				ch.getCanvas().removeLayer(il);
+
+				ilListModel.removeAllElements();
+				for (ImageLayer layer : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(layer);
+				}
+				
+				p.repaint();
+			}
+		});
 		
 		ilList.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e)
@@ -314,8 +330,6 @@ public class DemoApp2
 				}
 				
 				Canvas c = new Canvas(width, height);
-				c.addLayer(new ImageLayer(width, height));
-				c.addLayer(new ImageLayer(width, height));
 				c.addLayer(new ImageLayer(width, height));
 				ch.setCanvas(c);
 				
@@ -536,7 +550,7 @@ public class DemoApp2
 					{
 						long st = System.currentTimeMillis();
 						
-						ImageFilter filter = new ThreadedWrapperFilter( 
+						ImageFilter filter = new ImageFilterThreadingWrapper( 
 								new RepeatableMatrixFilter(
 									3,
 									3,
