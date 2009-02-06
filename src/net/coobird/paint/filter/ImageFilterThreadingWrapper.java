@@ -8,6 +8,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+/*
+ * FIXME Threads are not being freed when done.
+ * Fix this or else programs that create a new instance of this class cannot
+ * exit. Find a way to release the threads.
+ */
+
+/*
+ * Note: with CachedThreadPool, the cached threads will stay alive for 60 s,
+ * therefore, prevents GC, therefore prevents immediate termination of calling
+ * application. Ouch.
+ */
+
 /**
  * <p>
  * The {@code ImageFilterThreadingWrapper} class is a wrapper class to
@@ -31,7 +43,6 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	 * Number of pixels to overlap between the rendered quadrants.
 	 */
 	private static final int OVERLAP = 5;
-	private static ExecutorService es = Executors.newCachedThreadPool();
 
 	/**
 	 * The wrapped {@code ImageFilter}.
@@ -56,6 +67,12 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	public ImageFilterThreadingWrapper(ImageFilter filter)
 	{
 		this.filter = filter;
+	}
+	
+	@Override
+	public BufferedImage processImage(BufferedImage img)
+	{
+		ExecutorService es = null;
 		
 		/*
 		 * If only one processor is available, multi-threaded processing will
@@ -65,12 +82,11 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 		{
 			bypass = true;
 		}
-	}
-	
-	
-	@Override
-	public BufferedImage processImage(BufferedImage img)
-	{
+		else
+		{
+			es = Executors.newFixedThreadPool(4);
+		}
+
 		int width = img.getWidth();
 		int height = img.getHeight();
 		
@@ -203,6 +219,8 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 		finally
 		{
 			g.dispose();
+			es.shutdown();
+			es = null;
 		}
 		
 		return result;

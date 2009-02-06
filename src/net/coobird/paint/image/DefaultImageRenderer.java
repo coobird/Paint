@@ -19,6 +19,11 @@ public final class DefaultImageRenderer implements ImageRenderer
 	 * think of a way to clip the area where the image is to be rendered
 	 */
 	
+	/*
+	 * FIXME don't draw background on export to image
+	 * investigate a way to diable background drawing on save to image
+	 */
+	
 	/**
 	 * Instantiates a {@code DefaultImageRenderer}.
 	 */

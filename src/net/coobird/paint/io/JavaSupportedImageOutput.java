@@ -21,6 +21,10 @@ public class JavaSupportedImageOutput extends ImageOutput
 	@Override
 	public void write(Canvas c, File f)
 	{
+		/*
+		 * Note: saving as JPEG causes image to look over saturated.
+		 * TODO investigate cause and find mitigation measures.
+		 */
 		try
 		{
 			ImageIO.write(
