@@ -25,7 +25,7 @@ public class JavaSupportedImageOutput extends ImageOutput
 		{
 			ImageIO.write(
 					ImageRendererFactory.getInstance().render(c),
-					"png",
+					getExtension(f),
 					f
 			);
 		}
