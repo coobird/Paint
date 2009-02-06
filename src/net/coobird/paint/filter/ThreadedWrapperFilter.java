@@ -10,10 +10,23 @@ import java.util.concurrent.Future;
 
 public class ThreadedWrapperFilter extends ImageFilter
 {
+	/**
+	 * Number of pixels to overlap between the rendered quadrants.
+	 */
+	private static final int OVERLAP = 5;
 	private ImageFilter filter;
 	
+	/**
+	 * Cannot instantiate an {@code ThreadedWrapperFilter} without any
+	 * arguments.
+	 */
 	private ThreadedWrapperFilter() {}
 	
+	/**
+	 * Instantiates a {@code ThreadedWrapperFilter} object with the specified
+	 * {@link ImageFilter}.
+	 * @param filter		The {@code ImageFilter} to wrap.
+	 */
 	public ThreadedWrapperFilter(ImageFilter filter)
 	{
 		this.filter = filter;
@@ -22,8 +35,18 @@ public class ThreadedWrapperFilter extends ImageFilter
 	@Override
 	public BufferedImage processImage(BufferedImage img)
 	{
-		int halfWidth = img.getWidth() / 2;
-		int halfHeight = img.getHeight() / 2;
+		int width = img.getWidth();
+		int height = img.getHeight();
+		
+		// If the input size is less than 100 in any dimension, bypass the
+		// multithreaded rendering.
+		if (width < 100 || height < 100)
+		{
+			return filter.processImage(img);
+		}
+		
+		final int halfWidth = img.getWidth() / 2;
+		final int halfHeight = img.getHeight() / 2;
 		
 		final BufferedImage i1 = img.getSubimage(
 				0,
@@ -59,30 +82,31 @@ public class ThreadedWrapperFilter extends ImageFilter
 				img.getType()
 		);
 		
-		ExecutorService es = Executors.newCachedThreadPool();
+		//ExecutorService es = Executors.newCachedThreadPool();
+		ExecutorService es = Executors.newFixedThreadPool(4);
 		
 		Future<BufferedImage> f1 = es.submit(new Callable<BufferedImage>() {
 			public BufferedImage call()
 			{
-				return filter.processImage(i1);
+				return filter.processImage(i1).getSubimage(0, 0, halfWidth, halfHeight);
 			}
 		});
 		Future<BufferedImage> f2 = es.submit(new Callable<BufferedImage>() {
 			public BufferedImage call()
 			{
-				return filter.processImage(i2);
+				return filter.processImage(i2).getSubimage(OVERLAP, 0, halfWidth, halfHeight);
 			}
 		});
 		Future<BufferedImage> f3 = es.submit(new Callable<BufferedImage>() {
 			public BufferedImage call()
 			{
-				return filter.processImage(i3);
+				return filter.processImage(i3).getSubimage(0, 5, halfWidth, halfHeight);
 			}
 		});
 		Future<BufferedImage> f4 = es.submit(new Callable<BufferedImage>() {
 			public BufferedImage call()
 			{
-				return filter.processImage(i4);
+				return filter.processImage(i4).getSubimage(5, 5, halfWidth, halfHeight);
 			}
 		});
 		
@@ -91,9 +115,9 @@ public class ThreadedWrapperFilter extends ImageFilter
 		try
 		{
 			g.drawImage(f1.get(), 0, 0, null);
-			g.drawImage(f2.get(), halfHeight, 0, null);
+			g.drawImage(f2.get(), halfWidth, 0, null);
 			g.drawImage(f3.get(), 0, halfHeight, null);
-			g.drawImage(f4.get(), halfHeight, halfHeight, null);
+			g.drawImage(f4.get(), halfWidth, halfHeight, null);
 		}
 		catch (InterruptedException e)
 		{
