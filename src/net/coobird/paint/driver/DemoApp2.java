@@ -37,7 +37,10 @@ import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.RegularEllipticalEraser;
 import net.coobird.paint.brush.SolidCircularBrush;
-import net.coobird.paint.filter.TestImageFilter;
+import net.coobird.paint.filter.ImageFilter;
+import net.coobird.paint.filter.MatrixImageFilter;
+import net.coobird.paint.filter.RepeatableMatrixFilter;
+import net.coobird.paint.filter.ThreadedWrapperFilter;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRenderer;
@@ -404,17 +407,124 @@ public class DemoApp2
 		
 		layerMenu.addSeparator();
 		
-		layerMenu.add(new ActionMenuItem("Test Filter") {
+		layerMenu.add(new ActionMenuItem("Blur") {
 			public void actionPerformed(ActionEvent e)
 			{
-				TestImageFilter filter = new TestImageFilter();
+				ImageFilter filter = new MatrixImageFilter(3, 3, new float[]{
+						0.0f,	0.1f,	 0.0f,
+						0.1f,	0.6f,	 0.1f,
+						0.0f,	0.1f,	 0.0f
+				});
 				
 				for (ImageLayer il : ch.getCanvas().getLayers())
 				{
 					il.setImage(filter.processImage(il.getImage()));
 				}
 				p.repaint();
+			}
+		});
+
+		layerMenu.add(new ActionMenuItem("Blur More") {
+			public void actionPerformed(ActionEvent e)
+			{
+				long st = System.currentTimeMillis();
 				
+				ImageFilter filter = new RepeatableMatrixFilter(
+						3, 3, 10, new float[]{
+						0.0f,	0.1f,	 0.0f,
+						0.1f,	0.6f,	 0.1f,
+						0.0f,	0.1f,	 0.0f
+				});
+				
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					il.setImage(filter.processImage(il.getImage()));
+				}
+				
+				long tp = System.currentTimeMillis() - st;
+				System.out.println("complete in: " + tp);
+				
+				p.repaint();
+			}
+		});
+
+		layerMenu.add(new ActionMenuItem("Blur More Concurrent") {
+			public void actionPerformed(ActionEvent e)
+			{
+				long st = System.currentTimeMillis();
+				
+				ImageFilter filter = new ThreadedWrapperFilter( 
+					
+					new RepeatableMatrixFilter(
+						3, 3, 10, new float[]{
+								0.0f,	0.1f,	 0.0f,
+								0.1f,	0.6f,	 0.1f,
+								0.0f,	0.1f,	 0.0f
+						})
+					);
+				
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					il.setImage(filter.processImage(il.getImage()));
+				}
+				
+				long tp = System.currentTimeMillis() - st;
+				System.out.println("complete in: " + tp);
+				
+				p.repaint();
+			}
+		});
+
+		layerMenu.add(new ActionMenuItem("No Effect") {
+			public void actionPerformed(ActionEvent e)
+			{
+				ImageFilter filter = new MatrixImageFilter(3, 3, new float[]{
+						0.0f,	0.0f,	 0.0f,
+						0.0f,	1.0f,	 0.0f,
+						0.0f,	0.0f,	 0.0f
+				});
+				
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					il.setImage(filter.processImage(il.getImage()));
+				}
+				p.repaint();
+			}
+		});
+
+		layerMenu.add(new ActionMenuItem("Saturate") {
+			public void actionPerformed(ActionEvent e)
+			{
+				ImageFilter filter = new MatrixImageFilter(3, 3, new float[]{
+						0.0f,	0.0f,	 0.0f,
+						0.0f,	2.0f,	 0.0f,
+						0.0f,	0.0f,	 0.0f
+				});
+				
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					il.setImage(filter.processImage(il.getImage()));
+				}
+				p.repaint();
+			}
+		});
+
+		layerMenu.add(new ActionMenuItem("Blur + Lighten") {
+			public void actionPerformed(ActionEvent e)
+			{
+				ImageFilter filter = new MatrixImageFilter(5, 5, new float[]{
+						0.0f,	0.0f,	 0.25f,	0.0f,	0.0f,
+						0.0f,	0.0f,	 0.0f,	0.0f,	0.0f,
+						0.25f,	0.0f,	 1.0f,	0.0f,	0.25f,
+						0.0f,	0.0f,	 0.0f,	0.0f,	0.0f,
+						0.0f,	0.0f,	 0.25f,	0.0f,	0.0f
+				});
+				
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					il.setImage(filter.processImage(il.getImage()));
+				}
+				p.repaint();
 			}
 		});
 		
