@@ -9,7 +9,7 @@ import java.util.List;
  * @author coobird
  *
  */
-public class FormatManager
+public final class FormatManager
 {
 	/**
 	 * Manage the supported formats

@@ -1,6 +1,9 @@
 package net.coobird.paint.io;
 
 import java.io.File;
+import java.util.List;
+
+import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.image.Canvas;
 
@@ -13,14 +16,27 @@ import net.coobird.paint.image.Canvas;
  */
 public abstract class ImageOutput
 {
+	protected static List<FileFilter> filterList;
+	
 	/**
 	 * Writes the contents of the {@link Canvas} object to file specified in
-	 * the {@link File} object in  the format defined by the [@code ImageOutput}
+	 * the {@link File} object in  the format defined by the {@code ImageOutput}
 	 * filter. 
 	 * @param c				The {@code Canvas} object to write.
-	 * @param f				The [@code File} object to write to.
+	 * @param f				The {@code File} object to write to.
 	 */
 	public abstract void write(Canvas c, File f);
+
+	/**
+	 * Writes the contents of the {@link Canvas} object to file specified in
+	 * the {@link File} object in  the format defined by the {@code ImageOutput}
+	 * filter. 
+	 * @param c				The {@code Canvas} object to write.
+	 * @param f				The {@code File} object to write to.
+	 * @param format		A {@code String} holding the name of the format to
+	 * 						write the image in.
+	 */
+	public abstract void write(Canvas c, File f, String format);
 	
 	/**
 	 * 
@@ -28,4 +44,33 @@ public abstract class ImageOutput
 	 * @return
 	 */
 	public abstract boolean supportsFile(File f);
+	
+	/**
+	 * Returns a {@link List} of {@link FileFilter}s supported by this
+	 * {@code ImageOutput}.
+	 * @return				A {@code List} of {@code FileFilter}s supported
+	 * 						by this {@code ImageOutput}.
+	 */
+	public List<FileFilter> getFileFilters()
+	{
+		return filterList;
+	}
+	
+	/**
+	 * Gets the file extension of the given {@link File} object.
+	 * @param f				The {@code File} object to determine the extension
+	 * 						for.
+	 * @return				The file extension.
+	 */
+	protected static String getExtension(File f)
+	{
+		int lastIndex = f.getName().lastIndexOf('.');
+		
+		if (lastIndex == -1)
+		{
+			return "";
+		}
+		
+		return f.getName().substring(lastIndex + 1);
+	}
 }

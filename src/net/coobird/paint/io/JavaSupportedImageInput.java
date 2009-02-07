@@ -3,8 +3,10 @@ package net.coobird.paint.io;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
@@ -16,6 +18,66 @@ import net.coobird.paint.image.ImageLayer;
  */
 public final class JavaSupportedImageInput extends ImageInput
 {
+	static
+	{
+		filterList = new ArrayList<FileFilter>();
+		
+		if (ImageIO.getImageReadersByFormatName("png") != null)
+		{
+			filterList.add(new FileFilter() {
+				@Override
+				public boolean accept(File f)
+				{
+					if (
+							f.isDirectory() ||
+							getExtension(f).toLowerCase().equals("png")
+					)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+	
+				@Override
+				public String getDescription()
+				{
+					return "Portable Network Graphics (png)";
+				}
+			});
+		}
+		
+		if (ImageIO.getImageReadersByFormatName("jpeg") != null)
+		{
+			filterList.add(new FileFilter() {
+				@Override
+				public boolean accept(File f)
+				{
+					if (
+							f.isDirectory() ||
+							getExtension(f).toLowerCase().equals("jpg") ||
+							getExtension(f).toLowerCase().equals("jpeg")
+					)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+	
+				@Override
+				public String getDescription()
+				{
+					return "JPEG Image (jpeg, jpg)";
+				}
+			});
+		}	
+	}
+	
 	/**
 	 * Reads a file form a Java supported format.
 	 * @param f				The {@code File} object to read from.
@@ -65,23 +127,5 @@ public final class JavaSupportedImageInput extends ImageInput
 		}
 		
 		return false;
-	}
-	
-	/**
-	 * Gets the file extension of the given {@link File} object.
-	 * @param f				The {@code File} object to determine the extension
-	 * 						for.
-	 * @return				The file extension.
-	 */
-	private String getExtension(File f)
-	{
-		int lastIndex = f.getName().lastIndexOf('.');
-		
-		if (lastIndex == -1)
-		{
-			return "";
-		}
-		
-		return f.getName().substring(lastIndex + 1);
 	}
 }

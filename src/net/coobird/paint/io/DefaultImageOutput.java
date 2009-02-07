@@ -65,6 +65,17 @@ public final class DefaultImageOutput extends ImageOutput
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	public void write(Canvas c, File f, String format)
+	{
+		/*
+		 * Ignore format string.
+		 */
+		write(c, f);
+	}
 
 	/* (non-Javadoc)
 	 * @see net.coobird.paint.io.ImageOutput#supportsFile(java.io.File)

@@ -1,6 +1,9 @@
 package net.coobird.paint.io;
 
 import java.io.File;
+import java.util.List;
+
+import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.image.Canvas;
 
@@ -13,6 +16,8 @@ import net.coobird.paint.image.Canvas;
  */
 public abstract class ImageInput
 {
+	protected static List<FileFilter> filterList;
+	
 	/**
 	 * 
 	 * @param f
@@ -26,4 +31,32 @@ public abstract class ImageInput
 	 * @return
 	 */
 	public abstract boolean supportsFile(File f);
+	
+	/**
+	 * Returns the file filter associated with this {@code ImageInput}.
+	 * @return
+	 */
+	public List<FileFilter> getFileFilters()
+	{
+		return filterList;
+	}
+	
+	/**
+	 * Gets the file extension of the given {@link File} object.
+	 * @param f				The {@code File} object to determine the extension
+	 * 						for.
+	 * @return				The file extension.
+	 */
+
+	protected static String getExtension(File f)
+	{
+		int lastIndex = f.getName().lastIndexOf('.');
+		
+		if (lastIndex == -1)
+		{
+			return "";
+		}
+		
+		return f.getName().substring(lastIndex + 1);
+	}
 }
