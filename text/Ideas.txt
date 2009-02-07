@@ -49,6 +49,8 @@ Filters
 Layers
 ------
 -> Allow multiple move of layers.
+-> Allow merge of layers
+-> Merge visible, Merge down/up
 
 Drawing
 -------
