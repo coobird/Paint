@@ -16,6 +16,16 @@ import net.coobird.paint.image.ImageLayer;
 
 public final class DefaultImageInput extends ImageInput
 {
+	public DefaultImageInput()
+	{
+		this("DefaultImageInput Filter");
+	}
+	
+	public DefaultImageInput(String name)
+	{
+		super(name);
+	}
+	
 	/**
 	 * 
 	 * @param f		File to read.

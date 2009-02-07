@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileFilter;
 
+import net.coobird.paint.application.ApplicationUtils;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 
@@ -78,6 +79,16 @@ public final class JavaSupportedImageInput extends ImageInput
 		}	
 	}
 	
+	public JavaSupportedImageInput()
+	{
+		this("JavaSupportedImageInput Filter");
+	}
+	
+	public JavaSupportedImageInput(String name)
+	{
+		super(name);
+	}
+	
 	/**
 	 * Reads a file form a Java supported format.
 	 * @param f				The {@code File} object to read from.
@@ -99,7 +110,7 @@ public final class JavaSupportedImageInput extends ImageInput
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			ApplicationUtils.showExceptionMessage(e);
 		}
 		
 		return c;

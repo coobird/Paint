@@ -108,6 +108,16 @@ public final class JavaSupportedImageOutput extends ImageOutput
 		}
 	}
 	
+	public JavaSupportedImageOutput()
+	{
+		this("JavaSupportedImageOutput Filter");
+	}
+	
+	public JavaSupportedImageOutput(String name)
+	{
+		super(name);
+	}
+	
 	@Override
 	public void write(Canvas c, File f)
 	{

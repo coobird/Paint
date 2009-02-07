@@ -17,6 +17,21 @@ import net.coobird.paint.image.Canvas;
 public abstract class ImageInput
 {
 	protected static List<FileFilter> filterList;
+	private String name;
+
+	private ImageInput() {}
+	
+	protected ImageInput(String name)
+	{
+		if (name != null)
+		{
+			this.name = name;
+		}
+		else
+		{
+			name = "Unidentified ImageInput Filter";
+		}
+	}
 	
 	/**
 	 * 

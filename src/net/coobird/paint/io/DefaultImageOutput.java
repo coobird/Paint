@@ -19,6 +19,16 @@ import net.coobird.paint.image.ImageLayer;
  */
 public final class DefaultImageOutput extends ImageOutput
 {
+	public DefaultImageOutput()
+	{
+		this("DefaultImageOutput Filter");
+	}
+	
+	public DefaultImageOutput(String name)
+	{
+		super(name);
+	}
+	
 	/**
 	 * TODO Description.
 	 * @param c		Canvas

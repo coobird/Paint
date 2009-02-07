@@ -17,6 +17,22 @@ import net.coobird.paint.image.Canvas;
 public abstract class ImageOutput
 {
 	protected static List<FileFilter> filterList;
+	private String name;
+	
+	private ImageOutput() {}
+	
+	protected ImageOutput(String name)
+	{
+		if (name != null)
+		{
+			this.name = name;
+		}
+		else
+		{
+			name = "Unidentified ImageOutput Filter";
+		}
+	}
+
 	
 	/**
 	 * Writes the contents of the {@link Canvas} object to file specified in
