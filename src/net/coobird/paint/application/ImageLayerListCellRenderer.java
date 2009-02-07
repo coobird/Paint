@@ -20,6 +20,11 @@ public class ImageLayerListCellRenderer
 	extends JLabel
 	implements ListCellRenderer
 {
+	/**
+	 * Version string used for serialization.
+	 */
+	private static final long serialVersionUID = 8390058918154536766L;
+
 	public ImageLayerListCellRenderer()
 	{
 		super();
