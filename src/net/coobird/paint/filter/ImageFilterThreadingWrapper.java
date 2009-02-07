@@ -60,7 +60,10 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	 */
 	public ImageFilterThreadingWrapper(ImageFilter filter)
 	{
-		this("ImageFilterThreadingWrapper wrapping" + filter.getName(), filter);
+		this(
+				"ImageFilterThreadingWrapper wrapping " + filter.getName(),
+				filter
+		);
 	}
 	
 	/**
@@ -75,6 +78,11 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 		this.filter = filter;
 	}
 
+	/**
+	 * Process a image and return the filtered image.
+	 * @param img			The image to process.
+	 * @return				The filtered image.
+	 */
 	@Override
 	public BufferedImage processImage(BufferedImage img)
 	{
