@@ -20,11 +20,6 @@ public final class ClippableImageRenderer
 	implements ImageRenderer, PartialImageRenderer
 {
 	/**
-	 * Indicates whether or not to draw a checkered background.
-	 */
-	private boolean drawBackground = true;
-	
-	/**
 	 * Render the canvas.
 	 * @param c				The canvas to render.
 	 */
