@@ -22,7 +22,7 @@ public final class JavaSupportedImageInput extends ImageInput
 	{
 		filterList = new ArrayList<FileFilter>();
 		
-		if (ImageIO.getImageReadersByFormatName("png") != null)
+		if (ImageIO.getImageReadersByFormatName("png").hasNext())
 		{
 			filterList.add(new FileFilter() {
 				@Override
@@ -49,7 +49,7 @@ public final class JavaSupportedImageInput extends ImageInput
 			});
 		}
 		
-		if (ImageIO.getImageReadersByFormatName("jpeg") != null)
+		if (ImageIO.getImageReadersByFormatName("jpeg").hasNext())
 		{
 			filterList.add(new FileFilter() {
 				@Override

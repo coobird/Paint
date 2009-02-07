@@ -1,5 +1,8 @@
 package net.coobird.paint.io;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,6 +10,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileFilter;
 
+import net.coobird.paint.application.ApplicationUtils;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageRendererFactory;
 
@@ -21,7 +25,7 @@ public final class JavaSupportedImageOutput extends ImageOutput
 	{
 		filterList = new ArrayList<FileFilter>();
 		
-		if (ImageIO.getImageWritersByFormatName("png") != null)
+		if (ImageIO.getImageWritersByFormatName("png").hasNext())
 		{
 			filterList.add(new FileFilter() {
 				@Override
@@ -48,7 +52,7 @@ public final class JavaSupportedImageOutput extends ImageOutput
 			});
 		}
 		
-		if (ImageIO.getImageWritersByFormatName("jpeg") != null)
+		if (ImageIO.getImageWritersByFormatName("jpeg").hasNext())
 		{
 			filterList.add(new FileFilter() {
 				@Override
@@ -76,7 +80,7 @@ public final class JavaSupportedImageOutput extends ImageOutput
 			});
 		}
 		
-		if (ImageIO.getImageWritersByFormatName("bmp") != null)
+		if (ImageIO.getImageWritersByFormatName("bmp").hasNext())
 		{
 			filterList.add(new FileFilter() {
 				@Override
@@ -122,15 +126,37 @@ public final class JavaSupportedImageOutput extends ImageOutput
 		 */
 		try
 		{
-			ImageIO.write(
-					ImageRendererFactory.getInstance().render(c),
-					format,
-					f
+			BufferedImage img = ImageRendererFactory.getInstance().render(
+					c,
+					false
 			);
+			
+			if (
+					format.equals("jpeg") ||
+					format.equals("jpg") ||
+					format.equals("bmp")
+			)
+			{
+				BufferedImage reducedImg = new BufferedImage(
+						img.getWidth(),
+						img.getHeight(),
+						BufferedImage.TYPE_INT_RGB
+				);
+				
+				Graphics2D g = reducedImg.createGraphics();
+				g.setColor(Color.white);
+				g.fillRect(0, 0, img.getWidth(), img.getHeight());
+				g.drawImage(img, 0, 0, null);
+				g.dispose();
+				
+				img = reducedImg;
+			}
+			
+			ImageIO.write(img, format, f);
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			ApplicationUtils.showExceptionMessage(e);
 		}
 	}
 	
