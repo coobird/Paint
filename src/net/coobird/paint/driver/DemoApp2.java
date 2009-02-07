@@ -89,6 +89,8 @@ public class DemoApp2
 		brushListModel.addElement(new RegularEllipticalEraser(null, 40, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, Math.PI * 0.25, 0.5, 0.5f));
+		brushListModel.addElement(new RegularCircularBrush("Thin pen", 10, 5, Color.black));
+		brushListModel.addElement(new RegularEllipticalEraser("Thin eraser", 10, 0, 1, 0.8f));
 		final JScrollPane brushListSp = new JScrollPane(brushList);
 		listPanels.add(brushListSp);
 		

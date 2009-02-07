@@ -69,6 +69,16 @@ magnification.
 
 -> Magnification via Graphics2D.scale
 
+-> Stroke Rendering using Shape
+---> PathIterator and using that to drawImage of brush onto the stroke defined
+as a Shape.
+-> BrushController will take in drawBrush events and append line segments
+(optionally curved) into a Shape.
+-> Shape segments can be fed to Undo system.
+-> See "stroke-render.png" -- render the brush onto shape (coordinates returned
+from iterating over using PathIterator) with the brush rotated to be
+perpendicular to the stroke shape.
+
 
 File format
 -----------
