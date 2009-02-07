@@ -33,8 +33,10 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.BlendingMode;
+import net.coobird.paint.application.ApplicationUtils;
 import net.coobird.paint.application.BrushListCellRenderer;
 import net.coobird.paint.application.ImageLayerListCellRenderer;
 import net.coobird.paint.brush.Brush;
@@ -53,9 +55,10 @@ import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.PartialImageRenderer;
 import net.coobird.paint.io.DefaultImageInput;
 import net.coobird.paint.io.DefaultImageOutput;
-import net.coobird.paint.io.FormatManager;
+import net.coobird.paint.io.ImageInput;
 import net.coobird.paint.io.ImageOutput;
 import net.coobird.paint.io.JavaSupportedImageInput;
+import net.coobird.paint.io.JavaSupportedImageOutput;
 
 public class DemoApp2
 {
@@ -64,6 +67,8 @@ public class DemoApp2
 		final JFrame f = new JFrame("Paint Dot Jar Demonstration 2");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.getContentPane().setLayout(new BorderLayout());
+		
+		ApplicationUtils.setMainComponent(f);
 		
 		JPanel listPanels = new JPanel(new GridLayout(0, 1));
 		
@@ -89,8 +94,6 @@ public class DemoApp2
 		brushListModel.addElement(new RegularEllipticalEraser(null, 40, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, Math.PI * 0.25, 0.5, 0.5f));
-		brushListModel.addElement(new RegularCircularBrush("Thin pen", 10, 5, Color.black));
-		brushListModel.addElement(new RegularEllipticalEraser("Thin eraser", 10, 0, 1, 0.8f));
 		final JScrollPane brushListSp = new JScrollPane(brushList);
 		listPanels.add(brushListSp);
 		
@@ -115,8 +118,6 @@ public class DemoApp2
 			ilListModel.addElement(il);
 		}
 		
-
-		
 		final JScrollPane ilListSp = new JScrollPane(ilList);
 		listPanels.add(ilListSp);
 		
@@ -133,7 +134,13 @@ public class DemoApp2
 				super.paintComponent(g);
 //				g.drawImage(renderer.render(ch.getCanvas()), 0, 0, null);
 				g.drawImage(
-						renderer.render(ch.getCanvas(), 0, 0, this.getWidth(), this.getHeight()),
+						renderer.render(
+								ch.getCanvas(),
+								0,
+								0,
+								this.getWidth(),
+								this.getHeight()
+						),
 						0,
 						0,
 						null
@@ -389,7 +396,14 @@ public class DemoApp2
 		fileMenu.add(new ActionMenuItem("Open Supported Image...") {
 			public void actionPerformed(ActionEvent e)
 			{
+				ImageInput imageInput = new JavaSupportedImageInput();
+				
 				JFileChooser fc = new JFileChooser();
+				for (FileFilter filter : imageInput.getFileFilters())
+				{
+					fc.addChoosableFileFilter(filter);
+				}
+				
 				int option = fc.showOpenDialog(f);
 				
 				if (option != JFileChooser.APPROVE_OPTION)
@@ -397,7 +411,7 @@ public class DemoApp2
 				
 				File f = fc.getSelectedFile();
 				
-				ch.setCanvas(new JavaSupportedImageInput().read(f));
+				ch.setCanvas(imageInput.read(f));
 				ilListModel.removeAllElements();
 				for (ImageLayer il : ch.getCanvas().getLayers())
 				{
@@ -410,7 +424,14 @@ public class DemoApp2
 		fileMenu.add(new ActionMenuItem("Save Supported Image...") {
 			public void actionPerformed(ActionEvent e)
 			{
+				ImageOutput imageOutput = new JavaSupportedImageOutput();
+				
 				JFileChooser fc = new JFileChooser();
+				for (FileFilter filter : imageOutput.getFileFilters())
+				{
+					fc.addChoosableFileFilter(filter);
+				}
+				
 				int option = fc.showSaveDialog(f);
 				
 				if (option != JFileChooser.APPROVE_OPTION)
@@ -418,7 +439,7 @@ public class DemoApp2
 				
 				File outFile = fc.getSelectedFile();
 				
-				ImageOutput imageOutput = FormatManager.getImageOutput(outFile);
+				//ImageOutput imageOutput = FormatManager.getImageOutput(outFile);
 				
 				if (imageOutput == null)
 				{
@@ -504,6 +525,7 @@ public class DemoApp2
 						long st = System.currentTimeMillis();
 						
 						ImageFilter filter = new RepeatableMatrixFilter(
+								"Blur More",
 								3, 3, 10, new float[]{
 								0.0f,	0.1f,	 0.0f,
 								0.1f,	0.6f,	 0.1f,
@@ -527,11 +549,11 @@ public class DemoApp2
 							}
 							catch (InterruptedException e)
 							{
-								e.printStackTrace();
+								ApplicationUtils.showExceptionMessage(e);
 							}
 							catch (InvocationTargetException e)
 							{
-								e.printStackTrace();
+								ApplicationUtils.showExceptionMessage(e);
 							}
 						}
 						
@@ -567,7 +589,7 @@ public class DemoApp2
 					{
 						long st = System.currentTimeMillis();
 						
-						ImageFilter filter = new ImageFilterThreadingWrapper( 
+						ImageFilter filter = new ImageFilterThreadingWrapper(
 								new RepeatableMatrixFilter(
 									3,
 									3,
@@ -621,7 +643,9 @@ public class DemoApp2
 		layerMenu.add(new ActionMenuItem("No Effect") {
 			public void actionPerformed(ActionEvent e)
 			{
-				ImageFilter filter = new MatrixImageFilter(3, 3, new float[]{
+				ImageFilter filter = new MatrixImageFilter(
+						"No Effect",
+						3, 3, new float[]{
 						0.0f,	0.0f,	 0.0f,
 						0.0f,	1.0f,	 0.0f,
 						0.0f,	0.0f,	 0.0f
@@ -668,6 +692,30 @@ public class DemoApp2
 					il.setImage(filter.processImage(il.getImage()));
 				}
 				p.repaint();
+			}
+		});
+		
+		layerMenu.addSeparator();
+		
+		layerMenu.add(new ActionMenuItem("Throw Exception") {
+			public void actionPerformed(ActionEvent e)
+			{
+				try
+				{
+					class CatchMeIfYouCanException extends Exception
+					{
+						private CatchMeIfYouCanException(String s)
+						{
+							super(s);
+						}
+					}
+					
+					throw new CatchMeIfYouCanException("Ha! Catch me if you can!");
+				}
+				catch (Exception ex)
+				{
+					ApplicationUtils.showExceptionMessage(ex);
+				}
 			}
 		});
 		
