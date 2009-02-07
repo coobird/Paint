@@ -9,14 +9,44 @@ public class RepeatableMatrixFilter extends MatrixImageFilter
 {
 	protected int repeat;
 	
-	public RepeatableMatrixFilter(int width, int height, float[] matrix)
+	public RepeatableMatrixFilter(
+			int width,
+			int height,
+			float[] matrix
+	)
 	{
-		this(width, height, 1, matrix);
+		this("RepeatableMatrixFilter", width, height, 1, matrix);
+	}
+
+	public RepeatableMatrixFilter(
+			String name,
+			int width,
+			int height,
+			float[] matrix
+	)
+	{
+		this(name, width, height, 1, matrix);
 	}
 	
-	public RepeatableMatrixFilter(int width, int height, int repeat, float[] matrix)
+	public RepeatableMatrixFilter(
+			int width,
+			int height,
+			int repeat,
+			float[] matrix
+	)
 	{
-		super(width, height, matrix);
+		this("RepeatableMatrixFilter", width, height, repeat, matrix);
+	}
+
+	public RepeatableMatrixFilter(
+			String name,
+			int width,
+			int height,
+			int repeat,
+			float[] matrix
+	)
+	{
+		super(name, width, height, matrix);
 		this.repeat = repeat;		
 	}
 
