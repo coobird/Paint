@@ -10,8 +10,6 @@ import java.util.List;
 
 public final class DefaultImageRenderer implements ImageRenderer
 {
-	private boolean drawBackground = true;
-	
 	/*
 	 * Performance issues:
 	 * Large Canvases will take a long time to render
@@ -34,9 +32,20 @@ public final class DefaultImageRenderer implements ImageRenderer
 	
 	/**
 	 * Renders the ImageLayers in the given Canvas to a single BufferedImage.
-	 * @param c				Canvas to render.
+	 * @param c					The {@code Canvas} object to render.
 	 */
 	public BufferedImage render(Canvas c)
+	{
+		return render(c, true);
+	}
+	
+	/**
+	 * Renders the ImageLayers in the given Canvas to a single BufferedImage.
+	 * @param c					The {@code Canvas} object to render.
+	 * @param drawBackground	Whether or not to display a checkered
+	 * 							background.
+	 */
+	public BufferedImage render(Canvas c, boolean drawBackground)
 	{
 		if (c == null)
 		{

@@ -19,4 +19,20 @@ public interface ImageRenderer
 	 * @return				The rendered image.
 	 */
 	public BufferedImage render(Canvas c);
+	
+	/**
+	 * <p>
+	 * Renders the contents of a {@link Canvas} object and returns a
+	 * {@link BufferedImage} object, specifying whether or not to render a
+	 * background layer which shows if any portions are transparent down to the
+	 * deepest layer.
+	 * </p>
+	 * <p>
+	 * Typically, a checkered background is drawn.
+	 * </p>
+	 * @param c					The {@code Canvas} object to render.
+	 * @param drawBackground	Whether or not to render a background.
+	 * @return					The rendered image.
+	 */
+	public BufferedImage render(Canvas c, boolean drawBackground);
 }

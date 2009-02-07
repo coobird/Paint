@@ -16,7 +16,7 @@ import java.util.List;
  * @author coobird
  *
  */
-public class ClippableImageRenderer 
+public final class ClippableImageRenderer 
 	implements ImageRenderer, PartialImageRenderer
 {
 	/**
@@ -32,6 +32,31 @@ public class ClippableImageRenderer
 	{
 		return render(c, 0, 0, c.getWidth(), c.getHeight());
 	}
+
+	/**
+	 * Render the canvas.
+	 * @param c					The canvas to render.
+	 * @param drawBackground	Whether or not to render a background.
+	 */
+	public BufferedImage render(Canvas c, boolean drawBackground)
+	{
+		return render(c, 0, 0, c.getWidth(), c.getHeight());
+	}
+	
+
+	/**
+	 * 
+	 */
+	public BufferedImage render(
+			Canvas c,
+			int x,
+			int y,
+			int width,
+			int height
+	)
+	{
+		return render(c, x, y, width, height, true);
+	}
 	
 	/**
 	 * TODO write javadoc
@@ -43,7 +68,8 @@ public class ClippableImageRenderer
 			int x,
 			int y,
 			int width,
-			int height
+			int height,
+			boolean drawBackground
 	)
 	{
 		if (c == null)

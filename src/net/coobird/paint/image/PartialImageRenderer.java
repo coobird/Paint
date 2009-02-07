@@ -35,4 +35,28 @@ public interface PartialImageRenderer extends ImageRenderer
 			int width,
 			int height
 	);
+	
+	/**
+	 * Renders the contents of a {@link Canvas} object with the specified
+	 * constraints.
+	 * @param c					The {@code Canvas} object to render.
+	 * @param x					The {@code x} coordinate of the top-left hand
+	 * 							corner of the canvas to render.
+	 * @param y					The {@code y} coordinate of the top-left hand
+	 * 							corner of the canvas to render.
+	 * @param width				The width of the section of the canvas to
+	 * 							render.
+	 * @param height			The height of the section of the canvas to
+	 * 							render.
+	 * @param drawBackground	Whether or not to render a background.
+	 * @return					An image of the rendered canvas.
+	 */
+	public BufferedImage render(
+			Canvas c,
+			int x,
+			int y,
+			int width,
+			int height,
+			boolean drawBackground
+	);
 }

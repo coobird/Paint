@@ -24,7 +24,7 @@ import java.util.concurrent.Future;
  * @author coobird
  *
  */
-public class ProgressiveImageRenderer implements ImageRenderer
+public final class ProgressiveImageRenderer implements ImageRenderer
 {
 	private ExecutorService es;
 	
@@ -91,6 +91,14 @@ public class ProgressiveImageRenderer implements ImageRenderer
 	}
 
 	/**
+	 * 
+	 */
+	public BufferedImage render(Canvas c)
+	{
+		return render(c, true);
+	}
+	
+	/**
 	 * Renders a canvas.
 	 * 
 	 * Current implementation will section the canvas into four sections and
@@ -105,8 +113,12 @@ public class ProgressiveImageRenderer implements ImageRenderer
 	 * @see net.coobird.paint.image.ImageRenderer#render(net.coobird.paint.image.Canvas)
 	 */
 	@Override
-	public BufferedImage render(Canvas c)
+	public BufferedImage render(Canvas c, boolean drawBackground)
 	{
+		/*
+		 * TODO current implementation ignores drawBackground. Fix this.
+		 */
+		
 		final BufferedImage img = new BufferedImage(
 			c.getWidth(),
 			c.getHeight(),

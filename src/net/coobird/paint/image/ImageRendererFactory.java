@@ -6,7 +6,7 @@ package net.coobird.paint.image;
  * @author coobird
  *
  */
-public class ImageRendererFactory
+public final class ImageRendererFactory
 {
 	/**
 	 * Single instance of {@code ImageRenderer}.
