@@ -14,6 +14,27 @@ public abstract class ImageFilter
 	 * The name of the filter.
 	 */
 	protected String name;
+	
+	/**
+	 * 
+	 */
+	private ImageFilter() {}
+	
+	/**
+	 * 
+	 * @param name
+	 */
+	protected ImageFilter(String name)
+	{
+		if (name != null)
+		{
+			this.name = name;
+		}
+		else
+		{
+			this.name = "Unidentified ImageFilter";
+		}
+	}
 
 	/**
 	 * Processes the specified BufferedImage with this ImageFilter.

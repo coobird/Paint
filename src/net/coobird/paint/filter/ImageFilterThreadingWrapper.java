@@ -52,14 +52,7 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	 * Indicates whether or not multi-threaded rendering should be bypassed.
 	 */
 	private boolean bypass = false;
-	
-	/**
-	 * Cannot instantiate an {@code ThreadedWrapperFilter} without any
-	 * arguments.
-	 */
-	@SuppressWarnings("unused")
-	private ImageFilterThreadingWrapper() {}
-	
+
 	/**
 	 * Instantiates a {@code ThreadedWrapperFilter} object with the specified
 	 * {@link ImageFilter}.
@@ -67,9 +60,21 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	 */
 	public ImageFilterThreadingWrapper(ImageFilter filter)
 	{
-		this.filter = filter;
+		this("ImageFilterThreadingWrapper wrapping" + filter.getName(), filter);
 	}
 	
+	/**
+	 * Instantiates a {@code ThreadedWrapperFilter} object with the specified
+	 * {@link ImageFilter}.
+	 * @param name			The name of the filter.
+	 * @param filter		The {@code ImageFilter} to wrap.
+	 */
+	public ImageFilterThreadingWrapper(String name, ImageFilter filter)
+	{
+		super(name);
+		this.filter = filter;
+	}
+
 	@Override
 	public BufferedImage processImage(BufferedImage img)
 	{

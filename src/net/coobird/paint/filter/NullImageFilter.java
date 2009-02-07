@@ -15,7 +15,7 @@ public final class NullImageFilter extends ImageFilter
 	 */
 	public NullImageFilter()
 	{
-		this("Null Image Filter");
+		this("NullImageFilter");
 	}
 	
 	/**
@@ -24,7 +24,7 @@ public final class NullImageFilter extends ImageFilter
 	 */
 	public NullImageFilter(String name)
 	{
-		this.setName(name);
+		super(name);
 	}
 
 	/**
