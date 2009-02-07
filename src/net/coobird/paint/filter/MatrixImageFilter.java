@@ -11,6 +11,10 @@ public class MatrixImageFilter extends ImageFilter
 	protected int height;
 	protected float[] matrix;
 	
+	/**
+	 * Cannot instantiate by using the 0-argument constructor. 
+	 */
+	@SuppressWarnings("unused")
 	private MatrixImageFilter() {}
 	
 	public MatrixImageFilter(int width, int height, float[] matrix)

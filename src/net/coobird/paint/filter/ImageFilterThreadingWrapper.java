@@ -57,6 +57,7 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	 * Cannot instantiate an {@code ThreadedWrapperFilter} without any
 	 * arguments.
 	 */
+	@SuppressWarnings("unused")
 	private ImageFilterThreadingWrapper() {}
 	
 	/**
