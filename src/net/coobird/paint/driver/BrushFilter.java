@@ -1,10 +1,17 @@
-package net.coobird.paint.brush;
+package net.coobird.paint.driver;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import net.coobird.paint.brush.Brush;
 import net.coobird.paint.image.ImageLayer;
 
+/*
+ * Moved from net.coobird.paint.brush package.
+ * Not used anymore.
+ */
+
+@Deprecated
 public class BrushFilter
 {
 	private Brush brush;

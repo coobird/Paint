@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import net.coobird.paint.brush.BrushFilter;
 import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
@@ -20,6 +19,7 @@ import net.coobird.paint.io.DefaultImageOutput;
 public class CanvasDriver
 {
 
+	@SuppressWarnings("deprecation")
 	public void makeGUI()
 	{
 		JFrame f = new JFrame("CanvasDriver");

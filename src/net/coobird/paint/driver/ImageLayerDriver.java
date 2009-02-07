@@ -1,4 +1,4 @@
-package net.coobird.paint.application;
+package net.coobird.paint.driver;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,12 +15,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import net.coobird.paint.application.ImageLayerListCellRenderer;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRenderer;
 import net.coobird.paint.image.ImageRendererFactory;
 
-public class SampleApp
+public class ImageLayerDriver
 {
 	public void makeGUI()
 	{
@@ -168,7 +169,7 @@ public class SampleApp
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
-				new SampleApp().makeGUI();
+				new ImageLayerDriver().makeGUI();
 			}
 		});
 	}
