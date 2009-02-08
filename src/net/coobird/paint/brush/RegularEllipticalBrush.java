@@ -88,7 +88,7 @@ public class RegularEllipticalBrush extends Brush
 		double alphaInc = brushColor.getAlpha() / (double)steps;
 		double sizeInc = size / (double)steps;
 		
-		g.rotate(angle, size /2d, size /2d);
+		g.rotate(angle, size / 2.0, size / 2.0);
 		
 		int center = (int)Math.round(size / 2.0);
 		
