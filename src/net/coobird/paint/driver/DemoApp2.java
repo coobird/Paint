@@ -2,15 +2,19 @@ package net.coobird.paint.driver;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
@@ -55,6 +59,7 @@ import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.PartialImageRenderer;
 import net.coobird.paint.io.DefaultImageInput;
 import net.coobird.paint.io.DefaultImageOutput;
+import net.coobird.paint.io.FormatManager;
 import net.coobird.paint.io.ImageInput;
 import net.coobird.paint.io.ImageOutput;
 import net.coobird.paint.io.JavaSupportedImageInput;
@@ -132,19 +137,39 @@ public class DemoApp2
 			public void paintComponent(Graphics g)
 			{
 				super.paintComponent(g);
+				
+				Rectangle r = getVisibleRect();
+				
 //				g.drawImage(renderer.render(ch.getCanvas()), 0, 0, null);
+				
+				int width = r.width;
+				int height = r.height;
+				double zoom = ch.getCanvas().getZoom();
+				
 				g.drawImage(
 						renderer.render(
 								ch.getCanvas(),
-								0,
-								0,
-								this.getWidth(),
-								this.getHeight()
+								(int)(r.x / zoom),
+								(int)(r.y / zoom),
+								(int)(width / zoom),
+								(int)(height / zoom)
 						),
-						0,
-						0,
+						r.x,
+						r.y,
 						null
 				);
+			}
+
+			/* (non-Javadoc)
+			 * @see javax.swing.JComponent#getPreferredSize()
+			 */
+			@Override
+			public Dimension getPreferredSize()
+			{
+				int width = (int)Math.round(ch.getCanvas().getWidth() * ch.getCanvas().getZoom());
+				int height = (int)Math.round(ch.getCanvas().getHeight() * ch.getCanvas().getZoom());
+
+				return new Dimension(width, height);
 			}
 		};
 		
@@ -162,11 +187,15 @@ public class DemoApp2
 					return;
 				}
 				
+				double zoom = ch.getCanvas().getZoom();
+				int sx = (int)Math.round(e.getX() / zoom); 
+				int sy = (int)Math.round(e.getY() / zoom); 
+				
 				bc.drawBrush(
 						il,
 						b,
-						e.getX(),
-						e.getY()
+						sx,
+						sy
 				);
 				
 				long timePast = System.currentTimeMillis() - lastTime;
@@ -202,11 +231,15 @@ public class DemoApp2
 					return;
 				}
 				
+				double zoom = ch.getCanvas().getZoom();
+				int sx = (int)Math.round(e.getX() / zoom); 
+				int sy = (int)Math.round(e.getY() / zoom); 
+				
 				bc.drawBrush(
 						il,
 						b,
-						e.getX(),
-						e.getY()
+						sx,
+						sy
 				);
 			}
 		};
@@ -368,38 +401,11 @@ public class DemoApp2
 
 		fileMenu.addSeparator();
 		
-		fileMenu.add(new ActionMenuItem("Open") {
+		fileMenu.add(new ActionMenuItem("Open...") {
 			public void actionPerformed(ActionEvent e)
 			{
-				System.out.println("open");
-				ch.setCanvas(new DefaultImageInput().read(new File("output.zip")));
-
-				ilListModel.removeAllElements();
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(il);
-				}
-				p.repaint();
-			}
-		});
-
-		fileMenu.add(new ActionMenuItem("Save") {
-			public void actionPerformed(ActionEvent arg0)
-			{
-				System.out.println("save");
-				new DefaultImageOutput().write(ch.getCanvas(), new File("output.zip"));
-			}
-		});
-		
-		fileMenu.addSeparator();
-		
-		fileMenu.add(new ActionMenuItem("Open Supported Image...") {
-			public void actionPerformed(ActionEvent e)
-			{
-				ImageInput imageInput = new JavaSupportedImageInput();
-				
 				JFileChooser fc = new JFileChooser();
-				for (FileFilter filter : imageInput.getFileFilters())
+				for (FileFilter filter : FormatManager.getInputFileFilters())
 				{
 					fc.addChoosableFileFilter(filter);
 				}
@@ -411,7 +417,8 @@ public class DemoApp2
 				
 				File f = fc.getSelectedFile();
 				
-				ch.setCanvas(imageInput.read(f));
+				ch.setCanvas(FormatManager.getImageInput(f).read(f));
+
 				ilListModel.removeAllElements();
 				for (ImageLayer il : ch.getCanvas().getLayers())
 				{
@@ -421,33 +428,27 @@ public class DemoApp2
 			}
 		});
 
-		fileMenu.add(new ActionMenuItem("Save Supported Image...") {
+		fileMenu.add(new ActionMenuItem("Save As...") {
 			public void actionPerformed(ActionEvent e)
 			{
-				ImageOutput imageOutput = new JavaSupportedImageOutput();
-				
 				JFileChooser fc = new JFileChooser();
-				for (FileFilter filter : imageOutput.getFileFilters())
+				for (FileFilter filter : FormatManager.getOutputFileFilters())
 				{
 					fc.addChoosableFileFilter(filter);
 				}
+				fc.setFileFilter(fc.getAcceptAllFileFilter());
 				
 				int option = fc.showSaveDialog(f);
 				
 				if (option != JFileChooser.APPROVE_OPTION)
-					return;
-				
-				File outFile = fc.getSelectedFile();
-				
-				//ImageOutput imageOutput = FormatManager.getImageOutput(outFile);
-				
-				if (imageOutput == null)
 				{
-					JOptionPane.showMessageDialog(f, "No suitable output filter found.");
 					return;
 				}
 				
-				imageOutput.write(ch.getCanvas(), outFile);
+				
+				File outFile = fc.getSelectedFile();
+				
+				FormatManager.getImageOutput(outFile).write(ch.getCanvas(), outFile);
 			}
 		});
 		
@@ -719,6 +720,24 @@ public class DemoApp2
 			}
 		});
 		
+		layerMenu.addSeparator();
+
+		
+		final JScrollPane sp = new JScrollPane(p);
+
+		
+		layerMenu.add(new ActionMenuItem("Zoom...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				String s = JOptionPane.showInputDialog(f, "Zoom:");
+				
+				ch.getCanvas().setZoom(Double.parseDouble(s));
+				
+				p.revalidate();
+			}
+		});
+		
+		
 
 		menubar.add(fileMenu);
 		menubar.add(brushMenu);
@@ -729,7 +748,7 @@ public class DemoApp2
 
 		f.setSize(600,450);
 		f.setLocation(200, 100);
-		f.getContentPane().add(p);
+		f.getContentPane().add(sp);
 		f.validate();
 		f.setVisible(true);
 	}
