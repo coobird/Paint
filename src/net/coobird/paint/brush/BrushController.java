@@ -300,6 +300,13 @@ public class BrushController
 	 */
 	public void drawBrush(ImageLayer il, Brush b, int x, int y)
 	{
+		/*
+		 * Account for offset of the ImageLayer
+		 * wont work at zoom != 1
+		 */
+//		x = x - il.getX();
+//		y = y - il.getY();
+		
 		actionQueue.add(new BrushAction(il, b, x, y));
 		System.out.println("add brushevent");
 		long timePast = System.currentTimeMillis() - lastTime;
@@ -307,9 +314,9 @@ public class BrushController
 		if (!drawingThread.running && timePast > 100)
 		{
 			System.out.println("start thread");
-			//new DrawingThread().start();
-			//drawingThread.start();
+
 			executor.execute(drawingThread);
+			
 			lastTime = System.currentTimeMillis();
 		}
 	}

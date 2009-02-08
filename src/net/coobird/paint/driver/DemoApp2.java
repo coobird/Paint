@@ -192,9 +192,12 @@ public class DemoApp2
 					return;
 				}
 				
+				int offsetX = il.getX();
+				int offsetY = il.getY();
+				
 				double zoom = ch.getCanvas().getZoom();
-				int sx = (int)Math.round(e.getX() / zoom); 
-				int sy = (int)Math.round(e.getY() / zoom); 
+				int sx = (int)Math.round((e.getX() - offsetX) / zoom); 
+				int sy = (int)Math.round((e.getY() - offsetY) / zoom); 
 				
 				bc.drawBrush(
 						il,
@@ -236,9 +239,12 @@ public class DemoApp2
 					return;
 				}
 				
+				int offsetX = il.getX();
+				int offsetY = il.getY();
+				
 				double zoom = ch.getCanvas().getZoom();
-				int sx = (int)Math.round(e.getX() / zoom); 
-				int sy = (int)Math.round(e.getY() / zoom); 
+				int sx = (int)Math.round((e.getX() - offsetX) / zoom); 
+				int sy = (int)Math.round((e.getY() - offsetY) / zoom); 
 				
 				bc.drawBrush(
 						il,
