@@ -85,13 +85,19 @@ public final class ClippableImageRenderer
 			height = c.getHeight();
 		}
 		
+		double zoom = c.getZoom();
+		int nwidth = (int)Math.round(width * zoom);
+		int nheight = (int)Math.round(height * zoom);
+
+		
 		BufferedImage img = new BufferedImage(
-				width,
-				height,
+				nwidth,
+				nheight,
 				ImageLayer.getDefaultType()
 		);
 		
 		Graphics2D g = img.createGraphics();
+		g.scale(zoom, zoom);
 		
 		Composite originalComposite = g.getComposite();
 		
@@ -113,7 +119,21 @@ public final class ClippableImageRenderer
 			);
 			
 			g.setComposite(layerComposite);
-			BufferedImage bi = layer.getImage().getSubimage(x, y, width, height);
+			
+			BufferedImage layerImg = layer.getImage();
+			int swidth = width;
+			int sheight = height;
+			
+			if (swidth > layerImg.getWidth())
+			{
+				swidth = layerImg.getWidth();
+			}
+			if (sheight > layerImg.getHeight())
+			{
+				sheight = layerImg.getHeight();
+			}
+			
+			BufferedImage bi = layerImg.getSubimage(x, y, swidth, sheight);
 			g.drawImage(bi, layer.getX(), layer.getY(), null);
 		}
 		

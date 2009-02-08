@@ -9,6 +9,8 @@ public final class Canvas
 	private List<ImageLayer> layers;
 	private int width;
 	private int height;
+	private double zoom;
+	
 	// private LayerNamer --> names the new layer
 	
 	/**
@@ -28,6 +30,7 @@ public final class Canvas
 		layers = new ArrayList<ImageLayer>();
 		this.width = width;
 		this.height = height;
+		this.zoom = 1;
 	}
 
 	/**
@@ -37,6 +40,22 @@ public final class Canvas
 	public int getWidth()
 	{
 		return width;
+	}
+
+	/**
+	 * @return the zoom
+	 */
+	public double getZoom()
+	{
+		return zoom;
+	}
+
+	/**
+	 * @param zoom the zoom to set
+	 */
+	public void setZoom(double zoom)
+	{
+		this.zoom = zoom;
 	}
 
 	/**
