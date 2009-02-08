@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileFilter;
@@ -21,12 +20,11 @@ import net.coobird.paint.image.ImageRendererFactory;
  */
 public final class JavaSupportedImageOutput extends ImageOutput
 {
+	static
 	{
-		filterList = new ArrayList<FileFilter>();
-		
 		if (ImageIO.getImageWritersByFormatName("png").hasNext())
 		{
-			filterList.add(new FileFilter() {
+			addFilter(new FileFilter() {
 				@Override
 				public boolean accept(File f)
 				{
@@ -53,7 +51,7 @@ public final class JavaSupportedImageOutput extends ImageOutput
 		
 		if (ImageIO.getImageWritersByFormatName("jpeg").hasNext())
 		{
-			filterList.add(new FileFilter() {
+			addFilter(new FileFilter() {
 				@Override
 				public boolean accept(File f)
 				{
@@ -81,7 +79,7 @@ public final class JavaSupportedImageOutput extends ImageOutput
 		
 		if (ImageIO.getImageWritersByFormatName("bmp").hasNext())
 		{
-			filterList.add(new FileFilter() {
+			addFilter(new FileFilter() {
 				@Override
 				public boolean accept(File f)
 				{

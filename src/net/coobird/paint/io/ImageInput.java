@@ -1,6 +1,7 @@
 package net.coobird.paint.io;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.filechooser.FileFilter;
@@ -16,8 +17,13 @@ import net.coobird.paint.image.Canvas;
  */
 public abstract class ImageInput
 {
-	protected List<FileFilter> filterList;
+	private static List<FileFilter> filterList;
 	private String name;
+	
+	static
+	{
+		filterList = new ArrayList<FileFilter>();
+	}
 
 	@SuppressWarnings("unused")
 	private ImageInput() {}
@@ -55,6 +61,15 @@ public abstract class ImageInput
 	public List<FileFilter> getFileFilters()
 	{
 		return filterList;
+	}
+	
+	/**
+	 * 
+	 * @param f
+	 */
+	protected static void addFilter(FileFilter f)
+	{
+		filterList.add(f);
 	}
 	
 	/**

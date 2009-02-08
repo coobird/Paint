@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -18,9 +17,9 @@ import net.coobird.paint.image.ImageLayer;
 
 public final class DefaultImageInput extends ImageInput
 {
+	static
 	{
-		filterList = new ArrayList<FileFilter>();
-		filterList.add(new FileFilter() {
+		addFilter(new FileFilter() {
 			@Override
 			public boolean accept(File f)
 			{

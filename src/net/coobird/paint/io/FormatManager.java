@@ -34,7 +34,7 @@ public final class FormatManager
 		inputList.add(new JavaSupportedImageInput());
 		
 		outputList.add(new DefaultImageOutput());
-//		outputList.add(new JavaSupportedImageOutput());
+		outputList.add(new JavaSupportedImageOutput());
 		
 		inputFilters = new ArrayList<FileFilter>();
 		outputFilters = new ArrayList<FileFilter>();
@@ -43,7 +43,6 @@ public final class FormatManager
 		{
 			for (FileFilter f : ii.getFileFilters())
 			{
-				System.out.println(f.getDescription());
 				inputFilters.add(f);
 			}
 		}

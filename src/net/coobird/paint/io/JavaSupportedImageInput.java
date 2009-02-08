@@ -3,7 +3,6 @@ package net.coobird.paint.io;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileFilter;
@@ -19,12 +18,11 @@ import net.coobird.paint.image.ImageLayer;
  */
 public final class JavaSupportedImageInput extends ImageInput
 {
+	static
 	{
-		filterList = new ArrayList<FileFilter>();
-		
 		if (ImageIO.getImageReadersByFormatName("png").hasNext())
 		{
-			filterList.add(new FileFilter() {
+			addFilter(new FileFilter() {
 				@Override
 				public boolean accept(File f)
 				{
@@ -51,7 +49,7 @@ public final class JavaSupportedImageInput extends ImageInput
 		
 		if (ImageIO.getImageReadersByFormatName("jpeg").hasNext())
 		{
-			filterList.add(new FileFilter() {
+			addFilter(new FileFilter() {
 				@Override
 				public boolean accept(File f)
 				{

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -21,9 +20,9 @@ import net.coobird.paint.image.ImageLayer;
  */
 public final class DefaultImageOutput extends ImageOutput
 {
+	static
 	{
-		filterList = new ArrayList<FileFilter>();
-		filterList.add(new FileFilter() {
+		addFilter(new FileFilter() {
 			@Override
 			public boolean accept(File f)
 			{

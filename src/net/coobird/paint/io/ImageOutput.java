@@ -1,6 +1,7 @@
 package net.coobird.paint.io;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.filechooser.FileFilter;
@@ -16,8 +17,13 @@ import net.coobird.paint.image.Canvas;
  */
 public abstract class ImageOutput
 {
-	protected List<FileFilter> filterList;
+	private static List<FileFilter> filterList;
 	private String name;
+	
+	static
+	{
+		filterList = new ArrayList<FileFilter>();
+	}
 	
 	@SuppressWarnings("unused")
 	private ImageOutput() {}
@@ -72,7 +78,16 @@ public abstract class ImageOutput
 	{
 		return filterList;
 	}
-	
+
+	/**
+	 * 
+	 * @param f
+	 */
+	protected static void addFilter(FileFilter f)
+	{
+		filterList.add(f);
+	}
+
 	/**
 	 * Gets the file extension of the given {@link File} object.
 	 * @param f				The {@code File} object to determine the extension
