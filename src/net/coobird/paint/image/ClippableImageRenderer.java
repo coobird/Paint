@@ -108,6 +108,11 @@ public final class ClippableImageRenderer
 		
 		for (ImageLayer layer : layerList)
 		{
+			if (layer == null)
+			{
+				break;
+			}
+			
 			if (!layer.isVisible())
 			{
 				continue;

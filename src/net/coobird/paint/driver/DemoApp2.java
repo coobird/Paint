@@ -56,6 +56,7 @@ import net.coobird.paint.filter.RepeatableMatrixFilter;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.image.ImageLayer;
+import net.coobird.paint.image.ImageLayerUtils;
 import net.coobird.paint.image.PartialImageRenderer;
 import net.coobird.paint.io.DefaultImageInput;
 import net.coobird.paint.io.DefaultImageOutput;
@@ -362,6 +363,33 @@ public class DemoApp2
 			}
 		});
 		
+		popupMenu.add(new ActionMenuItem("Merge Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				int index = ilList.getSelectedIndex();
+				if (index >= ilListModel.size() - 1)
+				{
+					return;
+				}
+				
+				ImageLayer topIl = (ImageLayer)ilListModel.get(index);
+				ImageLayer bottomIl = (ImageLayer)ilListModel.get(index + 1);
+				
+				ch.getCanvas().removeLayer(topIl);
+				ch.getCanvas().removeLayer(bottomIl);
+				
+				ch.getCanvas().addLayer(ImageLayerUtils.mergeLayers(topIl, bottomIl), index);
+				
+				ilListModel.removeAllElements();
+				for (ImageLayer layer : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(layer);
+				}
+				
+				p.repaint();
+			}
+		});
+		
 		ilList.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e)
 			{
@@ -383,6 +411,7 @@ public class DemoApp2
 		final JMenu fileMenu = new JMenu("File");
 		final JMenu brushMenu = new JMenu("Brush");
 		final JMenu layerMenu = new JMenu("Layer");
+		final JMenu filterMenu = new JMenu("Filter");
 		
 		fileMenu.add(new ActionMenuItem("New") {
 			public void actionPerformed(ActionEvent e)
@@ -467,7 +496,6 @@ public class DemoApp2
 					return;
 				}
 				
-				
 				File outFile = fc.getSelectedFile();
 				
 				FormatManager.getImageOutput(outFile).write(ch.getCanvas(), outFile);
@@ -509,9 +537,92 @@ public class DemoApp2
 			}
 		});
 		
+		layerMenu.add(new ActionMenuItem("Delete Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				if (ilList.getSelectedIndex() == -1)
+				{
+					return;
+				}
+				
+				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
+				ch.getCanvas().removeLayer(il);
+
+				ilListModel.removeAllElements();
+				for (ImageLayer layer : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(layer);
+				}
+				
+				p.repaint();
+			}
+		});
+		
+		layerMenu.add(new ActionMenuItem("Merge Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				if (ilList.getSelectedIndex() == -1)
+				{
+					return;
+				}
+				
+				int index = ilList.getSelectedIndex();
+				if (index >= ilListModel.size() - 1)
+				{
+					return;
+				}
+				
+				ImageLayer topIl = (ImageLayer)ilListModel.get(index);
+				ImageLayer bottomIl = (ImageLayer)ilListModel.get(index + 1);
+				
+				ch.getCanvas().removeLayer(topIl);
+				ch.getCanvas().removeLayer(bottomIl);
+				
+				ch.getCanvas().addLayer(ImageLayerUtils.mergeLayers(topIl, bottomIl), index);
+				
+				ilListModel.removeAllElements();
+				for (ImageLayer layer : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(layer);
+				}
+				
+				p.repaint();
+			}
+		});
+		
 		layerMenu.addSeparator();
 		
-		layerMenu.add(new ActionMenuItem("Blur") {
+		layerMenu.add(new ActionMenuItem("Size Canvas to Largest Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				Rectangle r = new Rectangle();
+				
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					r.add(new Rectangle(
+							il.getX(),
+							il.getY(),
+							il.getWidth(),
+							il.getHeight()
+					));
+				}
+				
+				ch.getCanvas().setSize(r.width, r.height);
+
+				ilList.repaint();
+				p.repaint();
+			}
+		});
+
+		layerMenu.add(new ActionMenuItem("Grow Layer to Canvas") {
+			public void actionPerformed(ActionEvent e)
+			{
+			}
+		});
+		
+		
+	
+		filterMenu.add(new ActionMenuItem("Blur") {
 			public void actionPerformed(ActionEvent e)
 			{
 				ImageFilter filter = new MatrixImageFilter(3, 3, new float[]{
@@ -528,7 +639,7 @@ public class DemoApp2
 			}
 		});
 
-		layerMenu.add(new ActionMenuItem("Blur More") {
+		filterMenu.add(new ActionMenuItem("Blur More") {
 			public void actionPerformed(ActionEvent e)
 			{
 				final JProgressBar pb = new JProgressBar();
@@ -593,7 +704,7 @@ public class DemoApp2
 			}
 		});
 
-		layerMenu.add(new ActionMenuItem("Blur More Concurrent") {
+		filterMenu.add(new ActionMenuItem("Blur More Concurrent") {
 			public void actionPerformed(ActionEvent e)
 			{
 				final JProgressBar pb = new JProgressBar();
@@ -663,7 +774,7 @@ public class DemoApp2
 			}
 		});
 
-		layerMenu.add(new ActionMenuItem("No Effect") {
+		filterMenu.add(new ActionMenuItem("No Effect") {
 			public void actionPerformed(ActionEvent e)
 			{
 				ImageFilter filter = new MatrixImageFilter(
@@ -682,7 +793,7 @@ public class DemoApp2
 			}
 		});
 
-		layerMenu.add(new ActionMenuItem("Saturate") {
+		filterMenu.add(new ActionMenuItem("Saturate") {
 			public void actionPerformed(ActionEvent e)
 			{
 				ImageFilter filter = new MatrixImageFilter(3, 3, new float[]{
@@ -699,7 +810,7 @@ public class DemoApp2
 			}
 		});
 
-		layerMenu.add(new ActionMenuItem("Blur + Lighten") {
+		filterMenu.add(new ActionMenuItem("Blur + Lighten") {
 			public void actionPerformed(ActionEvent e)
 			{
 				ImageFilter filter = new MatrixImageFilter(5, 5, new float[]{
@@ -765,6 +876,7 @@ public class DemoApp2
 		menubar.add(fileMenu);
 		menubar.add(brushMenu);
 		menubar.add(layerMenu);
+		menubar.add(filterMenu);
 		f.setJMenuBar(menubar);
 
 		bcMenu.setSelected(bc.getMovable());

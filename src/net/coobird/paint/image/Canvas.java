@@ -86,6 +86,17 @@ public final class Canvas
 	}
 	
 	/**
+	 * 
+	 * @param width
+	 * @param height
+	 */
+	public void setSize(int width, int height)
+	{
+		setWidth(width);
+		setHeight(height);
+	}
+	
+	/**
 	 * Returns a {@link List} of {@link ImageLayer} objects which are contained
 	 * in the {@link Canvas} object.
 	 * @return				A {@code List} containing {@code ImageLayer} objects
@@ -129,6 +140,22 @@ public final class Canvas
 	public void addLayer(ImageLayer layer)
 	{
 		layers.add(layer);
+	}
+
+	/**
+	 * Adds a specified layer to the canvas.
+	 * @param layer			The ImageLayer to add to the canvas.
+	 */
+	public void addLayer(ImageLayer layer, int index)
+	{
+		if (index < layers.size())
+		{
+			layers.add(index, layer);
+		}
+		else
+		{
+			layers.add(layer);
+		}
 	}
 	
 	/**
