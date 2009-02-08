@@ -19,7 +19,6 @@ import net.coobird.paint.image.ImageLayer;
  */
 public final class JavaSupportedImageInput extends ImageInput
 {
-	static
 	{
 		filterList = new ArrayList<FileFilter>();
 		

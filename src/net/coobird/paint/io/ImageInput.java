@@ -16,9 +16,10 @@ import net.coobird.paint.image.Canvas;
  */
 public abstract class ImageInput
 {
-	protected static List<FileFilter> filterList;
+	protected List<FileFilter> filterList;
 	private String name;
 
+	@SuppressWarnings("unused")
 	private ImageInput() {}
 	
 	protected ImageInput(String name)

@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
@@ -19,6 +21,30 @@ import net.coobird.paint.image.ImageLayer;
  */
 public final class DefaultImageOutput extends ImageOutput
 {
+	{
+		filterList = new ArrayList<FileFilter>();
+		filterList.add(new FileFilter() {
+			@Override
+			public boolean accept(File f)
+			{
+				if (f.isDirectory() || f.getName().endsWith(".zip"))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			@Override
+			public String getDescription()
+			{
+				return "Paint dot Jar Format (zip)";
+			}
+		});
+	}
+
 	public DefaultImageOutput()
 	{
 		this("DefaultImageOutput Filter");

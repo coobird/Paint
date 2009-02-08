@@ -21,7 +21,6 @@ import net.coobird.paint.image.ImageRendererFactory;
  */
 public final class JavaSupportedImageOutput extends ImageOutput
 {
-	static
 	{
 		filterList = new ArrayList<FileFilter>();
 		

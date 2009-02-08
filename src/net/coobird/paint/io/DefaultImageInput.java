@@ -5,17 +5,43 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
+import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 
 public final class DefaultImageInput extends ImageInput
 {
+	{
+		filterList = new ArrayList<FileFilter>();
+		filterList.add(new FileFilter() {
+			@Override
+			public boolean accept(File f)
+			{
+				if (f.isDirectory() || f.getName().endsWith(".zip"))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			@Override
+			public String getDescription()
+			{
+				return "Paint dot Jar Format (zip)";
+			}
+		});
+	}
+	
 	public DefaultImageInput()
 	{
 		this("DefaultImageInput Filter");
