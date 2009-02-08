@@ -138,9 +138,34 @@ public final class ClippableImageRenderer
 		}
 		
 		g.setComposite(originalComposite);
+		
+		if (zoom > 2)
+		{
+			drawPixelGrid(img, zoom);
+		}
+		
 		g.dispose();
 		
 		return img;
+	}
+	
+	private void drawPixelGrid(BufferedImage img, double zoom)
+	{
+		Graphics g = img.getGraphics();
+		
+		g.setColor(Color.black);
+
+		int width = img.getWidth();
+		int height = img.getHeight();
+		int izoom = (int)Math.round(zoom);
+		
+		for (int i = 0; i < width; i+=izoom)
+		{
+			g.drawLine(i, 0, i, height);
+			g.drawLine(0, i, width, i);
+		}		
+		
+		g.dispose();
 	}
 	
 	/**

@@ -99,6 +99,10 @@ public class DemoApp2
 		brushListModel.addElement(new RegularEllipticalEraser(null, 40, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, Math.PI * 0.25, 0.5, 0.5f));
+		brushListModel.addElement(new SolidCircularBrush(null, 4));
+		brushListModel.addElement(new RegularCircularBrush(null, 4, Color.black));
+		brushListModel.addElement(new RegularEllipticalEraser(null, 4, 0, 1, 1f));
+
 		final JScrollPane brushListSp = new JScrollPane(brushList);
 		listPanels.add(brushListSp);
 		
@@ -326,6 +330,22 @@ public class DemoApp2
 			}
 		});
 		popupMenu.addSeparator();
+
+		popupMenu.add(new ActionMenuItem("New Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				ch.getCanvas().addLayer(new ImageLayer(ch.getCanvas().getWidth(), ch.getCanvas().getHeight()));
+				
+				ilListModel.removeAllElements();
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(il);
+				}
+				p.repaint();
+
+			}
+		});
+		
 		popupMenu.add(new ActionMenuItem("Delete Layer") {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -395,6 +415,8 @@ public class DemoApp2
 				{
 					ilListModel.addElement(il);
 				}
+				
+				p.revalidate();
 				p.repaint();
 			}
 		});
@@ -734,6 +756,7 @@ public class DemoApp2
 				ch.getCanvas().setZoom(Double.parseDouble(s));
 				
 				p.revalidate();
+				p.repaint();
 			}
 		});
 		
