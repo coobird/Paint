@@ -25,7 +25,7 @@ public final class DefaultImageInput extends ImageInput
 			{
 				if (
 						f.isDirectory() ||
-						getExtension(f).toLowerCase().equals("zip")
+						getExtension(f).toLowerCase().equals("pjz")
 				)
 				{
 					return true;
@@ -39,7 +39,7 @@ public final class DefaultImageInput extends ImageInput
 			@Override
 			public String getDescription()
 			{
-				return "Paint dot Jar Format (zip)";
+				return "Paint dot Jar Format (pjz)";
 			}
 		});
 	}
@@ -111,7 +111,7 @@ public final class DefaultImageInput extends ImageInput
 	@Override
 	public boolean supportsFile(File f)
 	{
-		if (getExtension(f).toLowerCase().equals("zip"))
+		if (getExtension(f).toLowerCase().equals("pjz"))
 		{
 			return true;
 		}
