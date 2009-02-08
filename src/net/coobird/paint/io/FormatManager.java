@@ -25,6 +25,9 @@ public final class FormatManager
 	private static List<FileFilter> inputFilters;
 	private static List<FileFilter> outputFilters;
 	
+	/*
+	 * Initialize the FileFilter and ImageInput/ImageOutput Lists.
+	 */
 	static
 	{
 		inputList = new ArrayList<ImageInput>();
