@@ -26,7 +26,10 @@ public final class DefaultImageOutput extends ImageOutput
 			@Override
 			public boolean accept(File f)
 			{
-				if (f.isDirectory() || f.getName().endsWith(".zip"))
+				if (
+						f.isDirectory() || 
+						getExtension(f).toLowerCase().equals(".zip")
+				)
 				{
 					return true;
 				}
@@ -118,13 +121,13 @@ public final class DefaultImageOutput extends ImageOutput
 	@Override
 	public boolean supportsFile(File f)
 	{
-		String name = f.getName();
-		
-		if (name.endsWith(".zip"))
+		if (getExtension(f).toLowerCase().equals("zip"))
 		{
 			return true;
 		}
-		
-		return false;
+		else
+		{
+			return false;
+		}
 	}
 }

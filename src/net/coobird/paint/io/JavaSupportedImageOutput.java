@@ -175,14 +175,13 @@ public final class JavaSupportedImageOutput extends ImageOutput
 	{
 		//FIXME getWriterFileSuffixes is from Java 1.6
 		String[] suffixes = ImageIO.getWriterFileSuffixes();
-		
+
 		//TODO check if this next line will fail if 
 		
 		for (String suffix : suffixes)
 		{
-			if (suffix.equals(getExtension(f)))
+			if (suffix.equals(getExtension(f).toLowerCase()))
 			{
-				System.out.println(suffix);
 				return true;
 			}
 		}

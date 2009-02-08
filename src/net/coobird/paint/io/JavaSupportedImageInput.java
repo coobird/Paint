@@ -128,7 +128,7 @@ public final class JavaSupportedImageInput extends ImageInput
 		
 		for (String suffix : suffixes)
 		{
-			if (suffix.equals(getExtension(f)))
+			if (suffix.equals(getExtension(f).toLowerCase()))
 			{
 				return true;
 			}

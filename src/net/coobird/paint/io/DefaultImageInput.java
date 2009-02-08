@@ -23,7 +23,10 @@ public final class DefaultImageInput extends ImageInput
 			@Override
 			public boolean accept(File f)
 			{
-				if (f.isDirectory() || f.getName().endsWith(".zip"))
+				if (
+						f.isDirectory() ||
+						getExtension(f).toLowerCase().equals("zip")
+				)
 				{
 					return true;
 				}
@@ -108,6 +111,13 @@ public final class DefaultImageInput extends ImageInput
 	@Override
 	public boolean supportsFile(File f)
 	{
-		return true;
+		if (getExtension(f).toLowerCase().equals("zip"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
