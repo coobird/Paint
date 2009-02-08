@@ -87,3 +87,16 @@ File format
 -> Need a way to store location, name and other attributes of ImageLayer.
 -> is serializing going to work?
 -> have thumbnail as one of zip entries in image file.
+
+
+Canvas problems
+---------------
+need a way to allow selecting enabling of:
+* drawing background
+* drawing pixel grid
+-> both must be able to be set independently, at different times
+=> How to implement ImageFilters? Should move to abstract class from interface?
+     -> what about PartialImageFilter? interface?
+     -> keep both as interfaces?
+     -> abstract class that implements ImageFilter?
+     -> ImageFilter interface has "setDrawBackground" type methods? 
