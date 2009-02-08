@@ -88,6 +88,11 @@ File format
 -> is serializing going to work?
 -> have thumbnail as one of zip entries in image file.
 
+-> Custom FileFilter that returns extensions
+---> use for autofilling extension
+---> FormatManager should be able to find the ImageInput/Output from the 
+        FileFilter being specified (reverse lookup for use in saving file)
+
 
 Canvas problems
 ---------------
