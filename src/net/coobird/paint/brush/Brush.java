@@ -15,33 +15,8 @@ public abstract class Brush
 	protected float alpha = 1f;
 	
 	public static final int THUMB_SIZE = 20;
-	protected final int DEFAULT_BRUSH_TYPE = BufferedImage.TYPE_INT_ARGB;
+	protected static final int DEFAULT_BRUSH_TYPE = BufferedImage.TYPE_INT_ARGB;
 	
-	/**
-	 * Creates a thumbnail of the Brush.
-	 * @throws IllegalStateException is thrown when the brush has not
-	 * been initialized.
-	 */
-	protected void makeThumbnail()
-	{
-		if (brush == null)
-		{
-			throw new IllegalStateException("Brush not initialized.");
-		}
-	}
-	
-	/**
-	 * Returns a String representation of a Brush.
-	 * @return	A String representation of the Brush.
-	 */
-	public String toString()
-	{
-		String brushString = "Brush: '" + name + "', Size: " +
-				brush.getWidth() + ", " + brush.getHeight();
-				
-		return brushString;
-	}
-
 	/**
 	 * Gets the name of the Brush.
 	 * @return	The name of the Brush.
@@ -111,6 +86,27 @@ public abstract class Brush
 	}
 	
 	/**
+	 * Returns the blending mode for the {@code Brush} object.
+	 * @return				The brush mode.
+	 */
+	public BlendingMode getMode()
+	{
+		return this.mode;
+	}
+
+	/**
+	 * Returns the opacity of the brush.
+	 * @return				The opacity of the brush as a {@code float} value
+	 * 						between {@code 0f} and {@code 1f}, where {@code 0f}
+	 * 						represents transparent, and {@code 1f} represents
+	 * 						opaque.
+	 */
+	public float getAlpha()
+	{
+		return alpha;
+	}
+
+	/**
 	 * 
 	 */
 	protected abstract void makeBrushImage();
@@ -124,20 +120,35 @@ public abstract class Brush
 	{
 		int size = Brush.THUMB_SIZE;
 	
-		thumbBrush = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+		thumbBrush = new BufferedImage(size, size, DEFAULT_BRUSH_TYPE);
 	
 		Graphics g = thumbBrush.createGraphics();
 		g.drawImage(brush, 0, 0, size, size, null);
 		g.dispose();
 	}
 	
-	public BlendingMode getMode()
+	/**
+	 * Creates a thumbnail of the Brush.
+	 * @throws IllegalStateException is thrown when the brush has not
+	 * been initialized.
+	 */
+	protected void makeThumbnail()
 	{
-		return this.mode;
+		if (brush == null)
+		{
+			throw new IllegalStateException("Brush not initialized.");
+		}
 	}
-	
-	public float getAlpha()
+
+	/**
+	 * Returns a String representation of a Brush.
+	 * @return	A String representation of the Brush.
+	 */
+	public String toString()
 	{
-		return alpha;
+		String brushString = "Brush: '" + name + "', Size: " +
+				brush.getWidth() + ", " + brush.getHeight();
+				
+		return brushString;
 	}
 }

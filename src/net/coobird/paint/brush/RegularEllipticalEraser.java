@@ -5,8 +5,24 @@ import java.awt.Graphics;
 
 import net.coobird.paint.BlendingMode;
 
+/**
+ * The {@code RegularEllipticalEraser} class represents an erasure with a 
+ * regular elliptical shape.
+ * 
+ * @author coobird
+ *
+ */
 public class RegularEllipticalEraser extends RegularEllipticalBrush
 {
+	/**
+	 * Instantiates an eraser.
+	 * 
+	 * @param name
+	 * @param size
+	 * @param angle
+	 * @param ratio
+	 * @param alpha
+	 */
 	public RegularEllipticalEraser(
 			String name,
 			int size,
@@ -28,12 +44,14 @@ public class RegularEllipticalEraser extends RegularEllipticalBrush
 	protected void makeBrushThumbnail()
 	{
 		super.makeBrushThumbnail();
+		
 		Graphics g = thumbBrush.getGraphics();
+		
+		// Draws an "E" on top of the brush thumbnail.
 		int width = g.getFontMetrics().stringWidth("E");
 		int height = g.getFontMetrics().getHeight();
 		int cx = (thumbBrush.getWidth() / 2) - (width / 2);
 		int cy = (thumbBrush.getHeight() / 2) + (height / 4);
-		
 		g.setColor(Color.white);
 		g.drawString("E", cx, cy);
 		

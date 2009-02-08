@@ -4,6 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * The {@code RegularEllipticalBrush} class represents a brush with a regular
+ * elliptical shape.
+ * 
+ * @author coobird
+ *
+ */
 public class RegularEllipticalBrush extends Brush
 {
 	protected final static int DEFAULT_STEPS_DIVISOR = 2;
@@ -20,19 +27,10 @@ public class RegularEllipticalBrush extends Brush
 	private Color brushColor;
 	
 	/**
-	 * change class structure?
-	 * 
-	 * RegularBrush <- RegCircBrush, RegEllipBrush
-	 * common;
-	 * - size
-	 * - color
-	 * 
+	 * Cannot instantiate by the 0-argument constructor.
 	 */
-	
-	public RegularEllipticalBrush()
-	{
-		
-	}
+	@SuppressWarnings("unused")
+	private RegularEllipticalBrush() {}
 	
 	public RegularEllipticalBrush(
 			String name,
@@ -78,9 +76,13 @@ public class RegularEllipticalBrush extends Brush
 		makeBrushImage();
 	}
 	
+	/**
+	 * Draws the brush image.
+	 */
+	@Override
 	protected void makeBrushImage()
 	{
-		brush = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+		brush = new BufferedImage(size, size, DEFAULT_BRUSH_TYPE);
 		Graphics2D g = brush.createGraphics();
 		
 		double alphaInc = brushColor.getAlpha() / (double)steps;
@@ -108,6 +110,7 @@ public class RegularEllipticalBrush extends Brush
 					(int)Math.round(sizeInc * i * ratio)
 			);
 		}
+		
 		g.dispose();
 
 		makeBrushThumbnail();
