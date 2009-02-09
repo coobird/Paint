@@ -13,8 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
@@ -58,13 +56,7 @@ import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageLayerUtils;
 import net.coobird.paint.image.PartialImageRenderer;
-import net.coobird.paint.io.DefaultImageInput;
-import net.coobird.paint.io.DefaultImageOutput;
 import net.coobird.paint.io.FormatManager;
-import net.coobird.paint.io.ImageInput;
-import net.coobird.paint.io.ImageOutput;
-import net.coobird.paint.io.JavaSupportedImageInput;
-import net.coobird.paint.io.JavaSupportedImageOutput;
 
 public class DemoApp2
 {
@@ -419,12 +411,17 @@ public class DemoApp2
 		final JMenu layerMenu = new JMenu("Layer");
 		final JMenu filterMenu = new JMenu("Filter");
 		
-		fileMenu.add(new ActionMenuItem("New") {
+		fileMenu.add(new ActionMenuItem("New...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				System.out.println("new");
 				
 				String s = JOptionPane.showInputDialog(f, "Enter dimensions in (w,h):");
+				
+				if (s == null)
+				{
+					return;
+				}
 				
 				int width = SIZE;
 				int height = SIZE;
@@ -516,17 +513,21 @@ public class DemoApp2
 				f.setVisible(false);
 			}
 		});
+		
+		////////////////
 
-		final JCheckBoxMenuItem bcMenu = new JCheckBoxMenuItem("Movable Brush");
+		final JCheckBoxMenuItem bcMenu = new JCheckBoxMenuItem("Rotatable Brush");
 		bcMenu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0)
 			{
-				System.out.println("movable toggle");
+				System.out.println("rotatable toggle");
 				bc.setMovable(!bc.getMovable());
 				bcMenu.setSelected(bc.getMovable());
 			}
 		});
 		brushMenu.add(bcMenu);
+		
+		///////////////
 		
 		layerMenu.add(new ActionMenuItem("New Layer") {
 			public void actionPerformed(ActionEvent e)
@@ -626,7 +627,7 @@ public class DemoApp2
 			}
 		});
 		
-		
+		////////////////		
 	
 		filterMenu.add(new ActionMenuItem("Blur") {
 			public void actionPerformed(ActionEvent e)
@@ -877,12 +878,21 @@ public class DemoApp2
 			}
 		});
 		
-		
+		JMenu helpMenu = new JMenu("Help");
+
+		helpMenu.add(new ActionMenuItem("About...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				String msg = "Coobird's Paint dot Jar Demonstration 2";
+				JOptionPane.showMessageDialog(f, msg, "About Paint dot Jar", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 
 		menubar.add(fileMenu);
 		menubar.add(brushMenu);
 		menubar.add(layerMenu);
 		menubar.add(filterMenu);
+		menubar.add(helpMenu);
 		f.setJMenuBar(menubar);
 
 		bcMenu.setSelected(bc.getMovable());
