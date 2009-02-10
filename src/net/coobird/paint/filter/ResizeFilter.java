@@ -10,11 +10,11 @@ import net.coobird.paint.image.ImageLayer;
 
 public class ResizeFilter extends ImageFilter
 {
-	double scale;
+	private double scale;
 	
 	public ResizeFilter(String name, double scale)
 	{
-		super("2x Resize filter");
+		super("Resize filter (" + scale + "x)");
 		this.scale = scale;
 	}
 
@@ -32,14 +32,25 @@ public class ResizeFilter extends ImageFilter
 		
 		Graphics2D g = newImg.createGraphics();
 		g.scale(scale, scale);
+		
 		Map<RenderingHints.Key, Object> hints = 
 			new HashMap<RenderingHints.Key, Object>();
 		
-		hints.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		hints.put(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-		hints.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		hints.put(
+				RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON
+		);
+		hints.put(
+				RenderingHints.KEY_ALPHA_INTERPOLATION,
+				RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY
+		);
+		hints.put(
+				RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BICUBIC
+		);
 		
 		g.addRenderingHints(hints);
+		
 		g.drawImage(img, 0, 0, null);
 		g.dispose();
 		

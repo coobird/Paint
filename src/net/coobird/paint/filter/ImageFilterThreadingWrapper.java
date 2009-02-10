@@ -9,15 +9,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /*
- * FIXME Threads are not being freed when done.
- * Fix this or else programs that create a new instance of this class cannot
- * exit. Find a way to release the threads.
- */
-
-/*
- * Note: with CachedThreadPool, the cached threads will stay alive for 60 s,
- * therefore, prevents GC, therefore prevents immediate termination of calling
- * application. Ouch.
+ * This wrapper only works if
+ * BufferedImage(x,y,t) -> BufferedImage(x,y,t)
+ * 
+ * If it is expected that:
+ * BufferedImage(x,y,t) -> BufferedImage(cx,cy,t) where c != 1 then
+ * result is BufferedImage(x,y,t) where the contents is mangled.
+ * 
+ * Either this needs to be fixed, or this wrapper must be of limited use.
+ * 
+ * Problem comes from execution of the Callable.
+ * After the filter is called a getSubImage call will trim off the OVERLAP
+ * section, but it assumes that the image dimensions remain the same. If not,
+ * the image will be cropped, or worse, a crash if resulting image is too small.
+ * 
+ * There needs to be a check to prevent a crash, if that is the case.
  */
 
 /**
@@ -114,8 +120,8 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 			return filter.processImage(img);
 		}
 		
-		final int halfWidth = img.getWidth() / 2;
-		final int halfHeight = img.getHeight() / 2;
+		final int halfWidth = width / 2;
+		final int halfHeight = height / 2;
 		
 		/*
 		 * Prepare the source images to perform the filtering on.
