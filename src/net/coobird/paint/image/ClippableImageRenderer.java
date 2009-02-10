@@ -72,8 +72,6 @@ public final class ClippableImageRenderer
 			throw new NullPointerException("Canvas not initialized.");
 		}
 		
-		List<ImageLayer> layerList = c.getRenderOrder();
-		
 		// If the width or height is greater than the width or height of the
 		// source image, set the rendering width/height to source width/height.
 		if (width > c.getWidth())
@@ -85,10 +83,12 @@ public final class ClippableImageRenderer
 			height = c.getHeight();
 		}
 		
+		/*
+		 * Produce the new image to use as the target to draw on.
+		 */
 		double zoom = c.getZoom();
 		int nwidth = (int)Math.round(width * zoom);
 		int nheight = (int)Math.round(height * zoom);
-
 		
 		BufferedImage img = new BufferedImage(
 				nwidth,
@@ -103,9 +103,14 @@ public final class ClippableImageRenderer
 		
 		if (drawBackground)
 		{
-			drawBackground(img);
+			drawBackground(img, x, y, width, height, zoom);
 		}
-		
+
+		/*
+		 * Draw subimage of each layer onto the screen.
+		 */
+		List<ImageLayer> layerList = c.getRenderOrder();
+
 		for (ImageLayer layer : layerList)
 		{
 			if (layer == null)
@@ -125,28 +130,37 @@ public final class ClippableImageRenderer
 			
 			g.setComposite(layerComposite);
 			
+			/*
+			 * Get the part of the layer's image to draw to screen, and draw it.
+			 */
 			BufferedImage layerImg = layer.getImage();
-			int swidth = width;
-			int sheight = height;
+			int subWidth = width;
+			int subHeight = height;
 			
-			if (swidth > layerImg.getWidth())
+			if (subWidth > layerImg.getWidth())
 			{
-				swidth = layerImg.getWidth();
+				subWidth = layerImg.getWidth();
 			}
-			if (sheight > layerImg.getHeight())
+			if (subHeight > layerImg.getHeight())
 			{
-				sheight = layerImg.getHeight();
+				subHeight = layerImg.getHeight();
 			}
 			
-			BufferedImage bi = layerImg.getSubimage(x, y, swidth, sheight);
-			g.drawImage(bi, layer.getX(), layer.getY(), null);
+			BufferedImage layerSubImage = layerImg.getSubimage(
+					x,
+					y,
+					subWidth,
+					subHeight
+			);
+			
+			g.drawImage(layerSubImage, layer.getX(), layer.getY(), null);
 		}
 		
 		g.setComposite(originalComposite);
 		
 		if (zoom > 2)
 		{
-			drawPixelGrid(img, zoom);
+			drawPixelGrid(img, x, y, zoom);
 		}
 		
 		g.dispose();
@@ -154,7 +168,7 @@ public final class ClippableImageRenderer
 		return img;
 	}
 	
-	private void drawPixelGrid(BufferedImage img, double zoom)
+	private void drawPixelGrid(BufferedImage img, int x, int y, double zoom)
 	{
 		Graphics g = img.getGraphics();
 		
@@ -164,9 +178,12 @@ public final class ClippableImageRenderer
 		int height = img.getHeight();
 		int izoom = (int)Math.round(zoom);
 		
-		for (int i = 0; i < width; i+=izoom)
+		for (int i = (-x % izoom); i < x + width; i += izoom)
 		{
 			g.drawLine(i, 0, i, height);
+		}		
+		for (int i = (-y % izoom); i < y + height; i += izoom)
+		{
 			g.drawLine(0, i, width, i);
 		}		
 		
@@ -177,18 +194,26 @@ public final class ClippableImageRenderer
 	 * Draws a checkered white and gray background.
 	 * @param img			The {@code BufferedImage}@to draw the background on.
 	 */
-	private void drawBackground(BufferedImage img)
+	private void drawBackground(BufferedImage img, int x, int y, int width, int height, double zoom)
 	{
+		/*
+		 * Doesnt work correctly with zoom.
+		 * Works fine at zoom = 1.
+		 * Else, minor deviation. Probably a rounding problem.
+		 */
 		Graphics g = img.getGraphics();
-
-		int width = img.getWidth();
-		int height = img.getHeight();
 		
-		for (int i = 0; i < width; i += 20)
+		width = (int)Math.round(width * zoom);
+		height = (int)Math.round(height * zoom);
+		
+		x = (int)Math.round(x * zoom);
+		y = (int)Math.round(y * zoom);
+
+		for (int i = (-x % 20); i < x + width + 20; i += 20)
 		{
-			for (int j = 0; j < height; j += 20)
+			for (int j = (-y % 20); j < y + height + 20; j += 20)
 			{
-				if ((i + j) % 40 == 0)
+				if (((i + x) + (j + y)) % 40 == 0)
 					g.setColor(Color.gray);
 				else
 					g.setColor(Color.white);

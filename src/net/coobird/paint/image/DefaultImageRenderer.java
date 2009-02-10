@@ -18,6 +18,11 @@ public final class DefaultImageRenderer implements ImageRenderer
 	 */
 	
 	/*
+	 * TODO implement PixelGrid drawing.
+	 * ClippableImageRenderer is the reference implementation.
+	 */
+	
+	/*
 	 * FIXME don't draw background on export to image
 	 * investigate a way to diable background drawing on save to image
 	 */
