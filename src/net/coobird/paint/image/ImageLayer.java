@@ -21,7 +21,7 @@ public class ImageLayer implements Serializable
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1498607431660594142L;
+	private static final long serialVersionUID = -6969332672194331399L;
 	
 	private static final int THUMBNAIL_SCALE = 8;
 	private static final int DEFAULT_IMAGE_TYPE = BufferedImage.TYPE_INT_ARGB;
@@ -186,6 +186,7 @@ public class ImageLayer implements Serializable
 			this.width = image.getWidth();
 			this.height = image.getHeight();
 			this.g = image.createGraphics();
+			
 			renderThumbnail();
 		}
 		else

@@ -80,11 +80,10 @@ public final class DefaultImageOutput extends ImageOutput
 		{
 			FileOutputStream fos = new FileOutputStream(f);
 			ZipOutputStream zos = new ZipOutputStream(fos);
-			
-			// Save info about Canvas size.
-			ZipEntry info = new ZipEntry("data");
-			info.setComment(c.getWidth() + "," + c.getHeight());
-			zos.putNextEntry(info);
+
+			zos.putNextEntry(new ZipEntry("canvas.serialized"));
+			new ObjectOutputStream(zos).writeObject(c);
+			zos.closeEntry();
 			
 			int index = 0;
 			

@@ -1,18 +1,33 @@
 package net.coobird.paint.image;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public final class Canvas
+public final class Canvas implements Serializable
 {
-	private List<ImageLayer> layers;
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1550922019253804872L;
+	
+	private transient List<ImageLayer> layers;
 	private int width;
 	private int height;
 	private double zoom;
 	
 	// private LayerNamer --> names the new layer
 	
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		in.defaultReadObject();
+		// TODO Determine appropriate List to use.
+		layers = new ArrayList<ImageLayer>();
+	}
 	/**
 	 * Cannot instantiate a {@code Canvas} object without specification of size.
 	 */

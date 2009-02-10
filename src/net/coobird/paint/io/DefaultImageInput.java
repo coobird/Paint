@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -74,35 +76,75 @@ public final class DefaultImageInput extends ImageInput
 			ZipFile zf = new ZipFile(f);
 			Enumeration<? extends ZipEntry> entries = zf.entries();
 			
-			ZipEntry info = entries.nextElement();
-			String size = info.getComment();
-			String[] s = size.split(",");
-			int width = Integer.parseInt(s[0]);
-			int height = Integer.parseInt(s[1]);
+			ZipEntry canvasZipEntry = entries.nextElement();
 			
-			c = new Canvas(width, height);
+			if (!canvasZipEntry.getName().equals("canvas.serialized"))
+			{
+				throw new IOException("Found: " + canvasZipEntry.getName() + " Expected: canvas.serialized");
+			}
 			
+			ObjectInputStream is = new ObjectInputStream(zf.getInputStream(canvasZipEntry));
+			c = (Canvas)is.readObject();
+			
+			Map<String, ImageLayer> layerMap =
+				new TreeMap<String, ImageLayer>();
+			
+			Map<String, BufferedImage> imgMap =
+				new TreeMap<String, BufferedImage>();
+			
+			/*
+			 * Go through ZIP entries and place ImageLayer and BufferedImage
+			 * into their respective Maps.
+			 */
 			while (entries.hasMoreElements())
 			{
 				ZipEntry ze = entries.nextElement();
-				InputStream is = zf.getInputStream(ze);
+				InputStream zis = zf.getInputStream(ze);
+				String entryName = ze.getName();
 				
-				ImageLayer il;
-				il = (ImageLayer)new ObjectInputStream(is).readObject();
+				System.out.println("begin reading " + entryName);
+
+				if (entryName.endsWith(".serialized"))
+				{
+					ImageLayer il;
+					il = (ImageLayer)new ObjectInputStream(zis).readObject();
+					
+					int index = entryName.lastIndexOf(".serialized");
+					String filename = entryName.substring(0, index);
+					
+					layerMap.put(filename, il);
+				}
+				else if (entryName.endsWith(".png"))
+				{
+					BufferedImage img = ImageIO.read(zis);
+
+					int index = entryName.lastIndexOf(".png");
+					String filename = entryName.substring(0, index);
+					
+					imgMap.put(filename, img);
+				}
 				
-				is.close();
-				
-				ze = entries.nextElement();
-				is = zf.getInputStream(ze);
-				
-				BufferedImage img = ImageIO.read(is);
-				
-				il.setImage(img);
-				
-				c.addLayer(il);
-				
-				is.close();
+				System.out.println("done reading " + entryName);
 			}
+			
+			/*
+			 * Set up Canvas.
+			 */
+			/*
+			 * Note:
+			 * This section is dependent on the ordering of the keys in the map.
+			 * This can be misordered and cause layers to be in the wrong order.
+			 * Current implementation is a TreeMap - that will work as it is 
+			 * sorted by natural order of the keys. However, use of other maps,
+			 * such as HashMap can cause the order to be incorrect.
+			 */
+			for (String key : imgMap.keySet())
+			{
+				ImageLayer layer = layerMap.get(key);
+				layer.setImage(imgMap.get(key));
+				c.addLayer(layer);
+			}
+			
 			zf.close();
 		}
 		catch (FileNotFoundException e)
@@ -115,7 +157,6 @@ public final class DefaultImageInput extends ImageInput
 		}
 		catch (ClassNotFoundException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
