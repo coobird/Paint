@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
@@ -34,7 +33,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.Popup;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -54,6 +52,7 @@ import net.coobird.paint.filter.ImageFilter;
 import net.coobird.paint.filter.ImageFilterThreadingWrapper;
 import net.coobird.paint.filter.MatrixImageFilter;
 import net.coobird.paint.filter.RepeatableMatrixFilter;
+import net.coobird.paint.filter.ResizeFilter;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.image.ImageLayer;
@@ -656,6 +655,9 @@ public class DemoApp2
 		layerMenu.add(new ActionMenuItem("Size Canvas to Largest Layer") {
 			public void actionPerformed(ActionEvent e)
 			{
+				/*
+				 * TODO consider adding this to Canvas.
+				 */
 				Rectangle r = new Rectangle();
 				
 				for (ImageLayer il : ch.getCanvas().getLayers())
@@ -887,6 +889,89 @@ public class DemoApp2
 					il.setImage(filter.processImage(il.getImage()));
 				}
 				p.repaint();
+			}
+		});
+		
+		filterMenu.add(new ActionMenuItem("Resize...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				String s = JOptionPane.showInputDialog(f, "Resize scale:");
+				final double scale = Double.parseDouble(s);
+
+				final JProgressBar pb = new JProgressBar();
+				final JDialog d = new JDialog(f);
+				JPanel panel = new JPanel(new BorderLayout());
+				pb.setValue(0);
+				pb.setStringPainted(true);
+				panel.add(new JLabel("Processing filter..."), BorderLayout.NORTH);
+				panel.add(pb, BorderLayout.CENTER);
+				d.getContentPane().add(panel);
+				d.pack();
+				d.setVisible(true);
+	
+				new Thread(new Runnable() {
+					public void run()
+					{
+						long st = System.currentTimeMillis();
+						
+						ImageFilter filter = new ImageFilterThreadingWrapper(new ResizeFilter("Resize", scale));
+						
+						for (ImageLayer il : ch.getCanvas().getLayers())
+						{
+							il.setImage(filter.processImage(il.getImage()));
+						}
+						
+						final int inc = 100 / ch.getCanvas().getLayers().size();
+						
+						for (ImageLayer il : ch.getCanvas().getLayers())
+						{
+							il.setImage(filter.processImage(il.getImage()));
+							
+							try
+							{
+								SwingUtilities.invokeAndWait(new Runnable() {
+									public void run()
+									{
+										pb.setValue(pb.getValue() + inc);	
+									}
+								});
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							catch (InvocationTargetException e)
+							{
+								e.printStackTrace();
+							}
+						}
+						
+						long tp = System.currentTimeMillis() - st;
+						System.out.println("complete in: " + tp);
+						
+						pb.setValue(100);
+						d.dispose();
+						
+						Rectangle r = new Rectangle();
+						
+						for (ImageLayer il : ch.getCanvas().getLayers())
+						{
+							r.add(new Rectangle(
+									il.getX(),
+									il.getY(),
+									il.getWidth(),
+									il.getHeight()
+							));
+						}
+						
+						ch.getCanvas().setSize(r.width, r.height);
+						
+						p.repaint();
+						ilList.repaint();
+						p.revalidate();
+						filter = null;
+					}
+				}).start();
 			}
 		});
 		
