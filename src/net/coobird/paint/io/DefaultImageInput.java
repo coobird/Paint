@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -86,8 +87,20 @@ public final class DefaultImageInput extends ImageInput
 				ZipEntry ze = entries.nextElement();
 				InputStream is = zf.getInputStream(ze);
 				
+				ImageLayer il;
+				il = (ImageLayer)new ObjectInputStream(is).readObject();
+				
+				is.close();
+				
+				ze = entries.nextElement();
+				is = zf.getInputStream(ze);
+				
 				BufferedImage img = ImageIO.read(is);
-				c.addLayer(new ImageLayer(img));
+				
+				il.setImage(img);
+				
+				c.addLayer(il);
+				
 				is.close();
 			}
 			zf.close();
@@ -98,6 +111,11 @@ public final class DefaultImageInput extends ImageInput
 		}
 		catch (IOException e)
 		{
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

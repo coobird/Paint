@@ -3,6 +3,7 @@ package net.coobird.paint.image;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import net.coobird.paint.BlendingMode;
 
@@ -15,14 +16,19 @@ import net.coobird.paint.BlendingMode;
  * @author coobird
  *
  */
-public class ImageLayer
+public class ImageLayer implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1498607431660594142L;
+	
 	private static final int THUMBNAIL_SCALE = 8;
 	private static final int DEFAULT_IMAGE_TYPE = BufferedImage.TYPE_INT_ARGB;
 	
-	private BufferedImage image;
-	private BufferedImage thumbImage;
-	private Graphics2D g;
+	private transient BufferedImage image;
+	private transient BufferedImage thumbImage;
+	private transient Graphics2D g;
 	private String caption;
 	private boolean visible = true;
 	
@@ -54,12 +60,6 @@ public class ImageLayer
 		initInstance();
 		setImage(image);
 
-		thumbImage = new BufferedImage(
-				this.width / THUMBNAIL_SCALE,
-				this.height / THUMBNAIL_SCALE,
-				DEFAULT_IMAGE_TYPE
-		);
-	
 		renderThumbnail();
 	}
 	
@@ -79,12 +79,6 @@ public class ImageLayer
 		);
 
 		setImage(image);
-
-		thumbImage = new BufferedImage(
-				this.width / THUMBNAIL_SCALE,
-				this.height / THUMBNAIL_SCALE,
-				DEFAULT_IMAGE_TYPE
-		);
 	
 		renderThumbnail();
 	}
@@ -104,6 +98,12 @@ public class ImageLayer
 	 */
 	private void renderThumbnail()
 	{
+		thumbImage = new BufferedImage(
+				this.width / THUMBNAIL_SCALE,
+				this.height / THUMBNAIL_SCALE,
+				DEFAULT_IMAGE_TYPE
+		);
+		
 		Graphics2D g = thumbImage.createGraphics();
 		
 		/*
@@ -186,6 +186,7 @@ public class ImageLayer
 			this.width = image.getWidth();
 			this.height = image.getHeight();
 			this.g = image.createGraphics();
+			renderThumbnail();
 		}
 		else
 		{
@@ -200,6 +201,8 @@ public class ImageLayer
 			this.g = this.image.createGraphics();
 			
 			g.drawImage(image, 0, 0, null);
+			
+			renderThumbnail();
 		}
 	}
 

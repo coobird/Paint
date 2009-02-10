@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -20,6 +21,11 @@ import net.coobird.paint.image.ImageLayer;
  */
 public final class DefaultImageOutput extends ImageOutput
 {
+	/*
+	 * TODO
+	 * store information on Canvas / ImageLayer to file.
+	 */
+	
 	static
 	{
 		addFilter(new FileFilter() {
@@ -84,9 +90,14 @@ public final class DefaultImageOutput extends ImageOutput
 			
 			for (ImageLayer l : c.getLayers())
 			{
+				zos.putNextEntry(new ZipEntry("" + index + ".serialized"));
+				new ObjectOutputStream(zos).writeObject(l);
+				zos.closeEntry();
+
 				zos.putNextEntry(new ZipEntry("" + index + ".png"));
 				ImageIO.write(l.getImage(), "png", zos);
 				zos.closeEntry();
+				
 				index++;
 			}
 			
