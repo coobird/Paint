@@ -122,7 +122,7 @@ public class BrushController
 		
 		Graphics2D g = action.getLayer().getGraphics();
 		setCompositeForBrush(g, action.getBrush());
-		BufferedImage brushImage = action.getBrush().getBrush();
+		BufferedImage brushImage = action.getBrush().getImage();
 
 		double distX = lastX - action.getX();
 		double distY = lastY - action.getY();
@@ -240,7 +240,7 @@ public class BrushController
 		// uncomment below:
 		// setCompositeForBrush(g, action.getBrush());
 
-		BufferedImage brushImage = action.getBrush().getBrush();
+		BufferedImage brushImage = action.getBrush().getImage();
 		
 		// Determine the brush painting mean to use.
 		// If brush is already being dragged across, then use interpolatedDraw.

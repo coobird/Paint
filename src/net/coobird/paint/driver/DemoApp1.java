@@ -132,7 +132,7 @@ public class DemoApp1
 			public void mousePressed(MouseEvent e)
 			{
 				g = ((ImageLayer)ilList.getSelectedValue()).getGraphics();
-				b = ((Brush)brushList.getSelectedValue()).getBrush();
+				b = ((Brush)brushList.getSelectedValue()).getImage();
 				
 				g.drawImage(
 						b,

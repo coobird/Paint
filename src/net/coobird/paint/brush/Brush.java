@@ -26,95 +26,6 @@ public abstract class Brush
 	 * @return
 	 */
 	protected abstract void setDefaultName();
-	
-	/**
-	 * Gets the name of the Brush.
-	 * @return	The name of the Brush.
-	 */
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * Sets the name of the Brush.
-	 * @param name	The name of the Brush.
-	 */
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-	
-	/**
-	 * Returns a copy of the brush.
-	 * Returns null if brush is not initialized.
-	 * @return
-	 */
-	public BufferedImage getBrush()
-	{
-		if (brush == null)
-		{
-			return null;
-		}
-		
-		BufferedImage brushCopy = new BufferedImage(
-				brush.getWidth(),
-				brush.getHeight(),
-				brush.getType()
-		);
-		
-		Graphics2D g = brushCopy.createGraphics();
-		g.drawImage(brush, 0, 0, null);
-		g.dispose();
-		
-		return brushCopy;
-	}
-	
-	/**
-	 * Returns a copy of the thumbnail of the brush.
-	 * Returns null if thumbnail of the brush is not initialized.
-	 * @return
-	 */
-	public BufferedImage getThumbBrush()
-	{
-		if (thumbBrush == null)
-		{
-			return null;
-		}
-
-		BufferedImage thumbBrushCopy = new BufferedImage(
-				thumbBrush.getWidth(),
-				thumbBrush.getHeight(),
-				thumbBrush.getType()
-		);
-		
-		Graphics2D g = thumbBrushCopy.createGraphics();
-		g.drawImage(thumbBrush, 0, 0, null);
-		g.dispose();
-
-		return thumbBrushCopy;
-	}
-	
-	/**
-	 * Returns the blending mode for the {@code Brush} object.
-	 * @return				The brush mode.
-	 */
-	public BlendingMode getMode()
-	{
-		return this.mode;
-	}
-
-	/**
-	 * Returns the opacity of the brush.
-	 * @return				The opacity of the brush as a {@code float} value
-	 * 						between {@code 0f} and {@code 1f}, where {@code 0f}
-	 * 						represents transparent, and {@code 1f} represents
-	 * 						opaque.
-	 */
-	public float getAlpha()
-	{
-		return alpha;
-	}
 
 	/**
 	 * 
@@ -135,7 +46,7 @@ public abstract class Brush
 		g.drawImage(brush, 0, 0, size, size, null);
 		g.dispose();
 	}
-	
+
 	/**
 	 * Creates a thumbnail of the Brush.
 	 * @throws IllegalStateException is thrown when the brush has not
@@ -147,6 +58,107 @@ public abstract class Brush
 		{
 			throw new IllegalStateException("Brush not initialized.");
 		}
+	}
+
+	/**
+	 * Returns a copy of the brush.
+	 * Returns null if brush is not initialized.
+	 * @return
+	 */
+	public BufferedImage getImage()
+	{
+		if (brush == null)
+		{
+			return null;
+		}
+		
+		BufferedImage brushCopy = new BufferedImage(
+				brush.getWidth(),
+				brush.getHeight(),
+				brush.getType()
+		);
+		
+		Graphics2D g = brushCopy.createGraphics();
+		g.drawImage(brush, 0, 0, null);
+		g.dispose();
+		
+		return brushCopy;
+	}
+
+	/**
+	 * Returns a copy of the thumbnail of the brush.
+	 * Returns null if thumbnail of the brush is not initialized.
+	 * @return
+	 */
+	public BufferedImage getThumbImage()
+	{
+		if (thumbBrush == null)
+		{
+			return null;
+		}
+	
+		BufferedImage thumbBrushCopy = new BufferedImage(
+				thumbBrush.getWidth(),
+				thumbBrush.getHeight(),
+				thumbBrush.getType()
+		);
+		
+		Graphics2D g = thumbBrushCopy.createGraphics();
+		g.drawImage(thumbBrush, 0, 0, null);
+		g.dispose();
+	
+		return thumbBrushCopy;
+	}
+
+	/**
+	 * Returns the blending mode for the {@code Brush} object.
+	 * @return				The brush mode.
+	 */
+	public BlendingMode getMode()
+	{
+		return this.mode;
+	}
+
+	/**
+	 * Gets the name of the Brush.
+	 * @return	The name of the Brush.
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * Sets the name of the Brush.
+	 * @param name	The name of the Brush.
+	 */
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	
+	/**
+	 * Returns the opacity of the brush.
+	 * @return				The opacity of the brush as a {@code float} value
+	 * 						between {@code 0f} and {@code 1f}, where {@code 0f}
+	 * 						represents transparent, and {@code 1f} represents
+	 * 						opaque.
+	 */
+	public float getAlpha()
+	{
+		return alpha;
+	}
+
+	/**
+	 * Sets the opacity of the brush.
+	 * @param alpha			The opacity of the brush as a {@code float} value
+	 * 						between {@code 0f} and {@code 1f}, where {@code 0f}
+	 * 						represents transparent, and {@code 1f} represents
+	 * 						opaque.
+	 */
+	public void setAlpha(float alpha)
+	{
+		this.alpha = alpha;
 	}
 
 	/**

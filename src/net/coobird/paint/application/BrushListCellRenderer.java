@@ -37,7 +37,7 @@ public class BrushListCellRenderer
 		{
 			Brush b = (Brush)value;
 			this.setText(b.getName());
-			this.setIcon(new ImageIcon(b.getThumbBrush()));
+			this.setIcon(new ImageIcon(b.getThumbImage()));
 			
 			if (isSelected)
 			{

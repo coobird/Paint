@@ -81,7 +81,7 @@ public class BrushDriver
 
 			public void mousePressed(MouseEvent e)
 			{
-				b = ((Brush)list.getSelectedValue()).getBrush();
+				b = ((Brush)list.getSelectedValue()).getImage();
 				
 				g.drawImage(
 						b,

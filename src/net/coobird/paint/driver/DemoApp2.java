@@ -111,7 +111,7 @@ public class DemoApp2
 		brushListModel.addElement(new RegularEllipticalEraser(null, 4, 0, 1, 1f));
 		
 		final JPopupMenu brushPopupMenu = new JPopupMenu();
-		brushPopupMenu.add(new ActionMenuItem("Change color...") {
+		brushPopupMenu.add(new ActionMenuItem("Change Color...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				Brush b = (Brush)brushList.getSelectedValue();
@@ -121,7 +121,7 @@ public class DemoApp2
 					return;
 				}
 				
-				Color c = JColorChooser.showDialog(f, "Choose color", b.getColor());
+				Color c = JColorChooser.showDialog(f, "Choose Color...", b.getColor());
 				if (c == null)
 				{
 					return;
@@ -131,7 +131,7 @@ public class DemoApp2
 				brushList.repaint();
 			}
 		});
-		brushPopupMenu.add(new ActionMenuItem("Change size...") {
+		brushPopupMenu.add(new ActionMenuItem("Change Size...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				Brush b = (Brush)brushList.getSelectedValue();

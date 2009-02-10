@@ -49,7 +49,7 @@ public class BrushFilter
 		//TODO
 		// handle TYPE
 		
-		BufferedImage brushImg = brush.getBrush();
+		BufferedImage brushImg = brush.getImage();
 		Graphics2D g = layer.getGraphics();
 	
 		g.drawImage(
