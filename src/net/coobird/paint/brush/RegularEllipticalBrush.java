@@ -15,7 +15,6 @@ public class RegularEllipticalBrush extends Brush
 {
 	protected final static int DEFAULT_STEPS_DIVISOR = 2;
 
-	private int size;
 	private double angle;
 	private int steps;
 	
@@ -24,8 +23,6 @@ public class RegularEllipticalBrush extends Brush
 	 * ellipse. Must be in the range (0, 1].
 	 */
 	private double ratio;
-	private Color brushColor;
-	
 	/**
 	 * Cannot instantiate by the 0-argument constructor.
 	 */
@@ -60,7 +57,7 @@ public class RegularEllipticalBrush extends Brush
 
 		if (name == null)
 		{
-			this.setName("Regular Elliptical Brush (" + size + ")");
+			this.setDefaultName();
 		}
 		else
 		{
@@ -74,6 +71,11 @@ public class RegularEllipticalBrush extends Brush
 		this.brushColor = brushColor;
 		
 		makeBrushImage();
+	}
+	
+	protected void setDefaultName()
+	{
+		this.setName("Regular Elliptical Brush (" + size + ")");
 	}
 	
 	/**

@@ -30,8 +30,13 @@ public class SolidCircularBrush extends SolidEllipticalBrush
 			throw new IllegalArgumentException(msg);
 		}
 
-		this.setName("Solid Circular Brush (" + size + " px)");
+		this.setDefaultName();
 		
 		makeBrushImage();
+	}
+	
+	protected void setDefaultName()
+	{
+		this.setName("Solid Circular Brush (" + size + " px)");
 	}
 }

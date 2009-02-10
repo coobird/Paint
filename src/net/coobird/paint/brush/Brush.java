@@ -1,5 +1,6 @@
 package net.coobird.paint.brush;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -13,9 +14,18 @@ public abstract class Brush
 	protected String name;
 	protected BlendingMode mode = BlendingMode.BRUSH_NORMAL;
 	protected float alpha = 1f;
+	protected Color brushColor;
+	protected int size;
 	
 	public static final int THUMB_SIZE = 20;
 	protected static final int DEFAULT_BRUSH_TYPE = BufferedImage.TYPE_INT_ARGB;
+	
+	
+	/**
+	 * Sets the default name
+	 * @return
+	 */
+	protected abstract void setDefaultName();
 	
 	/**
 	 * Gets the name of the Brush.
@@ -113,7 +123,6 @@ public abstract class Brush
 
 	/**
 	 * 
-	 * @param size
 	 * @param brushColor
 	 */
 	protected void makeBrushThumbnail()
@@ -138,6 +147,44 @@ public abstract class Brush
 		{
 			throw new IllegalStateException("Brush not initialized.");
 		}
+	}
+
+	/**
+	 * Gets the color of the brush.
+	 * @return 				The {@code Color} of the brush.
+	 */
+	public Color getColor()
+	{
+		return brushColor;
+	}
+
+	/**
+	 * Sets the color of the brush.
+	 * @param c				The {@code Color} of the brush.
+	 */
+	public void setColor(Color c)
+	{
+		this.brushColor = c;
+		makeBrushImage();
+		setDefaultName();
+	}
+
+	/**
+	 * @return the size
+	 */
+	public int getSize()
+	{
+		return size;
+	}
+
+	/**
+	 * @param size the size to set
+	 */
+	public void setSize(int size)
+	{
+		this.size = size;
+		makeBrushImage();
+		setDefaultName();
 	}
 
 	/**

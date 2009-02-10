@@ -34,11 +34,16 @@ public class RegularCircularBrush extends RegularEllipticalBrush
 
 		if (name == null)
 		{
-			this.setName("Regular Circular Brush (" + size + " px)");
+			this.setDefaultName();
 		}
 		else
 		{
 			this.setName(name);
 		}
+	}
+	
+	protected void setDefaultName()
+	{
+		this.setName("Regular Circular Brush (" + size + " px)");
 	}
 }

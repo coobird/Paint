@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 public class SolidEllipticalBrush extends Brush
 {
-	private int size;
 	private double angle;
 	
 	/** 
@@ -14,8 +13,6 @@ public class SolidEllipticalBrush extends Brush
 	 * ellipse. Must be in the range (0, 1].
 	 */
 	private double ratio;
-	private Color brushColor;
-	
 	/**
 	 * Cannot instantiate by the 0-argument constructor.
 	 */
@@ -46,7 +43,7 @@ public class SolidEllipticalBrush extends Brush
 
 		if (name == null)
 		{
-			this.setName("Solid Elliptical Brush (" + size + ")");
+			this.setDefaultName();
 		}
 		else
 		{
@@ -59,6 +56,11 @@ public class SolidEllipticalBrush extends Brush
 		this.brushColor = brushColor;
 		
 		makeBrushImage();
+	}
+	
+	protected void setDefaultName()
+	{
+		this.setName("Solid Elliptical Brush (" + size + ")");
 	}
 	
 	@Override

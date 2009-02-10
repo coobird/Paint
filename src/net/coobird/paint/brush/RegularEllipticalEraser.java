@@ -33,8 +33,13 @@ public class RegularEllipticalEraser extends RegularEllipticalBrush
 	{
 		super(name, size, angle, ratio, Color.black);
 		this.mode = BlendingMode.BRUSH_ERASER;
-		this.setName("Regular Elliptical Eraser (" + size +")");
+		this.setDefaultName();
 		this.alpha = alpha;
+	}
+	
+	protected void setDefaultName()
+	{
+		this.setName("Regular Elliptical Eraser (" + size +")");
 	}
 
 	/* (non-Javadoc)

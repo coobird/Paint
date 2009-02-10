@@ -13,11 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -32,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.Popup;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -60,6 +63,17 @@ import net.coobird.paint.io.FormatManager;
 
 public class DemoApp2
 {
+	class ActionMenuItem extends JMenuItem implements ActionListener
+	{
+		public ActionMenuItem(String s)
+		{
+			addActionListener(this);
+			setText(s);
+		}
+		
+		public void actionPerformed(ActionEvent e) {};
+	}
+
 	private void makeGUI()
 	{
 		final JFrame f = new JFrame("Paint Dot Jar Demonstration 2");
@@ -95,6 +109,57 @@ public class DemoApp2
 		brushListModel.addElement(new SolidCircularBrush(null, 4));
 		brushListModel.addElement(new RegularCircularBrush(null, 4, Color.black));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 4, 0, 1, 1f));
+		
+		final JPopupMenu brushPopupMenu = new JPopupMenu();
+		brushPopupMenu.add(new ActionMenuItem("Change color...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				Brush b = (Brush)brushList.getSelectedValue();
+				
+				if (b == null)
+				{
+					return;
+				}
+				
+				Color c = JColorChooser.showDialog(f, "Choose color", b.getColor());
+				if (c == null)
+				{
+					return;
+				}
+				
+				b.setColor(c);
+				brushList.repaint();
+			}
+		});
+		brushPopupMenu.add(new ActionMenuItem("Change size...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				Brush b = (Brush)brushList.getSelectedValue();
+				
+				String s = JOptionPane.showInputDialog(f, "Size:");
+				
+				b.setSize(Integer.parseInt(s));				
+
+				brushList.repaint();
+			}
+		});
+		
+		brushList.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					brushPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+			public void mouseReleased(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					brushPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+		});
 
 		final JScrollPane brushListSp = new JScrollPane(brushList);
 		listPanels.add(brushListSp);
@@ -275,17 +340,6 @@ public class DemoApp2
 			}
 		});
 		ilList.setDragEnabled(true);
-		
-		class ActionMenuItem extends JMenuItem implements ActionListener
-		{
-			public ActionMenuItem(String s)
-			{
-				addActionListener(this);
-				setText(s);
-			}
-			
-			public void actionPerformed(ActionEvent e) {};
-		}
 		
 		final JPopupMenu popupMenu = new JPopupMenu();
 		
