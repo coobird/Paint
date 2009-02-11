@@ -48,7 +48,8 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	/**
 	 * Number of pixels to overlap between the rendered quadrants.
 	 */
-	private static final int OVERLAP = 5;
+	private static final int DEFAULT_OVERLAP = 5;
+	private int overlap;
 
 	/**
 	 * The wrapped {@code ImageFilter}.
@@ -66,10 +67,28 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	 */
 	public ImageFilterThreadingWrapper(ImageFilter filter)
 	{
+		this(filter, DEFAULT_OVERLAP);
+	}
+
+	/**
+	 * Instantiates a {@code ThreadedWrapperFilter} object with the specified
+	 * {@link ImageFilter}, with a specified overlap between the processed.
+	 * 
+	 * The overlap should be at least as much the single most largest dimension
+	 * of a convolution matrix that is being applied.
+	 * 
+	 * subimages.
+	 * @param filter		The {@code ImageFilter} to wrap.
+	 * @param overlap		The overlap of the processed subimages in pixels.
+	 */
+	public ImageFilterThreadingWrapper(ImageFilter filter, int overlap)
+	{
 		this(
 				"ImageFilterThreadingWrapper wrapping " + filter.getName(),
 				filter
 		);
+		
+		this.overlap = overlap;
 	}
 	
 	/**
@@ -92,6 +111,8 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	@Override
 	public BufferedImage processImage(BufferedImage img)
 	{
+		final int overlap = this.overlap;
+		
 		ExecutorService es = null;
 		
 		/*
@@ -131,29 +152,29 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 		final BufferedImage i1 = img.getSubimage(
 				0,
 				0,
-				halfWidth + OVERLAP,
-				halfHeight + OVERLAP
+				halfWidth + overlap,
+				halfHeight + overlap
 		);
 		
 		final BufferedImage i2 = img.getSubimage(
-				halfWidth - OVERLAP,
+				halfWidth - overlap,
 				0,
-				halfWidth + OVERLAP,
-				halfHeight + OVERLAP
+				halfWidth + overlap,
+				halfHeight + overlap
 		);
 		
 		final BufferedImage i3 = img.getSubimage(
 				0,
-				halfHeight - OVERLAP,
-				halfWidth + OVERLAP,
-				halfHeight + OVERLAP
+				halfHeight - overlap,
+				halfWidth + overlap,
+				halfHeight + overlap
 		);
 		
 		final BufferedImage i4 = img.getSubimage(
-				halfWidth - OVERLAP,
-				halfHeight - OVERLAP,
-				halfWidth + OVERLAP,
-				halfHeight + OVERLAP
+				halfWidth - overlap,
+				halfHeight - overlap,
+				halfWidth + overlap,
+				halfHeight + overlap
 		);
 		
 		BufferedImage result = new BufferedImage(
@@ -186,7 +207,7 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 			public BufferedImage call()
 			{
 				return filter.processImage(i2).getSubimage(
-						OVERLAP,
+						overlap,
 						0,
 						halfWidth,
 						halfHeight
@@ -198,7 +219,7 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 			{
 				return filter.processImage(i3).getSubimage(
 						0,
-						OVERLAP,
+						overlap,
 						halfWidth,
 						halfHeight
 				);
@@ -208,8 +229,8 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 			public BufferedImage call()
 			{
 				return filter.processImage(i4).getSubimage(
-						OVERLAP,
-						OVERLAP,
+						overlap,
+						overlap,
 						halfWidth,
 						halfHeight
 				);

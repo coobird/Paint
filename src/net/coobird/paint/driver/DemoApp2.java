@@ -836,6 +836,81 @@ public class DemoApp2
 				}).start();
 			}
 		});
+		
+		filterMenu.add(new ActionMenuItem("Blur More Concurrent 7x7") {
+			public void actionPerformed(ActionEvent e)
+			{
+				final JProgressBar pb = new JProgressBar();
+				final JDialog d = new JDialog(f);
+				JPanel panel = new JPanel(new BorderLayout());
+				pb.setValue(0);
+				pb.setStringPainted(true);
+				panel.add(new JLabel("Processing filter..."), BorderLayout.NORTH);
+				panel.add(pb, BorderLayout.CENTER);
+				d.getContentPane().add(panel);
+				d.pack();
+				d.setVisible(true);
+				
+				new Thread(new Runnable() {
+					public void run()
+					{
+						long st = System.currentTimeMillis();
+						
+						ImageFilter filter = new ImageFilterThreadingWrapper(
+								new RepeatableMatrixFilter(
+										7,
+										7,
+										1,
+										new float[] {
+												0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f,
+												0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f,
+												0.0f,	0.0f,	0.0f,	 0.1f,	0.0f,	0.0f,	0.0f,
+												0.05f,	0.05f,	0.1f,	 0.2f,	0.1f,	0.05f,	0.05f,
+												0.0f,	0.0f,	0.0f,	 0.1f,	0.0f,	0.0f,	0.0f,
+												0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f,
+												0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f
+										}
+								),
+								10
+						);
+						
+						final int inc = 100 / ch.getCanvas().getLayers().size();
+						
+						for (ImageLayer il : ch.getCanvas().getLayers())
+						{
+							il.setImage(filter.processImage(il.getImage()));
+							
+							try
+							{
+								SwingUtilities.invokeAndWait(new Runnable() {
+									public void run()
+									{
+										pb.setValue(pb.getValue() + inc);	
+									}
+								});
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							catch (InvocationTargetException e)
+							{
+								e.printStackTrace();
+							}
+						}
+						
+						long tp = System.currentTimeMillis() - st;
+						System.out.println("complete in: " + tp);
+						
+						pb.setValue(100);
+						d.dispose();
+						p.repaint();
+						ilList.repaint();
+						filter = null;
+					}
+				}).start();
+			}
+		});
 
 		filterMenu.add(new ActionMenuItem("No Effect") {
 			public void actionPerformed(ActionEvent e)
