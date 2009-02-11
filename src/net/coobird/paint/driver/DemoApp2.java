@@ -559,6 +559,40 @@ public class DemoApp2
 		});
 		
 		fileMenu.addSeparator();
+		
+		fileMenu.add(new ActionMenuItem("Import Layer...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				JFileChooser fc = new JFileChooser();
+				for (FileFilter filter : FormatManager.getInputFileFilters())
+				{
+					fc.addChoosableFileFilter(filter);
+				}
+				
+				int option = fc.showOpenDialog(f);
+				
+				if (option != JFileChooser.APPROVE_OPTION)
+					return;
+				
+				File f = fc.getSelectedFile();
+				
+				Canvas c = FormatManager.getImageInput(f).read(f);
+				
+				for (ImageLayer layer : c.getLayers())
+				{
+					ch.getCanvas().addLayer(layer);
+				}
+
+				ilListModel.removeAllElements();
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(il);
+				}
+				p.repaint();
+			}
+		});
+		
+		fileMenu.addSeparator();
 
 		fileMenu.add(new ActionMenuItem("Exit") {
 			public void actionPerformed(ActionEvent arg0)
@@ -678,6 +712,12 @@ public class DemoApp2
 		});
 
 		layerMenu.add(new ActionMenuItem("Grow Layer to Canvas") {
+			public void actionPerformed(ActionEvent e)
+			{
+			}
+		});
+		
+		layerMenu.add(new ActionMenuItem("Resize Canvas...") {
 			public void actionPerformed(ActionEvent e)
 			{
 			}
