@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -139,6 +140,42 @@ public class DemoApp2
 				
 				b.setSize(Integer.parseInt(s));				
 
+				brushList.repaint();
+			}
+		});
+		brushPopupMenu.add(new ActionMenuItem("Properties...") {
+			public void actionPerformed(ActionEvent e)
+			{
+				Brush b = (Brush)brushList.getSelectedValue();
+				
+//				JPanel p = new JPanel(new GridLayout(0,1));
+				JPanel p = new JPanel(new BorderLayout());
+				JSlider brushSize = new JSlider(1, 200, b.getSize());
+				JSlider alpha = new JSlider(0, 100, Math.round(b.getAlpha() * 100));
+				JColorChooser color = new JColorChooser(b.getColor());
+				
+				JPanel ip = new JPanel(new GridLayout(0,1));
+				
+				ip.add(new JLabel("Brush size:"));
+				ip.add(brushSize);
+				ip.add(new JLabel("Alpha:"));
+				ip.add(alpha);
+				
+				p.add(ip, BorderLayout.CENTER);
+				p.add(color, BorderLayout.SOUTH);
+				p.validate();
+				
+				int option = JOptionPane.showConfirmDialog(f, p, "Properties", JOptionPane.OK_CANCEL_OPTION);
+				
+				if (option == JOptionPane.CANCEL_OPTION)
+				{
+					return;
+				}
+				
+				b.setSize(brushSize.getValue());
+				b.setAlpha(((float)alpha.getValue()/100f));
+				b.setColor(color.getColor());
+				
 				brushList.repaint();
 			}
 		});
