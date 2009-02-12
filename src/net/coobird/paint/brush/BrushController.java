@@ -127,9 +127,6 @@ public class BrushController
 		double distX = lastX - action.getX();
 		double distY = lastY - action.getY();
 	
-//		System.out.println(distX);
-//		System.out.println(distY);
-		
 		double dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
 		
 		double steps = dist / (double)(brushImage.getWidth() / (double)STEP_DIVISION);
@@ -209,6 +206,22 @@ public class BrushController
 		}
 	}
 
+	/*
+	 * Note: Exception happened here, may be threading-related.
+	 *  
+	 * Exception in thread "pool-1-thread-1" java.util.NoSuchElementException
+	at java.util.LinkedList.remove(Unknown Source)
+	at java.util.LinkedList.removeFirst(Unknown Source)
+	at java.util.LinkedList.remove(Unknown Source)
+	at net.coobird.paint.brush.BrushController.processBrush(BrushController.java:217)
+	at net.coobird.paint.brush.BrushController.access$1(BrushController.java:215)
+	at net.coobird.paint.brush.BrushController$DrawingThread.run(BrushController.java:397)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(Unknown Source)processing
+
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+	 */
+	
 	/**
 	 * Processes a {@code BrushAction} in the queue.
 	 */

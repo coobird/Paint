@@ -52,6 +52,16 @@ Layers
 -> Allow merge of layers
 -> Merge visible, Merge down/up
 
+-> Text Layers! --> Refactor?
+ImageLayer/TextLayer <- Layer ?
+
+
+Selection
+---------
+-> ImageLayer takes care of *clipping* while selecting -
+---> Graphics context will get setClip to a shape of selection
+-> Have the ImageLayerCellRenderer indicate that selection is in place
+
 Drawing
 -------
 Depending on the selected tool, swap out the MouseListener
