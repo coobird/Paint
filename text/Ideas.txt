@@ -61,6 +61,7 @@ Selection
 -> ImageLayer takes care of *clipping* while selecting -
 ---> Graphics context will get setClip to a shape of selection
 -> Have the ImageLayerCellRenderer indicate that selection is in place
+-> Allow selection and fill paint, etc.
 
 Drawing
 -------
@@ -91,6 +92,10 @@ as a Shape.
 from iterating over using PathIterator) with the brush rotated to be
 perpendicular to the stroke shape.
 
+Text Rendering
+--------------
+-> Add text rendering --> TextLayer?
+-> implement as selection with stroke?
 
 File format
 -----------

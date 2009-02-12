@@ -11,6 +11,12 @@ import java.util.concurrent.Executors;
 
 import net.coobird.paint.image.ImageLayer;
 
+/*
+ * FIXME Threading issues?
+ * synchronize methods?
+ * look into fixing the problems with threading, if exists.
+ */
+
 /**
  * The {@code BrushController} handles the drawing of brushes onto an image.
  * @author coobird
