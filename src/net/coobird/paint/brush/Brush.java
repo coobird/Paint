@@ -7,6 +7,11 @@ import java.awt.image.BufferedImage;
 
 import net.coobird.paint.BlendingMode;
 
+/**
+ * 
+ * @author coobird
+ *
+ */
 public abstract class Brush
 {
 	protected BufferedImage brush;
@@ -17,9 +22,8 @@ public abstract class Brush
 	protected Color brushColor;
 	protected int size;
 	
-	public static final int THUMB_SIZE = 20;
+	protected static final int THUMB_SIZE = 20;
 	protected static final int DEFAULT_BRUSH_TYPE = BufferedImage.TYPE_INT_ARGB;
-	
 	
 	/**
 	 * Sets the default name

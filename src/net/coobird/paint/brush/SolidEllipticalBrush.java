@@ -4,8 +4,16 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * The {@code SolidEllipticalBrush} class represents a solid elliptical brush.
+ * @author coobird
+ *
+ */
 public class SolidEllipticalBrush extends Brush
 {
+	/**
+	 * The rotation angle of the brush, in radians.
+	 */
 	private double angle;
 	
 	/** 
@@ -13,19 +21,24 @@ public class SolidEllipticalBrush extends Brush
 	 * ellipse. Must be in the range (0, 1].
 	 */
 	private double ratio;
+	
 	/**
-	 * Cannot instantiate by the 0-argument constructor.
+	 * Cannot instantiate this class with the default constructor.
 	 */
 	@SuppressWarnings("unused")
 	private SolidEllipticalBrush() {}
 	
 	/**
-	 * 
-	 * @param name
-	 * @param size
-	 * @param angle
-	 * @param ratio
-	 * @param brushColor
+	 * Instantiates a {@code SolidEllipticalBrush} object with a specified
+	 * name, size, angle, brush size ratio, and brush color.
+	 * @param name			The name of the brush.
+	 * @param size			The size of the brush, as the width. For a circular
+	 * 						brush, this will correspond to the diameter.
+	 * @param angle			The rotation angle of the brush, in radians.
+	 * @param ratio			The ratio between the semiminor and semimajor axes
+	 * 						of the elliptical brush. Must be in the range
+	 * 						{@code 0d} and {@code 1d}. 
+	 * @param brushColor	The color of the brush.
 	 */
 	public SolidEllipticalBrush(
 			String name,
@@ -58,11 +71,18 @@ public class SolidEllipticalBrush extends Brush
 		makeBrushImage();
 	}
 	
+	/**
+	 * Sets the default name for the instance of {@code SolidEllipticalBrush}.
+	 */
+	@Override
 	protected void setDefaultName()
 	{
 		this.setName("Solid Elliptical Brush (" + size + ")");
 	}
 	
+	/**
+	 * Generates the brush image.
+	 */
 	@Override
 	protected void makeBrushImage()
 	{

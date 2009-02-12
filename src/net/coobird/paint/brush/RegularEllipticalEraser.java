@@ -37,11 +37,18 @@ public class RegularEllipticalEraser extends RegularEllipticalBrush
 		this.alpha = alpha;
 	}
 	
+	/**
+	 * 
+	 */
+	@Override
 	protected void setDefaultName()
 	{
 		this.setName("Regular Elliptical Eraser (" + size +")");
 	}
 
+	/**
+	 * 
+	 */
 	/* (non-Javadoc)
 	 * @see net.coobird.paint.brush.Brush#makeBrushThumbnail()
 	 */

@@ -2,6 +2,14 @@ package net.coobird.paint.brush;
 
 import java.awt.Color;
 
+/**
+ * The {@code SolidCircularBrush} class represents a solid circular brush.
+ * 
+ * This class is a subclass of {@code SolidEllipticalBrush} where the rotation
+ * angle and the ratio of the ellipse are both set to zero.
+ * @author coobird
+ *
+ */
 public class SolidCircularBrush extends SolidEllipticalBrush
 {
 	/**

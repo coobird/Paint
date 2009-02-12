@@ -13,9 +13,23 @@ import java.awt.image.BufferedImage;
  */
 public class RegularEllipticalBrush extends Brush
 {
+	/**
+	 * The constant used to calculate the number of steps to use to render a
+	 * brush from the size of the brush.
+	 */
 	protected final static int DEFAULT_STEPS_DIVISOR = 2;
 
+	/** 
+	 * The ratio between the semiminor axis and the semimajor axis of the
+	 * ellipse. Must be in the range (0, 1].
+	 */
 	private double angle;
+	
+	/**
+	 * Specifies the number of steps are required to draw the brush.
+	 * This number corresponds to the number of concentric ellipses that are
+	 * rendered to draw the brush.
+	 */
 	private int steps;
 	
 	/** 
@@ -23,12 +37,21 @@ public class RegularEllipticalBrush extends Brush
 	 * ellipse. Must be in the range (0, 1].
 	 */
 	private double ratio;
+
 	/**
-	 * Cannot instantiate by the 0-argument constructor.
+	 * Cannot instantiate this class with the default constructor.
 	 */
 	@SuppressWarnings("unused")
 	private RegularEllipticalBrush() {}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param size
+	 * @param angle
+	 * @param ratio
+	 * @param brushColor
+	 */
 	public RegularEllipticalBrush(
 			String name,
 			int size,
@@ -40,6 +63,15 @@ public class RegularEllipticalBrush extends Brush
 		this(null, size, size / DEFAULT_STEPS_DIVISOR, angle, ratio, brushColor);
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param size
+	 * @param steps
+	 * @param angle
+	 * @param ratio
+	 * @param brushColor
+	 */
 	public RegularEllipticalBrush(
 			String name,
 			int size,
@@ -73,6 +105,10 @@ public class RegularEllipticalBrush extends Brush
 		makeBrushImage();
 	}
 	
+	/**
+	 * 
+	 */
+	@Override
 	protected void setDefaultName()
 	{
 		this.setName("Regular Elliptical Brush (" + size + ")");
