@@ -1,6 +1,5 @@
 package net.coobird.paint.image;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics;
@@ -26,6 +25,10 @@ import java.util.concurrent.Future;
  */
 public final class ProgressiveImageRenderer implements ImageRenderer
 {
+	/*
+	 * TODO drawBackground should be updated to allow offset (x,y,w,h)
+	 */
+	
 	private ExecutorService es;
 	
 	/**
@@ -39,7 +42,7 @@ public final class ProgressiveImageRenderer implements ImageRenderer
 	
 	private class ImageCallable implements Callable<BufferedImage>
 	{
-		int x,y,w,h; 
+		int x, y, w, h; 
 		BufferedImage img;
 		Canvas c;
 		
@@ -73,13 +76,10 @@ public final class ProgressiveImageRenderer implements ImageRenderer
 					continue;
 				}
 				
-				Composite layerComposite = AlphaComposite.getInstance(
-						layer.getMode().getComposite().getRule(),
-						layer.getAlpha()
-				);
+				g.setComposite(layer.getAlphaComposite());
 				
-				g.setComposite(layerComposite);
 				BufferedImage img = layer.getImage().getSubimage(x, y, w, h);
+				
 				g.drawImage(img, layer.getX(), layer.getY(), null);
 			}
 			
@@ -192,8 +192,15 @@ public final class ProgressiveImageRenderer implements ImageRenderer
 			BufferedImage result3 = f3.get();
 			BufferedImage result4 = f4.get();
 			
+			/*
+			 * TODO re-order this to come before f#.get()?
+			 * Possibly allow better performance?
+			 * Or would it slow things down if many threads are already running?
+			 */
 			Graphics2D g = img.createGraphics();
+			
 			drawBackground(img);
+			
 			g.drawImage(result1, 0, 0, null);
 			g.drawImage(result2, c.getWidth() / 2, 0, null);
 			g.drawImage(result3, 0, c.getHeight() / 2, null);

@@ -1,6 +1,5 @@
 package net.coobird.paint.image;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics;
@@ -23,17 +22,8 @@ public final class DefaultImageRenderer implements ImageRenderer
 	 */
 	
 	/*
-	 * FIXME don't draw background on export to image
-	 * investigate a way to diable background drawing on save to image
+	 * TODO drawBackground should be updated to allow offset (x,y,w,h)
 	 */
-	
-	/**
-	 * Instantiates a {@code DefaultImageRenderer}.
-	 */
-	public DefaultImageRenderer()
-	{
-		
-	}
 	
 	/**
 	 * Renders the ImageLayers in the given Canvas to a single BufferedImage.

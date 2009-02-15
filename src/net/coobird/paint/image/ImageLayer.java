@@ -328,6 +328,18 @@ public class ImageLayer implements Serializable
 	{
 		this.alpha = alpha;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public AlphaComposite getAlphaComposite()
+	{
+		return AlphaComposite.getInstance(
+				mode.getComposite().getRule(),
+				alpha
+		);
+	}
 
 	/**
 	 * @return the mode

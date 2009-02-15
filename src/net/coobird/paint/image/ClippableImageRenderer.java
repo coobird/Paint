@@ -1,6 +1,5 @@
 package net.coobird.paint.image;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics;
@@ -21,7 +20,6 @@ public final class ClippableImageRenderer
 	implements ImageRenderer, PartialImageRenderer
 {
 	private static final double SHOW_GRID_ZOOM_LEVEL = 2.0;
-	
 	
 	/**
 	 * Render the canvas.
@@ -237,7 +235,14 @@ public final class ClippableImageRenderer
 	 * Draws a checkered white and gray background.
 	 * @param img			The {@code BufferedImage}Å@to draw the background on.
 	 */
-	private void drawBackground(BufferedImage img, int x, int y, int width, int height, double zoom)
+	private void drawBackground(
+			BufferedImage img,
+			int x,
+			int y,
+			int width,
+			int height,
+			double zoom
+	)
 	{
 		/*
 		 * FIXME Doesnt work correctly with zoom.
