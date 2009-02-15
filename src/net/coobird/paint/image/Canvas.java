@@ -1,5 +1,6 @@
 package net.coobird.paint.image;
 
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -9,7 +10,6 @@ import java.util.List;
 
 public final class Canvas implements Serializable
 {
-	
 	/**
 	 * 
 	 */
@@ -22,12 +22,6 @@ public final class Canvas implements Serializable
 	
 	// private LayerNamer --> names the new layer
 	
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-	{
-		in.defaultReadObject();
-		// TODO Determine appropriate List to use.
-		layers = new ArrayList<ImageLayer>();
-	}
 	/**
 	 * Cannot instantiate a {@code Canvas} object without specification of size.
 	 */
@@ -41,7 +35,6 @@ public final class Canvas implements Serializable
 	 */
 	public Canvas(int width, int height)
 	{
-		// TODO Determine appropriate List to use.
 		layers = new ArrayList<ImageLayer>();
 		this.width = width;
 		this.height = height;
@@ -194,11 +187,42 @@ public final class Canvas implements Serializable
 	}
 	
 	/**
+	 * Resizes the canvas to fit all layers.
+	 * TODO Test this method to see if this works.
+	 */
+	public void pack()
+	{
+		Rectangle r = new Rectangle();
+		
+		for (ImageLayer il : layers)
+		{
+			r.add(new Rectangle(
+					il.getX(),
+					il.getY(),
+					il.getWidth(),
+					il.getHeight()
+			));
+		}
+		
+		setSize(r.width, r.height);
+	}
+	
+	/**
 	 * Clears the current contents of the {@link Canvas} object.
 	 */
 	public void clear()
 	{
 		layers.clear();
+	}
+	
+	/**
+	 * 
+	 */
+	private void readObject(ObjectInputStream in)
+		throws IOException, ClassNotFoundException
+	{
+		in.defaultReadObject();
+		layers = new ArrayList<ImageLayer>();
 	}
 
 	/**

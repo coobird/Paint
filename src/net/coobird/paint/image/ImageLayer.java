@@ -32,8 +32,6 @@ public class ImageLayer implements Serializable
 	private String caption;
 	private boolean visible = true;
 	
-	// TODO
-	// Location of ImageLayer wrt some origin
 	private int x;
 	private int y;
 	private int width;
@@ -109,6 +107,8 @@ public class ImageLayer implements Serializable
 		/*
 		 *  Use AlphaComposite.Src as the Composite mode to draw source image
 		 *  directly onto thumbImage.
+		 *  Else, the original image will not be overwritten, and if there was
+		 *  change in alpha, it may not show up.
 		 */
 		g.setComposite(AlphaComposite.Src);
 		
@@ -370,6 +370,10 @@ public class ImageLayer implements Serializable
 		return msg;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public static int getDefaultType()
 	{
 		return DEFAULT_IMAGE_TYPE;
