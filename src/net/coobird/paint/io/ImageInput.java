@@ -28,6 +28,10 @@ public abstract class ImageInput
 	@SuppressWarnings("unused")
 	private ImageInput() {}
 	
+	/**
+	 * 
+	 * @param name
+	 */
 	protected ImageInput(String name)
 	{
 		if (name != null)
@@ -72,25 +76,6 @@ public abstract class ImageInput
 		filterList.add(f);
 	}
 	
-	/**
-	 * Gets the file extension of the given {@link File} object.
-	 * @param f				The {@code File} object to determine the extension
-	 * 						for.
-	 * @return				The file extension.
-	 */
-
-	protected static String getExtension(File f)
-	{
-		int lastIndex = f.getName().lastIndexOf('.');
-		
-		if (lastIndex == -1)
-		{
-			return "";
-		}
-		
-		return f.getName().substring(lastIndex + 1);
-	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

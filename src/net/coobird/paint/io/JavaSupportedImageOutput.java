@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.application.ApplicationUtils;
 import net.coobird.paint.image.Canvas;
@@ -24,84 +23,29 @@ public final class JavaSupportedImageOutput extends ImageOutput
 	{
 		if (ImageIO.getImageWritersByFormatName("png").hasNext())
 		{
-			addFilter(new FileFilter() {
-				@Override
-				public boolean accept(File f)
-				{
-					if (
-							f.isDirectory() ||
-							getExtension(f).toLowerCase().equals("png")
+			addFilter(new ImageFileFilter(
+					"Portable Network Graphics (png)",
+					new String[]{"png"}
 					)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-	
-				@Override
-				public String getDescription()
-				{
-					return "Portable Network Graphics (png)";
-				}
-			});
+			);
 		}
 		
 		if (ImageIO.getImageWritersByFormatName("jpeg").hasNext())
 		{
-			addFilter(new FileFilter() {
-				@Override
-				public boolean accept(File f)
-				{
-					if (
-							f.isDirectory() ||
-							getExtension(f).toLowerCase().equals("jpg") ||
-							getExtension(f).toLowerCase().equals("jpeg")
+			addFilter(new ImageFileFilter(
+					"JPEG Image (jpeg, jpg)",
+					new String[]{"jpg", "jpeg"}
 					)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-				
-				@Override
-				public String getDescription()
-				{
-					return "JPEG Image (jpeg, jpg)";
-				}
-			});
+			);
 		}
 		
 		if (ImageIO.getImageWritersByFormatName("bmp").hasNext())
 		{
-			addFilter(new FileFilter() {
-				@Override
-				public boolean accept(File f)
-				{
-					if (
-							f.isDirectory() ||
-							getExtension(f).toLowerCase().equals("bmp")
+			addFilter(new ImageFileFilter(
+					"Bitmap Image (bmp)",
+					new String[]{"bmp"}
 					)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-				
-				@Override
-				public String getDescription()
-				{
-					return "Bitmap Image (bmp)";
-				}
-			});
+			);
 		}
 	}
 	
@@ -121,7 +65,7 @@ public final class JavaSupportedImageOutput extends ImageOutput
 		/*
 		 * Determine format string from file extension.
 		 */
-		write(c, f, getExtension(f));
+		write(c, f, ImageFileFilter.getExtension(f));
 	}
 	
 	@Override
@@ -176,11 +120,12 @@ public final class JavaSupportedImageOutput extends ImageOutput
 		//FIXME getWriterFileSuffixes is from Java 1.6
 		String[] suffixes = ImageIO.getWriterFileSuffixes();
 
+		String fileExtension = ImageFileFilter.getExtension(f);
+
 		//TODO check if this next line will fail if 
-		
 		for (String suffix : suffixes)
 		{
-			if (suffix.equals(getExtension(f).toLowerCase()))
+			if (suffix.equals(fileExtension.toLowerCase()))
 			{
 				return true;
 			}

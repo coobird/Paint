@@ -9,7 +9,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
-import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
@@ -28,29 +27,11 @@ public final class DefaultImageOutput extends ImageOutput
 	
 	static
 	{
-		addFilter(new FileFilter() {
-			@Override
-			public boolean accept(File f)
-			{
-				if (
-						f.isDirectory() || 
-						getExtension(f).toLowerCase().equals("pjz")
+		addFilter(new ImageFileFilter(
+				"Paint dot Jar Format (pjz)",
+				new String[] {"pjz"}
 				)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			@Override
-			public String getDescription()
-			{
-				return "Paint dot Jar Format (pjz)";
-			}
-		});
+		);		
 	}
 
 	public DefaultImageOutput()
@@ -131,7 +112,7 @@ public final class DefaultImageOutput extends ImageOutput
 	@Override
 	public boolean supportsFile(File f)
 	{
-		if (getExtension(f).toLowerCase().equals("pjz"))
+		if (ImageFileFilter.getExtension(f).toLowerCase().equals("pjz"))
 		{
 			return true;
 		}
