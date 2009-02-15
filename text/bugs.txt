@@ -1,10 +1,14 @@
 Bugs
 -----
 
+--------------------------------------------------------------------------------
+
 1. Resize concurrent not working
 -> look at the ImageFilterThreadingWrapper to see if that's the problem.
 -> Size not changing, and drawn in wrong places.
 added: 02-15-2008
+
+--------------------------------------------------------------------------------
 
 2. Crash when rendering Canvas with shifted layer.
 -> Must be a problem with ClippedImageRenderer
@@ -12,3 +16,35 @@ added: 02-15-2008
 requested to be drawn. (Exception thrown saying that y + dy > height)
 added: 02-15-2008
 
+Stack trace:
+Exception in thread "AWT-EventQueue-0" java.awt.image.RasterFormatException: (y + height) is outside raster
+	at sun.awt.image.IntegerInterleavedRaster.createWritableChild(Unknown Source)
+	at java.awt.image.BufferedImage.getSubimage(Unknown Source)
+	at net.coobird.paint.image.ClippableImageRenderer.render(ClippableImageRenderer.java:158)
+	at net.coobird.paint.image.ClippableImageRenderer.render(ClippableImageRenderer.java:53)
+	at net.coobird.paint.driver.DemoApp2$5.paintComponent(DemoApp2.java:248)
+	at javax.swing.JComponent.paint(Unknown Source)
+	at javax.swing.JComponent.paintChildren(Unknown Source)
+	at javax.swing.JComponent.paint(Unknown Source)
+	at javax.swing.JViewport.paint(Unknown Source)
+	at javax.swing.JComponent.paintChildren(Unknown Source)
+	at javax.swing.JComponent.paint(Unknown Source)
+	at javax.swing.JComponent.paintToOffscreen(Unknown Source)
+	at javax.swing.BufferStrategyPaintManager.paint(Unknown Source)
+	at javax.swing.RepaintManager.paint(Unknown Source)
+	at javax.swing.JComponent._paintImmediately(Unknown Source)
+	at javax.swing.JComponent.paintImmediately(Unknown Source)
+	at javax.swing.RepaintManager.paintDirtyRegions(Unknown Source)
+	at javax.swing.RepaintManager.paintDirtyRegions(Unknown Source)
+	at javax.swing.RepaintManager.seqPaintDirtyRegions(Unknown Source)
+	at javax.swing.SystemEventQueueUtilities$ComponentWorkRequest.run(Unknown Source)
+	at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+	
+--------------------------------------------------------------------------------

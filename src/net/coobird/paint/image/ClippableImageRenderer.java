@@ -74,6 +74,7 @@ public final class ClippableImageRenderer
 		
 		// If the width or height is greater than the width or height of the
 		// source image, set the rendering width/height to source width/height.
+		// TODO how to handle width < 0 or height < 0?
 		if (width > c.getWidth())
 		{
 			width = c.getWidth();
@@ -141,11 +142,23 @@ public final class ClippableImageRenderer
 			{
 				subWidth = layerImg.getWidth();
 			}
+			else if (subWidth < 0)
+			{
+				subWidth = 0;
+			}
+			
 			if (subHeight > layerImg.getHeight())
 			{
 				subHeight = layerImg.getHeight();
 			}
+			else if (subHeight < 0)
+			{
+				subHeight = 0;
+			}
 			
+			/*
+			 * FIXME This fails when image layer is shifted to negative. 
+			 */
 			BufferedImage layerSubImage = layerImg.getSubimage(
 					x,
 					y,
