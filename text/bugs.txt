@@ -1,0 +1,14 @@
+Bugs
+-----
+
+1. Resize concurrent not working
+-> look at the ImageFilterThreadingWrapper to see if that's the problem.
+-> Size not changing, and drawn in wrong places.
+added: 02-15-2008
+
+2. Crash when rendering Canvas with shifted layer.
+-> Must be a problem with ClippedImageRenderer
+-> Crash occurs when portion of BufferedImage beyond the size of layer is
+requested to be drawn. (Exception thrown saying that y + dy > height)
+added: 02-15-2008
+
