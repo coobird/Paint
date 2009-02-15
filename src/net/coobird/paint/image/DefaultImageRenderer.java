@@ -81,12 +81,7 @@ public final class DefaultImageRenderer implements ImageRenderer
 				continue;
 			}
 			
-			Composite layerComposite = AlphaComposite.getInstance(
-					layer.getMode().getComposite().getRule(),
-					layer.getAlpha()
-			);
-			
-			g.setComposite(layerComposite);
+			g.setComposite(layer.getAlphaComposite());
 			g.drawImage(layer.getImage(), layer.getX(), layer.getY(), null);
 		}
 		
