@@ -726,22 +726,7 @@ public class DemoApp2
 		layerMenu.add(new ActionMenuItem("Size Canvas to Largest Layer") {
 			public void actionPerformed(ActionEvent e)
 			{
-				/*
-				 * TODO consider adding this to Canvas.
-				 */
-				Rectangle r = new Rectangle();
-				
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					r.add(new Rectangle(
-							il.getX(),
-							il.getY(),
-							il.getWidth(),
-							il.getHeight()
-					));
-				}
-				
-				ch.getCanvas().setSize(r.width, r.height);
+				ch.getCanvas().pack();
 
 				ilList.repaint();
 				p.repaint();
@@ -1213,7 +1198,7 @@ public class DemoApp2
 		});
 	}
 	
-	class CanvasHolder
+	private static class CanvasHolder
 	{
 		Canvas c;
 		

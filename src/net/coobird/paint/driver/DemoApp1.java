@@ -236,7 +236,7 @@ public class DemoApp1
 		});
 	}
 	
-	class CanvasHolder
+	private static class CanvasHolder
 	{
 		Canvas c;
 		

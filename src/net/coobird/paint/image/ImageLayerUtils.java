@@ -22,17 +22,11 @@ public class ImageLayerUtils
 		
 		topRect.add(bottomRect);
 		
-		BufferedImage img = new BufferedImage(
-				topRect.width,
-				topRect.height,
-				ImageLayer.getDefaultType()
-		);
-		
 		Canvas c = new Canvas(topRect.width, topRect.height);
 		c.addLayer(top);
 		c.addLayer(bottom);
 		
-		img = ImageRendererFactory.getInstance().render(c, false);
+		BufferedImage img = ImageRendererFactory.getInstance().render(c, false);
 		
 		ImageLayer il = new ImageLayer(img);
 		

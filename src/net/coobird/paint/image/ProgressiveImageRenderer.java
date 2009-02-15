@@ -40,7 +40,7 @@ public final class ProgressiveImageRenderer implements ImageRenderer
 		es = Executors.newFixedThreadPool(4);
 	}
 	
-	private class ImageCallable implements Callable<BufferedImage>
+	private static class ImageCallable implements Callable<BufferedImage>
 	{
 		int x, y, w, h; 
 		BufferedImage img;

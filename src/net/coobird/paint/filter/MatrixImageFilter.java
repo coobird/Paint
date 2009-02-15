@@ -21,7 +21,7 @@ public class MatrixImageFilter extends ImageFilter
 		super(name);
 		this.width = width;
 		this.height = height;
-		this.matrix = matrix;
+		this.matrix = matrix.clone();
 	}
 	
 	@Override

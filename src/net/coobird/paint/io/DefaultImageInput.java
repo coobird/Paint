@@ -80,10 +80,16 @@ public final class DefaultImageInput extends ImageInput
 			
 			if (!canvasZipEntry.getName().equals("canvas.serialized"))
 			{
-				throw new IOException("Found: " + canvasZipEntry.getName() + " Expected: canvas.serialized");
+				throw new IOException(
+						"Found: " + canvasZipEntry.getName() +
+						" Expected: canvas.serialized"
+				);
 			}
 			
-			ObjectInputStream is = new ObjectInputStream(zf.getInputStream(canvasZipEntry));
+			ObjectInputStream is = new ObjectInputStream(
+					zf.getInputStream(canvasZipEntry)
+			);
+			
 			c = (Canvas)is.readObject();
 			
 			Map<String, ImageLayer> layerMap =

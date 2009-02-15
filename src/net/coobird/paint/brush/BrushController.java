@@ -140,8 +140,8 @@ public class BrushController
 		double incX = -distX / steps;
 		double incY = -distY / steps;
 		
-		double x = lastX - (brushImage.getWidth() / 2);
-		double y = lastY - (brushImage.getHeight() / 2);
+		double x = lastX - (brushImage.getWidth() / 2.0d);
+		double y = lastY - (brushImage.getHeight() / 2.0d);
 		
 		int intSteps = (int)Math.round(steps);
 		
@@ -152,7 +152,7 @@ public class BrushController
 			BufferedImage rotatedBrushImage = new BufferedImage(
 					brushImage.getWidth(),
 					brushImage.getHeight(),
-					BufferedImage.TYPE_INT_ARGB
+					Brush.DEFAULT_BRUSH_TYPE
 			);
 
 			Graphics2D brushg = rotatedBrushImage.createGraphics();
@@ -190,7 +190,7 @@ public class BrushController
 				BufferedImage rotatedBrushImage = new BufferedImage(
 						brushImage.getWidth(),
 						brushImage.getHeight(),
-						BufferedImage.TYPE_INT_ARGB
+						Brush.DEFAULT_BRUSH_TYPE
 				);
 				
 				Graphics2D brushg = rotatedBrushImage.createGraphics();
@@ -199,8 +199,8 @@ public class BrushController
 				{
 					brushg.rotate(
 							t,
-							rotatedBrushImage.getWidth() / 2,
-							rotatedBrushImage.getHeight() / 2
+							rotatedBrushImage.getWidth() / 2.0d,
+							rotatedBrushImage.getHeight() / 2.0d
 					);
 				}
 		
