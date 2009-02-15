@@ -41,7 +41,6 @@ public class ImageFileFilter extends FileFilter
 	@Override
 	public String getDescription()
 	{
-		// TODO Auto-generated method stub
 		return description;
 	}
 	
@@ -52,11 +51,16 @@ public class ImageFileFilter extends FileFilter
 	public String getDefaultExtension()
 	{
 		if (extensions[0] == null)
-			return null;
+			return "";
 		
 		return extensions[0];
 	}
 	
+	/*
+	 * TODO Refactor?
+	 * Possibly refactor this method to another util method?
+	 * This method is being called by other ImageInput/ImageOutput classes.
+	 */
 	/**
 	 * Gets the file extension of the given {@link File} object.
 	 * @param f				The {@code File} object to determine the extension

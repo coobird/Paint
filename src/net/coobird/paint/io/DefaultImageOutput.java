@@ -20,11 +20,6 @@ import net.coobird.paint.image.ImageLayer;
  */
 public final class DefaultImageOutput extends ImageOutput
 {
-	/*
-	 * TODO
-	 * store information on Canvas / ImageLayer to file.
-	 */
-	
 	static
 	{
 		addFilter(new ImageFileFilter(
@@ -100,9 +95,6 @@ public final class DefaultImageOutput extends ImageOutput
 	 */
 	public void write(Canvas c, File f, String format)
 	{
-		/*
-		 * Ignore format string.
-		 */
 		write(c, f);
 	}
 
