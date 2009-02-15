@@ -73,6 +73,7 @@ public class DemoApp2
 		
 		public void actionPerformed(ActionEvent e) {};
 	}
+	
 
 	private void makeGUI()
 	{
@@ -148,7 +149,6 @@ public class DemoApp2
 			{
 				Brush b = (Brush)brushList.getSelectedValue();
 				
-//				JPanel p = new JPanel(new GridLayout(0,1));
 				JPanel p = new JPanel(new BorderLayout());
 				JSlider brushSize = new JSlider(1, 200, b.getSize());
 				JSlider alpha = new JSlider(0, 100, Math.round(b.getAlpha() * 100));
@@ -760,7 +760,73 @@ public class DemoApp2
 			}
 		});
 		
-		////////////////		
+		////////////////
+		
+		class FilterWithProgressBar
+		{
+			final ImageFilter filter;
+			final JProgressBar pb;
+			final JDialog d;
+			
+			public FilterWithProgressBar(final ImageFilter filter)
+			{
+				pb = new JProgressBar();
+				d = new JDialog(f);
+				JPanel panel = new JPanel(new BorderLayout());
+				pb.setValue(0);
+				pb.setStringPainted(true);
+				panel.add(new JLabel("Processing filter..."), BorderLayout.NORTH);
+				panel.add(pb, BorderLayout.CENTER);
+				d.getContentPane().add(panel);
+				d.pack();
+				d.setVisible(true);
+				
+				this.filter = filter;
+			}
+			
+			public void run()
+			{
+				new Thread(new Runnable() {
+					public void run()
+					{
+						long st = System.currentTimeMillis();
+						
+						final int inc = 100 / ch.getCanvas().getLayers().size();
+						
+						for (ImageLayer il : ch.getCanvas().getLayers())
+						{
+							il.setImage(filter.processImage(il.getImage()));
+							
+							try
+							{
+								SwingUtilities.invokeAndWait(new Runnable() {
+									public void run()
+									{
+										pb.setValue(pb.getValue() + inc);	
+									}
+								});
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							catch (InvocationTargetException e)
+							{
+								e.printStackTrace();
+							}
+						}
+						
+						long tp = System.currentTimeMillis() - st;
+						System.out.println("complete in: " + tp);
+						
+						pb.setValue(100);
+						d.dispose();
+						p.repaint();
+						ilList.repaint();
+					}
+				}).start();
+			}
+		}
 	
 		filterMenu.add(new ActionMenuItem("Blur") {
 			public void actionPerformed(ActionEvent e)
@@ -771,221 +837,70 @@ public class DemoApp2
 						0.0f,	0.1f,	 0.0f
 				});
 				
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					il.setImage(filter.processImage(il.getImage()));
-				}
-				p.repaint();
+				new FilterWithProgressBar(filter).run();						
 			}
 		});
 
 		filterMenu.add(new ActionMenuItem("Blur More") {
 			public void actionPerformed(ActionEvent e)
 			{
-				final JProgressBar pb = new JProgressBar();
-				final JDialog d = new JDialog(f);
-				JPanel panel = new JPanel(new BorderLayout());
-				pb.setValue(0);
-				pb.setStringPainted(true);
-				panel.add(new JLabel("Processing filter..."), BorderLayout.NORTH);
-				panel.add(pb, BorderLayout.CENTER);
-				d.getContentPane().add(panel);
-				d.pack();
-				d.setVisible(true);
-
-				new Thread(new Runnable() {
-					public void run()
-					{
-						long st = System.currentTimeMillis();
-						
-						ImageFilter filter = new RepeatableMatrixFilter(
-								"Blur More",
-								3, 3, 10, new float[]{
-								0.0f,	0.1f,	 0.0f,
-								0.1f,	0.6f,	 0.1f,
-								0.0f,	0.1f,	 0.0f
-						});
-						
-						final int inc = 100 / ch.getCanvas().getLayers().size();
-						
-						for (ImageLayer il : ch.getCanvas().getLayers())
-						{
-							il.setImage(filter.processImage(il.getImage()));
-							
-							try
-							{
-								SwingUtilities.invokeAndWait(new Runnable() {
-									public void run()
-									{
-										pb.setValue(pb.getValue() + inc);	
-									}
-								});
-							}
-							catch (InterruptedException e)
-							{
-								ApplicationUtils.showExceptionMessage(e);
-							}
-							catch (InvocationTargetException e)
-							{
-								ApplicationUtils.showExceptionMessage(e);
-							}
-						}
-						
-						long tp = System.currentTimeMillis() - st;
-						System.out.println("complete in: " + tp);
-						
-						pb.setValue(100);
-						
-						d.dispose();
-						p.repaint();
-						ilList.repaint();
-					}
-				}).start();
+				ImageFilter filter = new RepeatableMatrixFilter(
+						"Blur More",
+						3,
+						3,
+						10,
+						new float[]{
+						0.0f,	0.1f,	 0.0f,
+						0.1f,	0.6f,	 0.1f,
+						0.0f,	0.1f,	 0.0f
+				});
+				
+				new FilterWithProgressBar(filter).run();						
 			}
 		});
 
 		filterMenu.add(new ActionMenuItem("Blur More Concurrent") {
 			public void actionPerformed(ActionEvent e)
 			{
-				final JProgressBar pb = new JProgressBar();
-				final JDialog d = new JDialog(f);
-				JPanel panel = new JPanel(new BorderLayout());
-				pb.setValue(0);
-				pb.setStringPainted(true);
-				panel.add(new JLabel("Processing filter..."), BorderLayout.NORTH);
-				panel.add(pb, BorderLayout.CENTER);
-				d.getContentPane().add(panel);
-				d.pack();
-				d.setVisible(true);
-
-				new Thread(new Runnable() {
-					public void run()
-					{
-						long st = System.currentTimeMillis();
-						
-						ImageFilter filter = new ImageFilterThreadingWrapper(
-								new RepeatableMatrixFilter(
-									3,
-									3,
-									10,
-									new float[] {
-											0.0f,	0.1f,	 0.0f,
-											0.1f,	0.6f,	 0.1f,
-											0.0f,	0.1f,	 0.0f
-									}
-								)
-						);
-						
-						final int inc = 100 / ch.getCanvas().getLayers().size();
-						
-						for (ImageLayer il : ch.getCanvas().getLayers())
-						{
-							il.setImage(filter.processImage(il.getImage()));
-							
-							try
-							{
-								SwingUtilities.invokeAndWait(new Runnable() {
-									public void run()
-									{
-										pb.setValue(pb.getValue() + inc);	
-									}
-								});
+				ImageFilter filter = new ImageFilterThreadingWrapper(
+						new RepeatableMatrixFilter(
+							3,
+							3,
+							10,
+							new float[] {
+									0.0f,	0.1f,	 0.0f,
+									0.1f,	0.6f,	 0.1f,
+									0.0f,	0.1f,	 0.0f
 							}
-							catch (InterruptedException e)
-							{
-								e.printStackTrace();
-							}
-							catch (InvocationTargetException e)
-							{
-								e.printStackTrace();
-							}
-						}
-						
-						long tp = System.currentTimeMillis() - st;
-						System.out.println("complete in: " + tp);
-						
-						pb.setValue(100);
-						d.dispose();
-						p.repaint();
-						ilList.repaint();
-						filter = null;
-					}
-				}).start();
+						)
+				);
+				
+				new FilterWithProgressBar(filter).run();
 			}
 		});
 		
 		filterMenu.add(new ActionMenuItem("Blur More Concurrent 7x7") {
 			public void actionPerformed(ActionEvent e)
 			{
-				final JProgressBar pb = new JProgressBar();
-				final JDialog d = new JDialog(f);
-				JPanel panel = new JPanel(new BorderLayout());
-				pb.setValue(0);
-				pb.setStringPainted(true);
-				panel.add(new JLabel("Processing filter..."), BorderLayout.NORTH);
-				panel.add(pb, BorderLayout.CENTER);
-				d.getContentPane().add(panel);
-				d.pack();
-				d.setVisible(true);
+				ImageFilter filter = new ImageFilterThreadingWrapper(
+						new RepeatableMatrixFilter(
+								7,
+								7,
+								1,
+								new float[] {
+										0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f,
+										0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f,
+										0.0f,	0.0f,	0.0f,	 0.1f,	0.0f,	0.0f,	0.0f,
+										0.05f,	0.05f,	0.1f,	 0.2f,	0.1f,	0.05f,	0.05f,
+										0.0f,	0.0f,	0.0f,	 0.1f,	0.0f,	0.0f,	0.0f,
+										0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f,
+										0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f
+								}
+						),
+						10
+				);
 				
-				new Thread(new Runnable() {
-					public void run()
-					{
-						long st = System.currentTimeMillis();
-						
-						ImageFilter filter = new ImageFilterThreadingWrapper(
-								new RepeatableMatrixFilter(
-										7,
-										7,
-										1,
-										new float[] {
-												0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f,
-												0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f,
-												0.0f,	0.0f,	0.0f,	 0.1f,	0.0f,	0.0f,	0.0f,
-												0.05f,	0.05f,	0.1f,	 0.2f,	0.1f,	0.05f,	0.05f,
-												0.0f,	0.0f,	0.0f,	 0.1f,	0.0f,	0.0f,	0.0f,
-												0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f,
-												0.0f,	0.0f,	0.0f,	 0.05f,	0.0f,	0.0f,	0.0f
-										}
-								),
-								10
-						);
-						
-						final int inc = 100 / ch.getCanvas().getLayers().size();
-						
-						for (ImageLayer il : ch.getCanvas().getLayers())
-						{
-							il.setImage(filter.processImage(il.getImage()));
-							
-							try
-							{
-								SwingUtilities.invokeAndWait(new Runnable() {
-									public void run()
-									{
-										pb.setValue(pb.getValue() + inc);	
-									}
-								});
-							}
-							catch (InterruptedException e)
-							{
-								e.printStackTrace();
-							}
-							catch (InvocationTargetException e)
-							{
-								e.printStackTrace();
-							}
-						}
-						
-						long tp = System.currentTimeMillis() - st;
-						System.out.println("complete in: " + tp);
-						
-						pb.setValue(100);
-						d.dispose();
-						p.repaint();
-						ilList.repaint();
-						filter = null;
-					}
-				}).start();
+				new FilterWithProgressBar(filter).run();
 			}
 		});
 
@@ -1000,11 +915,7 @@ public class DemoApp2
 						0.0f,	0.0f,	 0.0f
 				});
 				
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					il.setImage(filter.processImage(il.getImage()));
-				}
-				p.repaint();
+				new FilterWithProgressBar(filter).run();						
 			}
 		});
 
@@ -1017,11 +928,7 @@ public class DemoApp2
 						0.0f,	0.0f,	 0.0f
 				});
 				
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					il.setImage(filter.processImage(il.getImage()));
-				}
-				p.repaint();
+				new FilterWithProgressBar(filter).run();						
 			}
 		});
 
@@ -1036,11 +943,7 @@ public class DemoApp2
 						0.0f,	0.0f,	 0.25f,	0.0f,	0.0f
 				});
 				
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					il.setImage(filter.processImage(il.getImage()));
-				}
-				p.repaint();
+				new FilterWithProgressBar(filter).run();						
 			}
 		});
 		
@@ -1277,7 +1180,7 @@ public class DemoApp2
 		f.validate();
 		f.setVisible(true);
 	}
-	
+
 	public static void main(String[] args)
 	{
 		try
