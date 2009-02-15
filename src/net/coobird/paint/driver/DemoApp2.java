@@ -377,9 +377,9 @@ public class DemoApp2
 		});
 		ilList.setDragEnabled(true);
 		
-		final JPopupMenu popupMenu = new JPopupMenu();
+		final JPopupMenu ilPopupMenu = new JPopupMenu();
 		
-		popupMenu.add(new ActionMenuItem("Change Name...") {
+		ilPopupMenu.add(new ActionMenuItem("Change Name...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				String s = JOptionPane.showInputDialog(f, "Name:");
@@ -387,7 +387,7 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
-		popupMenu.add(new ActionMenuItem("Change Alpha...") {
+		ilPopupMenu.add(new ActionMenuItem("Change Alpha...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				String s = JOptionPane.showInputDialog(f, "Alpha:");
@@ -395,7 +395,7 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
-		popupMenu.add(new ActionMenuItem("Change Location...") {
+		ilPopupMenu.add(new ActionMenuItem("Change Location...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				String s = JOptionPane.showInputDialog(f, "Location (x,y):");
@@ -407,7 +407,7 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
-		popupMenu.add(new ActionMenuItem("Change Mode...") {
+		ilPopupMenu.add(new ActionMenuItem("Change Mode...") {
 			public void actionPerformed(ActionEvent e)
 			{
 				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
@@ -418,9 +418,9 @@ public class DemoApp2
 				p.repaint();
 			}
 		});
-		popupMenu.addSeparator();
+		ilPopupMenu.addSeparator();
 
-		popupMenu.add(new ActionMenuItem("New Layer") {
+		ilPopupMenu.add(new ActionMenuItem("New Layer") {
 			public void actionPerformed(ActionEvent e)
 			{
 				ch.getCanvas().addLayer(new ImageLayer(ch.getCanvas().getWidth(), ch.getCanvas().getHeight()));
@@ -435,7 +435,7 @@ public class DemoApp2
 			}
 		});
 		
-		popupMenu.add(new ActionMenuItem("Delete Layer") {
+		ilPopupMenu.add(new ActionMenuItem("Delete Layer") {
 			public void actionPerformed(ActionEvent e)
 			{
 				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
@@ -451,7 +451,7 @@ public class DemoApp2
 			}
 		});
 		
-		popupMenu.add(new ActionMenuItem("Merge Layer") {
+		ilPopupMenu.add(new ActionMenuItem("Merge Layer") {
 			public void actionPerformed(ActionEvent e)
 			{
 				int index = ilList.getSelectedIndex();
@@ -483,14 +483,14 @@ public class DemoApp2
 			{
 				if (e.isPopupTrigger())
 				{
-					popupMenu.show(e.getComponent(), e.getX(), e.getY());
+					ilPopupMenu.show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
 			public void mouseReleased(MouseEvent e)
 			{
 				if (e.isPopupTrigger())
 				{
-					popupMenu.show(e.getComponent(), e.getX(), e.getY());
+					ilPopupMenu.show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
 		});

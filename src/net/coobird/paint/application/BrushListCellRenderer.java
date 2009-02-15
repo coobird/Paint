@@ -9,6 +9,12 @@ import javax.swing.ListCellRenderer;
 
 import net.coobird.paint.brush.Brush;
 
+/**
+ * The {@code BrushListCellRenderer} class is the {@link ListCellRenderer} for
+ * displaying {@link Brush} objects in a {@link JList}.
+ * @author coobird
+ *
+ */
 public class BrushListCellRenderer 
 	extends JLabel
 	implements ListCellRenderer

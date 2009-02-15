@@ -15,6 +15,7 @@ added: 02-15-2008
 -> Crash occurs when portion of BufferedImage beyond the size of layer is
 requested to be drawn. (Exception thrown saying that y + dy > height)
 added: 02-15-2008
+fixed: 02-15-2008
 
 Stack trace:
 Exception in thread "AWT-EventQueue-0" java.awt.image.RasterFormatException: (y + height) is outside raster

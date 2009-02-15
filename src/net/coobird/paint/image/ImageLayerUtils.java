@@ -3,8 +3,20 @@ package net.coobird.paint.image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+/**
+ * Utility class for {@link ImageLayer} processing.
+ * @author coobird
+ *
+ */
 public class ImageLayerUtils
 {
+	/**
+	 * Merge the image contents of two {@link ImageLayer} objects.
+	 * @param top			The top {@code ImageLayer}.
+	 * @param bottom		The bottom {@code ImageLayer}.
+	 * @return				A new {@code ImageLayer} object containing an image
+	 * 						as a result of merging two {@code ImageLayer}s.
+	 */
 	public static ImageLayer mergeLayers(ImageLayer top, ImageLayer bottom)
 	{
 		Rectangle topRect = new Rectangle(
@@ -30,7 +42,6 @@ public class ImageLayerUtils
 		
 		ImageLayer il = new ImageLayer(img);
 		
-		// Set the imagelayer properties
 		il.setLocation(top.getX(), top.getY());
 		
 		return il;
