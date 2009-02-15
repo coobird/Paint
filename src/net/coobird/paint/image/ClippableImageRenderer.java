@@ -6,6 +6,7 @@ import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,6 +20,9 @@ import java.util.List;
 public final class ClippableImageRenderer 
 	implements ImageRenderer, PartialImageRenderer
 {
+	private static final double SHOW_GRID_ZOOM_LEVEL = 2.0;
+	
+	
 	/**
 	 * Render the canvas.
 	 * @param c				The canvas to render.
@@ -88,12 +92,12 @@ public final class ClippableImageRenderer
 		 * Produce the new image to use as the target to draw on.
 		 */
 		double zoom = c.getZoom();
-		int nwidth = (int)Math.round(width * zoom);
-		int nheight = (int)Math.round(height * zoom);
+		int scaledWidth = (int)Math.round(width * zoom);
+		int scaledHeight = (int)Math.round(height * zoom);
 		
 		BufferedImage img = new BufferedImage(
-				nwidth,
-				nheight,
+				scaledWidth,
+				scaledHeight,
 				ImageLayer.getDefaultType()
 		);
 		
@@ -124,32 +128,33 @@ public final class ClippableImageRenderer
 				continue;
 			}
 			
-			Composite layerComposite = AlphaComposite.getInstance(
-					layer.getMode().getComposite().getRule(),
-					layer.getAlpha()
-			);
-			
-			g.setComposite(layerComposite);
+			g.setComposite(layer.getAlphaComposite());
 			
 			/*
 			 * Get the part of the layer's image to draw to screen, and draw it.
+			 * Change the subWidth/subHeight if the width/height combined with
+			 * x/y will be beyond the size of image -- this is to prevent a
+			 * crash when trying to retrieve a subimage.
+			 */
+			/*
+			 * TODO Is subW/H < 0 check needed?
 			 */
 			BufferedImage layerImg = layer.getImage();
 			int subWidth = width;
 			int subHeight = height;
 			
-			if (subWidth > layerImg.getWidth())
+			if (x + subWidth > layerImg.getWidth())
 			{
-				subWidth = layerImg.getWidth();
+				subWidth = layerImg.getWidth() - x;
 			}
 			else if (subWidth < 0)
 			{
 				subWidth = 0;
 			}
 			
-			if (subHeight > layerImg.getHeight())
+			if (y + subHeight > layerImg.getHeight())
 			{
-				subHeight = layerImg.getHeight();
+				subHeight = layerImg.getHeight() - y;
 			}
 			else if (subHeight < 0)
 			{
@@ -157,21 +162,39 @@ public final class ClippableImageRenderer
 			}
 			
 			/*
-			 * FIXME This fails when image layer is shifted to negative. 
+			 * FIXME Temporary try-catch to find out when the rendering fails. 
 			 */
-			BufferedImage layerSubImage = layerImg.getSubimage(
-					x,
-					y,
-					subWidth,
-					subHeight
-			);
-			
-			g.drawImage(layerSubImage, layer.getX(), layer.getY(), null);
+			try
+			{
+				BufferedImage layerSubImage = layerImg.getSubimage(
+						x,
+						y,
+						subWidth,
+						subHeight
+				);
+
+				g.drawImage(layerSubImage, layer.getX(), layer.getY(), null);
+			}
+			catch (Exception e)
+			{
+				System.out.println(e.toString());
+				System.out.println(Arrays.toString(
+						new int[]{
+								x,
+								y,
+								subWidth,
+								subHeight,
+								layerImg.getWidth(), 
+								layerImg.getHeight()
+								}
+						)
+				);
+			}
 		}
 		
 		g.setComposite(originalComposite);
 		
-		if (zoom > 2)
+		if (zoom > SHOW_GRID_ZOOM_LEVEL)
 		{
 			drawPixelGrid(img, x, y, zoom);
 		}
@@ -181,6 +204,13 @@ public final class ClippableImageRenderer
 		return img;
 	}
 	
+	/**
+	 * Draw a pixel grid.
+	 * @param img
+	 * @param x
+	 * @param y
+	 * @param zoom
+	 */
 	private void drawPixelGrid(BufferedImage img, int x, int y, double zoom)
 	{
 		Graphics g = img.getGraphics();
@@ -210,9 +240,10 @@ public final class ClippableImageRenderer
 	private void drawBackground(BufferedImage img, int x, int y, int width, int height, double zoom)
 	{
 		/*
-		 * Doesnt work correctly with zoom.
+		 * FIXME Doesnt work correctly with zoom.
 		 * Works fine at zoom = 1.
 		 * Else, minor deviation. Probably a rounding problem.
+		 * Occurs after scrolling.
 		 */
 		Graphics g = img.getGraphics();
 		
