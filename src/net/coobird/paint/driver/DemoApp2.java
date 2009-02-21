@@ -271,9 +271,12 @@ public class DemoApp2
 			}
 		};
 		
-		MouseAdapter ma = new MouseAdapter()
+		
+		class DrawEventHandler extends MouseAdapter implements BrushController.BrushDrawListener
 		{
-			long lastTime = System.currentTimeMillis();
+//		MouseAdapter ma = new MouseAdapter()
+//		{
+//			long lastTime = System.currentTimeMillis();
 			
 			public void mouseDragged(MouseEvent e)
 			{
@@ -299,12 +302,19 @@ public class DemoApp2
 						sy
 				);
 				
-				long timePast = System.currentTimeMillis() - lastTime;
-				if (timePast > 50)
-				{
-					p.repaint();
-					lastTime = System.currentTimeMillis();
-				}
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						p.repaint();
+					}
+				});
+				
+//				long timePast = System.currentTimeMillis() - lastTime;
+//				if (timePast > 50)
+//				{
+//					p.repaint();
+//					lastTime = System.currentTimeMillis();
+//				}
 			}
 			
 			public void mouseReleased(MouseEvent e)
@@ -346,7 +356,22 @@ public class DemoApp2
 						sy
 				);
 			}
+
+			@Override
+			public void doneDrawing()
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						p.repaint();
+						System.out.println("called doneDrawing");
+					}
+				});
+			}
 		};
+		
+		DrawEventHandler ma = new DrawEventHandler();
+		bc.listener = ma;
 		
 		p.addMouseListener(ma);
 		p.addMouseMotionListener(ma);

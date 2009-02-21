@@ -24,6 +24,14 @@ import net.coobird.paint.image.ImageLayer;
  */
 public class BrushController
 {
+	public static interface BrushDrawListener
+	{
+		public void doneDrawing();
+	}
+	
+	public BrushDrawListener listener;
+	
+	
 	/**
 	 * The {@code BrushAction} class represents an event to process.
 	 * Events such as drawing and releasing a brush is represented as an
@@ -328,15 +336,15 @@ public class BrushController
 		
 		actionQueue.add(new BrushAction(il, b, x, y));
 		System.out.println("add brushevent");
-		long timePast = System.currentTimeMillis() - lastTime;
+//		long timePast = System.currentTimeMillis() - lastTime;
 		
-		if (!drawingThread.running && timePast > 100)
+		if (!drawingThread.running )//&& timePast > 100)
 		{
 			System.out.println("start thread");
 
 			executor.execute(drawingThread);
 			
-			lastTime = System.currentTimeMillis();
+//			lastTime = System.currentTimeMillis();
 		}
 	}
 	
@@ -415,6 +423,7 @@ public class BrushController
 				System.out.println("processing");
 				processBrush();
 			}
+			listener.doneDrawing();
 			running = false;
 		}
 	}
