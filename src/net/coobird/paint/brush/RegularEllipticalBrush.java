@@ -87,6 +87,12 @@ public class RegularEllipticalBrush extends Brush
 			throw new IllegalArgumentException(msg);
 		}
 
+		this.size = size;
+		this.steps = steps;
+		this.angle = angle;
+		this.ratio = ratio;
+		this.brushColor = brushColor;
+		
 		if (name == null)
 		{
 			this.setDefaultName();
@@ -95,12 +101,6 @@ public class RegularEllipticalBrush extends Brush
 		{
 			this.setName(name);
 		}
-		
-		this.size = size;
-		this.steps = steps;
-		this.angle = angle;
-		this.ratio = ratio;
-		this.brushColor = brushColor;
 		
 		makeBrushImage();
 	}
@@ -111,7 +111,7 @@ public class RegularEllipticalBrush extends Brush
 	@Override
 	protected void setDefaultName()
 	{
-		this.setName("Regular Elliptical Brush (" + size + ")");
+		this.setName("Regular Elliptical Brush (" + size + " px)");
 	}
 	
 	/**

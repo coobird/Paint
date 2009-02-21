@@ -43,7 +43,7 @@ public class RegularEllipticalEraser extends RegularEllipticalBrush
 	@Override
 	protected void setDefaultName()
 	{
-		this.setName("Regular Elliptical Eraser (" + size +")");
+		this.setName("Regular Elliptical Eraser (" + size +" px)");
 	}
 
 	/**
