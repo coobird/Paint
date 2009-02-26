@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -17,8 +18,15 @@ import javax.imageio.ImageIO;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 
+/**
+ * 
+ * @author coobird
+ *
+ */
 public final class DefaultImageInput extends ImageInput
 {
+	private boolean debug = true;
+	
 	static
 	{
 		addFilter(new ImageFileFilter(
@@ -28,19 +36,33 @@ public final class DefaultImageInput extends ImageInput
 		);
 	}
 	
+	/**
+	 * Instantiates a {@code DefaultImageInput} filter.
+	 */
 	public DefaultImageInput()
 	{
 		this("DefaultImageInput Filter");
 	}
 	
+	/**
+	 * Instantiates a {@code DefaultImageInput} filter with a specified name.
+	 * @param name
+	 */
 	public DefaultImageInput(String name)
 	{
 		super(name);
 	}
 	
 	/**
-	 * 
-	 * @param f		File to read.
+	 * Reads a file supported by the {@code DefaultImageInput} filter and
+	 * returns the contents of the image file as a {@code Canvas} object.
+	 * @param f				File to read.
+	 * @return				The {@code Canvas} object.
+	 * 						If something goes wrong, the method will return
+	 * 						{@code null}.
+	 * @throws NullPointerException		If {@code f} is {@code null}.
+	 * @throws IOException				If an error occurs while reading in
+	 * 									the serialzed data from a file.
 	 */
 	@Override
 	public Canvas read(File f)
@@ -89,7 +111,10 @@ public final class DefaultImageInput extends ImageInput
 				InputStream zis = zf.getInputStream(ze);
 				String entryName = ze.getName();
 				
-				System.out.println("begin reading " + entryName);
+				if (debug)
+				{
+					System.out.println("begin reading " + entryName);
+				}
 
 				if (entryName.endsWith(".serialized"))
 				{
@@ -111,7 +136,10 @@ public final class DefaultImageInput extends ImageInput
 					imgMap.put(filename, img);
 				}
 				
-				System.out.println("done reading " + entryName);
+				if (debug)
+				{
+					System.out.println("done reading " + entryName);
+				}
 			}
 			
 			/*
@@ -125,11 +153,11 @@ public final class DefaultImageInput extends ImageInput
 			 * sorted by natural order of the keys. However, use of other maps,
 			 * such as HashMap can cause the order to be incorrect.
 			 */
-			for (String key : imgMap.keySet())
+			for (Map.Entry<String, BufferedImage> entry: imgMap.entrySet())
 			{
-				ImageLayer layer = layerMap.get(key);
-				layer.setImage(imgMap.get(key));
-				c.addLayer(layer);
+				ImageLayer il = layerMap.get(entry.getKey());
+				il.setImage(entry.getValue());
+				c.addLayer(il);
 			}
 			
 			zf.close();
