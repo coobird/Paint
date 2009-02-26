@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class Canvas implements Serializable
@@ -130,13 +131,8 @@ public final class Canvas implements Serializable
 	 */
 	public List<ImageLayer> getRenderOrder()
 	{
-		ImageLayer[] array = new ImageLayer[1];
-		array = layers.toArray(array);
-		
-		List<ImageLayer> renderOrderList = new ArrayList<ImageLayer>();
-		
-		for (int i = array.length - 1; i >= 0; i--)
-			renderOrderList.add(array[i]);
+		List<ImageLayer> renderOrderList = new ArrayList<ImageLayer>(layers);
+		Collections.reverse(renderOrderList);
 		
 		return renderOrderList; 
 	}
