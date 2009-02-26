@@ -1,5 +1,11 @@
 package net.coobird.paint.driver;
 
+/* TODO Fix the problem with needing $zoom- imes click on the scroll pane
+ * in order to move one pixel when zoomed into image $zoom times.
+ *  
+ */
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -37,6 +43,8 @@ import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.BlendingMode;
@@ -244,6 +252,18 @@ public class DemoApp2
 				int height = r.height;
 				double zoom = ch.getCanvas().getZoom();
 				
+//				g.drawImage(
+//						renderer.render(
+//								ch.getCanvas(),
+//								(int)(r.x / zoom),
+//								(int)(r.y / zoom),
+//								(int)(width / zoom),
+//								(int)(height / zoom)
+//						),
+//						r.x,
+//						r.y,
+//						null
+//				);
 				g.drawImage(
 						renderer.render(
 								ch.getCanvas(),
@@ -1126,7 +1146,13 @@ public class DemoApp2
 
 		
 		final JScrollPane sp = new JScrollPane(p);
-
+		sp.getViewport().addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e)
+			{
+				sp.repaint();
+			}
+		});
 		
 		layerMenu.add(new ActionMenuItem("Zoom...") {
 			public void actionPerformed(ActionEvent e)
