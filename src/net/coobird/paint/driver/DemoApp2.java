@@ -103,7 +103,7 @@ public class DemoApp2
 		brushListModel.addElement(new RegularEllipticalBrush(null, 240, Math.PI * 0.4, 0.8, new Color(255,0,0,16)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 240, Math.PI * 0.2, 0.6, new Color(255,0,0,4)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 40, Math.PI * 0.9, 0.2, new Color(0,255,128,4)));
-		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.0, 0.4, new Color(0,0,128,4)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.5, 0.4, new Color(0,0,128,16)));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 40, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, Math.PI * 0.25, 0.5, 0.5f));
@@ -364,7 +364,7 @@ public class DemoApp2
 					public void run()
 					{
 						p.repaint();
-						System.out.println("called doneDrawing");
+						System.out.println("3 called doneDrawing");
 					}
 				});
 			}

@@ -248,7 +248,7 @@ public class BrushController
 				action.getState() == BrushAction.State.RELEASE
 		)
 		{
-			System.out.println("last brush released.");
+			System.out.println("4 last brush released.");
 			clearTheta();
 		}
 		
@@ -340,11 +340,11 @@ public class BrushController
 		
 		if (!drawingThread.running )//&& timePast > 100)
 		{
-			System.out.println("start thread");
+			System.out.println("1 start thread");
 
 			executor.execute(drawingThread);
 			
-//			lastTime = System.currentTimeMillis();
+//				lastTime = System.currentTimeMillis();
 		}
 	}
 	
@@ -420,11 +420,13 @@ public class BrushController
 			running = true;
 			while(!actionQueue.isEmpty())
 			{
-				System.out.println("processing");
+				System.out.println("2 processing");
 				processBrush();
+				System.out.println("2 done processing");
 			}
 			listener.doneDrawing();
 			running = false;
+			System.out.println("5 done with thread");
 		}
 	}
 }
