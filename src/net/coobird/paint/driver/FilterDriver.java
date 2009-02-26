@@ -18,7 +18,7 @@ public class FilterDriver
 				BufferedImage.TYPE_INT_ARGB
 		);
 		
-		BufferedImage result = filter.processImage(img);
+		filter.processImage(img);
 		
 		long timePast = System.currentTimeMillis() - startTime;
 		
