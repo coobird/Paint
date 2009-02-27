@@ -25,12 +25,19 @@ public class ImageLayerListCellRenderer
 	 */
 	private static final long serialVersionUID = 8390058918154536766L;
 
+	/**
+	 * Constructs an instance of {@code ImageLayerListCellRenderer}.
+	 */
 	public ImageLayerListCellRenderer()
 	{
 		super();
 		this.setOpaque(true);
 	}
 
+	/**
+	 * Generates a {@link ImageLayerListCellRenderer} object to display the
+	 * information about a {@link ImageLayer}.
+	 */
 	@Override
 	public Component getListCellRendererComponent(
 			JList list,

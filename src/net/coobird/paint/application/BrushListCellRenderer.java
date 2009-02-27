@@ -24,12 +24,19 @@ public class BrushListCellRenderer
 	 */
 	private static final long serialVersionUID = -2298872884258272114L;
 
+	/**
+	 * Constructs an instance of {@code BrushListCellRenderer}.
+	 */
 	public BrushListCellRenderer()
 	{
 		super();
 		this.setOpaque(true);
 	}
 	
+	/**
+	 * Generates a {@link BrushListCellRenderer} object to display the
+	 * information about a {@link Brush}.
+	 */
 	@Override
 	public Component getListCellRendererComponent(
 			JList list,
