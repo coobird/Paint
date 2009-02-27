@@ -15,7 +15,7 @@ public class StagedBrush extends RegularCircularBrush
 		
 		if (timePast < 100)
 		{
-			if (size < 60)
+			if (size < 100)
 			{
 				size = size + 1;
 				makeBrushImage();
@@ -23,7 +23,11 @@ public class StagedBrush extends RegularCircularBrush
 		}
 		else
 		{
-			size = defaultSize;
+			if (size != defaultSize)
+			{
+				size = defaultSize;
+				makeBrushImage();
+			}
 		}
 		
 		lastTime = System.currentTimeMillis();
@@ -32,7 +36,7 @@ public class StagedBrush extends RegularCircularBrush
 
 	public StagedBrush(String name, int size, Color brushColor)
 	{
-		super(name, size, brushColor);
+		super(name, size, 40, brushColor);
 		defaultSize = size;
 	}
 }

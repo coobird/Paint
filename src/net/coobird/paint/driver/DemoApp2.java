@@ -49,6 +49,7 @@ import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.RegularEllipticalEraser;
 import net.coobird.paint.brush.SolidCircularBrush;
+import net.coobird.paint.brush.StagedBrush;
 import net.coobird.paint.filter.ImageFilter;
 import net.coobird.paint.filter.ImageFilterThreadingWrapper;
 import net.coobird.paint.filter.MatrixImageFilter;
@@ -110,6 +111,7 @@ public class DemoApp2
 		brushListModel.addElement(new SolidCircularBrush(null, 4));
 		brushListModel.addElement(new RegularCircularBrush(null, 4, Color.black));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 4, 0, 1, 1f));
+		brushListModel.addElement(new StagedBrush(null, 10, Color.black));
 		
 		final JPopupMenu brushPopupMenu = new JPopupMenu();
 		brushPopupMenu.add(new ActionMenuItem("Change Color...") {
