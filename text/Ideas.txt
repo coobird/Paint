@@ -127,3 +127,9 @@ Write unit tests.
 
 1. Filters
 -> create File objects to see if the supports(File) method works.
+
+
+Error handling
+--------------
+Error output should be moved from System.out to another mechanism.
+Logging? (Probably too heavy)
