@@ -38,7 +38,7 @@ public class ImageLayer implements Serializable
 	private int height;
 	
 	private float alpha = 1.0f;
-	private BlendingMode mode = BlendingMode.LAYER_NORMAL;
+	private BlendingMode.Layer mode = BlendingMode.Layer.NORMAL;
 	
 	/**
 	 * {@code ImageLayer} must be constructed with a width and height parameter.
@@ -344,7 +344,7 @@ public class ImageLayer implements Serializable
 	/**
 	 * @return the mode
 	 */
-	public BlendingMode getMode()
+	public BlendingMode.Layer getMode()
 	{
 		return mode;
 	}
@@ -352,7 +352,7 @@ public class ImageLayer implements Serializable
 	/**
 	 * @param mode the mode to set
 	 */
-	public void setMode(BlendingMode mode)
+	public void setMode(BlendingMode.Layer mode)
 	{
 		this.mode = mode;
 	}

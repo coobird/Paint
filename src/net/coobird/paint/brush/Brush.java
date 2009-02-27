@@ -17,7 +17,7 @@ public abstract class Brush
 	protected BufferedImage brush;
 	protected BufferedImage thumbBrush;
 	protected String name;
-	protected BlendingMode mode = BlendingMode.BRUSH_NORMAL;
+	protected BlendingMode.Brush mode = BlendingMode.Brush.NORMAL;
 	protected float alpha = 1f;
 	protected Color brushColor;
 	protected int size;
@@ -118,7 +118,7 @@ public abstract class Brush
 	 * Returns the blending mode for the {@code Brush} object.
 	 * @return				The brush mode.
 	 */
-	public BlendingMode getMode()
+	public BlendingMode.Brush getMode()
 	{
 		return this.mode;
 	}

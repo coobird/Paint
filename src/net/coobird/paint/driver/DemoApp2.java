@@ -431,10 +431,10 @@ public class DemoApp2
 			public void actionPerformed(ActionEvent e)
 			{
 				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
-				JComboBox cb = new JComboBox(BlendingMode.values());
+				JComboBox cb = new JComboBox(BlendingMode.Layer.values());
 				cb.setSelectedItem(il.getMode());
 				JOptionPane.showMessageDialog(f, cb);
-				il.setMode((BlendingMode)cb.getSelectedItem());
+				il.setMode((BlendingMode.Layer)cb.getSelectedItem());
 				p.repaint();
 			}
 		});
