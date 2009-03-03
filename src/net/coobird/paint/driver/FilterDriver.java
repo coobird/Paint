@@ -31,13 +31,23 @@ public class FilterDriver
 	{
 		final int SIZE = 1000;
 		
+		try
+		{
+			Thread.sleep(10000);
+		}
+		catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		long time1 = 0;
 		long time2 = 0;
 		
 		ImageFilter filter = new RepeatableMatrixFilter(
 				3,
 				3,
-				10,
+				100,
 				new float[] {
 						0.0f, 0.0f, 0.0f,
 						0.0f, 1.0f, 0.0f,
@@ -55,13 +65,59 @@ public class FilterDriver
 		filter = new RepeatableMatrixFilter(
 				5,
 				5,
-				10,
+				100,
 				new float[] {
 						0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 						0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 						0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 						0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 						0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+				}
+		);
+		
+		time1 = perform(filter, SIZE, SIZE);
+		System.out.println("Time elapsed: " + time1 + " ms");
+		time2 = perform(new ImageFilterThreadingWrapper(filter), SIZE, SIZE);
+		System.out.println("Time elapsed: " + time2 + " ms");
+		
+		System.out.println("Decrease of " + (100d - ((double)time2 / (double)time1 * 100)) + "%");
+		
+		filter = new RepeatableMatrixFilter(
+				7,
+				7,
+				100,
+				new float[] {
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+				}
+		);
+		
+		time1 = perform(filter, SIZE, SIZE);
+		System.out.println("Time elapsed: " + time1 + " ms");
+		time2 = perform(new ImageFilterThreadingWrapper(filter), SIZE, SIZE);
+		System.out.println("Time elapsed: " + time2 + " ms");
+		
+		System.out.println("Decrease of " + (100d - ((double)time2 / (double)time1 * 100)) + "%");
+
+		filter = new RepeatableMatrixFilter(
+				9,
+				9,
+				100,
+				new float[] {
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 				}
 		);
 		
