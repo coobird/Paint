@@ -108,11 +108,9 @@ public class BrushController
 	}
 
 	private static final int UNDEFINED = Integer.MIN_VALUE;
-	private static final double UNDEFINED_THETA = Double.NaN;
 	
 	private Queue<BrushAction> actionQueue;
 	private double theta;
-	private double lastTheta = UNDEFINED_THETA;
 	private int lastX = UNDEFINED;
 	private int lastY = UNDEFINED;
 	private Brush lastBrush = null;
@@ -165,6 +163,12 @@ public class BrushController
 				brushImage.getHeight(),
 				Brush.DEFAULT_BRUSH_TYPE
 		);
+		
+		/*
+		 * Could improve rotating quality of brush is brush is recalculated
+		 * for each step. The rotated brush creation would have to be in
+		 * the loop instead.
+		 */
 
 		Graphics2D brushg = rotatedBrushImage.createGraphics();
 		if (rotatable)
@@ -178,23 +182,14 @@ public class BrushController
 
 		brushg.drawImage(brushImage, 0, 0, null);
 		brushg.dispose();
-		
-		System.out.println("intsteps" + intSteps);
 
 		for (int i = 0; i < intSteps; i++)
 		{
 			x += incX;
 			y += incY;
 			
-			System.out.println(x+","+y);
-			
 			g.drawImage(rotatedBrushImage, (int)x, (int)y, null);
 		}
-		
-		// tracer
-		g.setColor(Color.black);
-		g.fillOval(action.getX(), action.getY(), 2,2);
-		
 	}
 
 	/*
@@ -225,7 +220,6 @@ public class BrushController
 				action.getState() == BrushAction.State.RELEASE
 		)
 		{
-			System.out.println("4 last brush released.");
 			clearTheta();
 		}
 		
@@ -256,7 +250,6 @@ public class BrushController
 				calcTheta(action.getX(), action.getY());
 			}
 			
-			System.out.println("calling interpolateddraw for " + action);
 			interpolatedDraw(action);
 		}
 		else
@@ -266,7 +259,6 @@ public class BrushController
 
 			setCompositeForBrush(g, action.getBrush());
 			g.drawImage(brushImage, x, y, null);
-			System.out.println("regular draw for " + action);
 		}
 		
 		lastX = action.x;
@@ -313,14 +305,10 @@ public class BrushController
 //		x = x - il.getX();
 //		y = y - il.getY();
 		
-		BrushAction ba = new BrushAction(il, b, x, y);
-		actionQueue.add(ba);
-		System.out.println("add brushevent: " + ba);
+		actionQueue.add(new BrushAction(il, b, x, y));
 		
 		if (!drawingThread.running )//&& timePast > 100)
 		{
-			System.out.println("1 start thread");
-
 			executor.execute(drawingThread);
 		}
 	}
@@ -342,7 +330,6 @@ public class BrushController
 			lastX = x;
 			lastY = y;
 		}
-		lastTheta = theta;
 		
 		int diffX = lastX - x;
 		int diffY = lastY - y;
@@ -357,7 +344,6 @@ public class BrushController
 	{
 		lastX = UNDEFINED;
 		lastY = UNDEFINED;
-		lastTheta = UNDEFINED_THETA;
 		System.out.println("9 clear theta called");
 	}
 	
@@ -398,13 +384,10 @@ public class BrushController
 			running = true;
 			while(!actionQueue.isEmpty())
 			{
-				System.out.println("2 processing");
 				processBrush();
-				System.out.println("2 done processing");
 			}
 			listener.doneDrawing();
 			running = false;
-			System.out.println("5 done with thread");
 		}
 	}
 }

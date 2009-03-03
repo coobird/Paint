@@ -308,13 +308,6 @@ public class DemoApp2
 						p.repaint();
 					}
 				});
-				
-//				long timePast = System.currentTimeMillis() - lastTime;
-//				if (timePast > 50)
-//				{
-//					p.repaint();
-//					lastTime = System.currentTimeMillis();
-//				}
 			}
 			
 			public void mouseReleased(MouseEvent e)
@@ -364,7 +357,6 @@ public class DemoApp2
 					public void run()
 					{
 						p.repaint();
-						System.out.println("3 called doneDrawing");
 					}
 				});
 			}
