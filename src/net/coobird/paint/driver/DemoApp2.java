@@ -38,6 +38,8 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import net.coobird.paint.BlendingMode;
@@ -586,6 +588,7 @@ public class DemoApp2
 					ilListModel.addElement(il);
 				}
 				p.repaint();
+				p.revalidate();
 			}
 		});
 
@@ -1143,7 +1146,13 @@ public class DemoApp2
 
 		
 		final JScrollPane sp = new JScrollPane(p);
-
+		sp.getViewport().addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e)
+			{
+				sp.repaint();
+			}
+		});
 		
 		layerMenu.add(new ActionMenuItem("Zoom...") {
 			public void actionPerformed(ActionEvent e)
