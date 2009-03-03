@@ -1,6 +1,7 @@
 package net.coobird.paint.brush;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -97,6 +98,13 @@ public class BrushController
 			return this.state;
 			
 		}
+		
+		@Override
+		public String toString()
+		{
+			// TODO Auto-generated method stub
+			return "BrushAction: " + il + " " + x + " " + y + " " + state;
+		}
 	}
 
 	private static final int UNDEFINED = Integer.MIN_VALUE;
@@ -109,7 +117,6 @@ public class BrushController
 	private int lastY = UNDEFINED;
 	private Brush lastBrush = null;
 	private boolean rotatable = true;
-	private long lastTime = System.currentTimeMillis();
 
 	private DrawingThread drawingThread = new DrawingThread();
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -138,86 +145,56 @@ public class BrushController
 		setCompositeForBrush(g, action.getBrush());
 		BufferedImage brushImage = action.getBrush().getImage();
 
-		double distX = lastX - action.getX();
-		double distY = lastY - action.getY();
+		double distX = (double)lastX - (double)action.getX();
+		double distY = (double)lastY - (double)action.getY();
 	
 		double dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
 		
-		double steps = dist / (double)(brushImage.getWidth() / (double)STEP_DIVISION);
+		double steps = (dist / ((double)brushImage.getWidth() / (double)STEP_DIVISION)) + 1;
 		
 		double incX = -distX / steps;
 		double incY = -distY / steps;
 		
-		double x = lastX - (brushImage.getWidth() / 2.0d);
-		double y = lastY - (brushImage.getHeight() / 2.0d);
+		double x = (double)lastX - (brushImage.getWidth() / 2.0d);
+		double y = (double)lastY - (brushImage.getHeight() / 2.0d);
 		
 		int intSteps = (int)Math.round(steps);
 		
-		// true -> unsmooth transition of brush angle
-		// false -> smooth transition of brush angle --> buggy
-		if (false)
+		BufferedImage rotatedBrushImage = new BufferedImage(
+				brushImage.getWidth(),
+				brushImage.getHeight(),
+				Brush.DEFAULT_BRUSH_TYPE
+		);
+
+		Graphics2D brushg = rotatedBrushImage.createGraphics();
+		if (rotatable)
 		{
-			BufferedImage rotatedBrushImage = new BufferedImage(
-					brushImage.getWidth(),
-					brushImage.getHeight(),
-					Brush.DEFAULT_BRUSH_TYPE
+			brushg.rotate(
+					-theta,
+					rotatedBrushImage.getWidth() / 2.0d,
+					rotatedBrushImage.getHeight() / 2.0d
 			);
-
-			Graphics2D brushg = rotatedBrushImage.createGraphics();
-			if (rotatable)
-			{
-				brushg.rotate(
-						theta,
-						rotatedBrushImage.getWidth() / 2.0d,
-						rotatedBrushImage.getHeight() / 2.0d
-				);
-			}
-	
-			brushg.drawImage(brushImage, 0, 0, null);
-			
-			for (int i = 0; i < intSteps; i++)
-			{
-				x += incX;
-				y += incY;
-				
-				g.drawImage(rotatedBrushImage, (int)x, (int)y, null);
-			}
-			brushg.dispose();
 		}
-		else
-		{
-			double t = lastTheta;
-			double incTheta = lastTheta - theta;
-			
-			for (int i = 0; i < intSteps; i++)
-			{
-				x += incX;
-				y += incY;
-				t += incTheta;
 
-				BufferedImage rotatedBrushImage = new BufferedImage(
-						brushImage.getWidth(),
-						brushImage.getHeight(),
-						Brush.DEFAULT_BRUSH_TYPE
-				);
-				
-				Graphics2D brushg = rotatedBrushImage.createGraphics();
-				
-				if (rotatable)
-				{
-					brushg.rotate(
-							-t,
-							rotatedBrushImage.getWidth() / 2.0d,
-							rotatedBrushImage.getHeight() / 2.0d
-					);
-				}
+		brushg.drawImage(brushImage, 0, 0, null);
+		brushg.dispose();
 		
-				brushg.drawImage(brushImage, 0, 0, null);
-				
-				g.drawImage(rotatedBrushImage, (int)x, (int)y, null);
-				brushg.dispose();
-			}
+		System.out.println("intsteps" + intSteps);
+
+		for (int i = 0; i < intSteps; i++)
+		{
+			x += incX;
+			y += incY;
+			
+			System.out.println(x+","+y);
+			
+			g.drawImage(rotatedBrushImage, (int)x, (int)y, null);
 		}
+		
+		// tracer
+		g.setColor(Color.black);
+		g.fillOval(action.getX(), action.getY(), 2,2);
+		
 	}
 
 	/*
@@ -279,6 +256,7 @@ public class BrushController
 				calcTheta(action.getX(), action.getY());
 			}
 			
+			System.out.println("calling interpolateddraw for " + action);
 			interpolatedDraw(action);
 		}
 		else
@@ -288,6 +266,7 @@ public class BrushController
 
 			setCompositeForBrush(g, action.getBrush());
 			g.drawImage(brushImage, x, y, null);
+			System.out.println("regular draw for " + action);
 		}
 		
 		lastX = action.x;
@@ -334,17 +313,15 @@ public class BrushController
 //		x = x - il.getX();
 //		y = y - il.getY();
 		
-		actionQueue.add(new BrushAction(il, b, x, y));
-		System.out.println("add brushevent");
-//		long timePast = System.currentTimeMillis() - lastTime;
+		BrushAction ba = new BrushAction(il, b, x, y);
+		actionQueue.add(ba);
+		System.out.println("add brushevent: " + ba);
 		
 		if (!drawingThread.running )//&& timePast > 100)
 		{
 			System.out.println("1 start thread");
 
 			executor.execute(drawingThread);
-			
-//				lastTime = System.currentTimeMillis();
 		}
 	}
 	
@@ -381,6 +358,7 @@ public class BrushController
 		lastX = UNDEFINED;
 		lastY = UNDEFINED;
 		lastTheta = UNDEFINED_THETA;
+		System.out.println("9 clear theta called");
 	}
 	
 	/**
