@@ -34,6 +34,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -80,7 +81,7 @@ public class DemoApp2
 	{
 		final JFrame f = new JFrame("Paint Dot Jar Demonstration 2");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().setLayout(new BorderLayout());
+		//f.getContentPane().setLayout(new BorderLayout());
 		
 		ApplicationUtils.setMainComponent(f);
 		
@@ -209,7 +210,7 @@ public class DemoApp2
 		final DefaultListModel ilListModel = new DefaultListModel();
 		ilList.setModel(ilListModel);
 		
-		final int SIZE = 400;
+		final int SIZE = 800;
 		
 		final CanvasHolder ch = new CanvasHolder();
 		Canvas c = new Canvas(SIZE, SIZE);
@@ -226,9 +227,6 @@ public class DemoApp2
 		final JScrollPane ilListSp = new JScrollPane(ilList);
 		listPanels.add(ilListSp);
 		
-		f.getContentPane().add(listPanels, BorderLayout.EAST);
-		
-
 //		final ImageRenderer renderer = ImageRendererFactory.getInstance();
 		final PartialImageRenderer renderer = new ClippableImageRenderer();
 //		final ProgressiveImageRenderer renderer = new ProgressiveImageRenderer();
@@ -1186,11 +1184,17 @@ public class DemoApp2
 
 		bcMenu.setSelected(bc.getMovable());
 
-		f.setSize(600,450);
+		f.setSize(800, 600);
 		f.setLocation(200, 100);
-		f.getContentPane().add(sp);
+		
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setLeftComponent(sp);
+		splitPane.setRightComponent(listPanels);
+		f.getContentPane().add(splitPane);
+		
 		f.validate();
 		f.setVisible(true);
+		splitPane.setDividerLocation(0.7);
 	}
 
 	public static void main(String[] args)
