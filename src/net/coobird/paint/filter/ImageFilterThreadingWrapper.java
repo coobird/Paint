@@ -109,8 +109,9 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	public BufferedImage processImage(BufferedImage img)
 	{
 		final int overlap = this.overlap;
-		int width = img.getWidth();
-		int height = img.getHeight();
+		
+		final int width = img.getWidth();
+		final int height = img.getHeight();
 		
 		ExecutorService es = null;
 		
