@@ -28,7 +28,8 @@ import java.util.concurrent.Future;
 
 /**
  * <p>
- * The {@code ImageFilterThreadingWrapper} class is a wrapper class to
+ * The {@code ImageFilterThreadingWrapper} class is a wrapper class to enable
+ * multithreaded processing of images using a specified {@code ImageFilter}.
  * </p>
  * <p>
  * Note: An image with at least one dimension under 100 pixels will cause the
@@ -55,10 +56,6 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	 * The wrapped {@code ImageFilter}.
 	 */
 	private ImageFilter filter;
-	/**
-	 * Indicates whether or not multi-threaded rendering should be bypassed.
-	 */
-	private boolean bypass = false;
 
 	/**
 	 * Instantiates a {@code ThreadedWrapperFilter} object with the specified
@@ -112,35 +109,35 @@ public class ImageFilterThreadingWrapper extends ImageFilter
 	public BufferedImage processImage(BufferedImage img)
 	{
 		final int overlap = this.overlap;
+		int width = img.getWidth();
+		int height = img.getHeight();
 		
 		ExecutorService es = null;
 		
 		/*
 		 * If only one processor is available, multi-threaded processing will
 		 * be bypassed.
+		 * TODO Reconsider this behavior -- is using a single thread really
+		 * going to be better than multiple threads for single core?
 		 */
-		if (Runtime.getRuntime().availableProcessors() == 1)
+		/*
+		 *  If the input size is less than 100 in any dimension, or if the
+		 *  bypass flag is set, multi-threaded rendering will be bypassed, and
+		 *  processing will be performed by the wrapped
+		 */
+		if (
+				Runtime.getRuntime().availableProcessors() == 1 ||
+				width < 100 ||
+				height < 100
+		)
 		{
-			bypass = true;
+			return filter.processImage(img);
 		}
 		else
 		{
 			es = Executors.newFixedThreadPool(4);
 		}
 
-		int width = img.getWidth();
-		int height = img.getHeight();
-		
-		/*
-		 *  If the input size is less than 100 in any dimension, or if the
-		 *  bypass flag is set, multi-threaded rendering will be bypassed, and
-		 *  processing will be performed by the wrapped
-		 */
-		if (width < 100 || height < 100 || bypass)
-		{
-			return filter.processImage(img);
-		}
-		
 		final int halfWidth = width / 2;
 		final int halfHeight = height / 2;
 		
