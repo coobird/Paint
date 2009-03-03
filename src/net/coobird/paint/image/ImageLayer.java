@@ -96,9 +96,24 @@ public class ImageLayer implements Serializable
 	 */
 	private void renderThumbnail()
 	{
+		int thumbWidth = this.width / THUMBNAIL_SCALE;
+		int thumbHeight = this.height / THUMBNAIL_SCALE;
+		
+		/*
+		 * If either the thumbnail width or height is 0, then upon rendering
+		 * the thumbnail, a IllegalArgumentException will be thrown by trying
+		 * to instantiate a BufferedImage with any dimension that is 0.
+		 * This check will prevent illegal sized images.
+		 */
+		if (thumbWidth == 0 || thumbHeight == 0)
+		{
+			thumbWidth = this.width;
+			thumbHeight = this.height;
+		}
+		
 		thumbImage = new BufferedImage(
-				this.width / THUMBNAIL_SCALE,
-				this.height / THUMBNAIL_SCALE,
+				thumbWidth,
+				thumbHeight,
 				DEFAULT_IMAGE_TYPE
 		);
 		
