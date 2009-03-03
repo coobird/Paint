@@ -3,6 +3,11 @@ package net.coobird.paint.brush;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+/*
+ * Also, make a brush that gets smaller / fades with time, like a
+ * real brush.
+ */
+
 public class StagedBrush extends RegularCircularBrush
 {
 	long lastTime = 0;
@@ -15,7 +20,7 @@ public class StagedBrush extends RegularCircularBrush
 		
 		if (timePast < 100)
 		{
-			if (size < 60)
+			if (size < 100)
 			{
 				size = size + 1;
 				makeBrushImage();
@@ -23,7 +28,11 @@ public class StagedBrush extends RegularCircularBrush
 		}
 		else
 		{
-			size = defaultSize;
+			if (size != defaultSize)
+			{
+				size = defaultSize;
+				makeBrushImage();
+			}
 		}
 		
 		lastTime = System.currentTimeMillis();
