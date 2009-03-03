@@ -206,7 +206,7 @@ public class BrushController
 				if (rotatable)
 				{
 					brushg.rotate(
-							t,
+							-t,
 							rotatedBrushImage.getWidth() / 2.0d,
 							rotatedBrushImage.getHeight() / 2.0d
 					);
