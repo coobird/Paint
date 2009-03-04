@@ -24,6 +24,14 @@ import net.coobird.paint.image.ImageLayer;
  */
 public class BrushController
 {
+	public static interface BrushDrawListener
+	{
+		public void doneDrawing();
+	}
+	
+	public BrushDrawListener listener;
+	
+	
 	/**
 	 * The {@code BrushAction} class represents an event to process.
 	 * Events such as drawing and releasing a brush is represented as an
@@ -92,16 +100,13 @@ public class BrushController
 	}
 
 	private static final int UNDEFINED = Integer.MIN_VALUE;
-	private static final double UNDEFINED_THETA = Double.NaN;
 	
 	private Queue<BrushAction> actionQueue;
 	private double theta;
-	private double lastTheta = UNDEFINED_THETA;
 	private int lastX = UNDEFINED;
 	private int lastY = UNDEFINED;
 	private Brush lastBrush = null;
 	private boolean rotatable = true;
-	private long lastTime = System.currentTimeMillis();
 
 	private DrawingThread drawingThread = new DrawingThread();
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -122,93 +127,62 @@ public class BrushController
 	 */
 	private void interpolatedDraw(BrushAction action)
 	{
-		// Constant used to determine the distance moved between one brush draw.
-		// By detault, the distance is 1/8 the size of the brush.
+		/*
+		 *  Constant used to determine the distance moved between one brush
+		 *  draw. By detault, the distance is 1/8 the size of the brush.
+		 */
 		final int STEP_DIVISION = 8;
 		
 		Graphics2D g = action.getLayer().getGraphics();
 		setCompositeForBrush(g, action.getBrush());
 		BufferedImage brushImage = action.getBrush().getImage();
 
-		double distX = lastX - action.getX();
-		double distY = lastY - action.getY();
+		double distX = (double)lastX - (double)action.getX();
+		double distY = (double)lastY - (double)action.getY();
 	
 		double dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
 		
-		double steps = dist / (double)(brushImage.getWidth() / (double)STEP_DIVISION);
+		double steps = (dist / ((double)brushImage.getWidth() / (double)STEP_DIVISION)) + 1;
 		
 		double incX = -distX / steps;
 		double incY = -distY / steps;
 		
-		double x = lastX - (brushImage.getWidth() / 2.0d);
-		double y = lastY - (brushImage.getHeight() / 2.0d);
+		double x = (double)lastX - (brushImage.getWidth() / 2.0d);
+		double y = (double)lastY - (brushImage.getHeight() / 2.0d);
 		
 		int intSteps = (int)Math.round(steps);
 		
-		// true -> unsmooth transition of brush angle
-		// false -> smooth transition of brush angle --> buggy
-		if (false)
-		{
-			BufferedImage rotatedBrushImage = new BufferedImage(
-					brushImage.getWidth(),
-					brushImage.getHeight(),
-					Brush.DEFAULT_BRUSH_TYPE
-			);
-
-			Graphics2D brushg = rotatedBrushImage.createGraphics();
-			if (rotatable)
-			{
-				brushg.rotate(
-						theta,
-						rotatedBrushImage.getWidth() / 2.0d,
-						rotatedBrushImage.getHeight() / 2.0d
-				);
-			}
-	
-			brushg.drawImage(brushImage, 0, 0, null);
-			
-			for (int i = 0; i < intSteps; i++)
-			{
-				x += incX;
-				y += incY;
-				
-				g.drawImage(rotatedBrushImage, (int)x, (int)y, null);
-			}
-			brushg.dispose();
-		}
-		else
-		{
-			double t = lastTheta;
-			double incTheta = lastTheta - theta;
-			
-			for (int i = 0; i < intSteps; i++)
-			{
-				x += incX;
-				y += incY;
-				t += incTheta;
-
-				BufferedImage rotatedBrushImage = new BufferedImage(
-						brushImage.getWidth(),
-						brushImage.getHeight(),
-						Brush.DEFAULT_BRUSH_TYPE
-				);
-				
-				Graphics2D brushg = rotatedBrushImage.createGraphics();
-				
-				if (rotatable)
-				{
-					brushg.rotate(
-							t,
-							rotatedBrushImage.getWidth() / 2.0d,
-							rotatedBrushImage.getHeight() / 2.0d
-					);
-				}
+		BufferedImage rotatedBrushImage = new BufferedImage(
+				brushImage.getWidth(),
+				brushImage.getHeight(),
+				Brush.DEFAULT_BRUSH_TYPE
+		);
 		
-				brushg.drawImage(brushImage, 0, 0, null);
-				
-				g.drawImage(rotatedBrushImage, (int)x, (int)y, null);
-				brushg.dispose();
-			}
+		/*
+		 * FIXME Could improve rotating quality of brush is brush is recalculated
+		 * for each step. The rotated brush creation would have to be in
+		 * the loop instead.
+		 */
+
+		Graphics2D brushg = rotatedBrushImage.createGraphics();
+		if (rotatable)
+		{
+			brushg.rotate(
+					-theta,
+					rotatedBrushImage.getWidth() / 2.0d,
+					rotatedBrushImage.getHeight() / 2.0d
+			);
+		}
+
+		brushg.drawImage(brushImage, 0, 0, null);
+		brushg.dispose();
+
+		for (int i = 0; i < intSteps; i++)
+		{
+			x += incX;
+			y += incY;
+			
+			g.drawImage(rotatedBrushImage, (int)x, (int)y, null);
 		}
 	}
 
@@ -240,7 +214,6 @@ public class BrushController
 				action.getState() == BrushAction.State.RELEASE
 		)
 		{
-			System.out.println("last brush released.");
 			clearTheta();
 		}
 		
@@ -327,16 +300,10 @@ public class BrushController
 //		y = y - il.getY();
 		
 		actionQueue.add(new BrushAction(il, b, x, y));
-		System.out.println("add brushevent");
-		long timePast = System.currentTimeMillis() - lastTime;
 		
-		if (!drawingThread.running && timePast > 100)
+		if (!drawingThread.running )//&& timePast > 100)
 		{
-			System.out.println("start thread");
-
 			executor.execute(drawingThread);
-			
-			lastTime = System.currentTimeMillis();
 		}
 	}
 	
@@ -357,7 +324,6 @@ public class BrushController
 			lastX = x;
 			lastY = y;
 		}
-		lastTheta = theta;
 		
 		int diffX = lastX - x;
 		int diffY = lastY - y;
@@ -372,7 +338,6 @@ public class BrushController
 	{
 		lastX = UNDEFINED;
 		lastY = UNDEFINED;
-		lastTheta = UNDEFINED_THETA;
 	}
 	
 	/**
@@ -412,9 +377,9 @@ public class BrushController
 			running = true;
 			while(!actionQueue.isEmpty())
 			{
-				System.out.println("processing");
 				processBrush();
 			}
+			listener.doneDrawing();
 			running = false;
 		}
 	}
