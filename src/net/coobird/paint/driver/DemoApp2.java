@@ -1,11 +1,5 @@
 package net.coobird.paint.driver;
 
-/* TODO Fix the problem with needing $zoom- imes click on the scroll pane
- * in order to move one pixel when zoomed into image $zoom times.
- *  
- */
-
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -40,6 +34,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -88,7 +83,7 @@ public class DemoApp2
 	{
 		final JFrame f = new JFrame("Paint Dot Jar Demonstration 2");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().setLayout(new BorderLayout());
+		//f.getContentPane().setLayout(new BorderLayout());
 		
 		ApplicationUtils.setMainComponent(f);
 		
@@ -112,14 +107,14 @@ public class DemoApp2
 		brushListModel.addElement(new RegularEllipticalBrush(null, 240, Math.PI * 0.4, 0.8, new Color(255,0,0,16)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 240, Math.PI * 0.2, 0.6, new Color(255,0,0,4)));
 		brushListModel.addElement(new RegularEllipticalBrush(null, 40, Math.PI * 0.9, 0.2, new Color(0,255,128,4)));
-		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.0, 0.4, new Color(0,0,128,4)));
+		brushListModel.addElement(new RegularEllipticalBrush(null, 60, Math.PI * 0.5, 0.4, new Color(0,0,128,16)));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 40, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, 0, 1, 1f));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 80, Math.PI * 0.25, 0.5, 0.5f));
 		brushListModel.addElement(new SolidCircularBrush(null, 4));
 		brushListModel.addElement(new RegularCircularBrush(null, 4, Color.black));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 4, 0, 1, 1f));
-		brushListModel.addElement(new StagedBrush(null, 20, Color.black));
+		brushListModel.addElement(new StagedBrush(null, 10, Color.black));
 		
 		final JPopupMenu brushPopupMenu = new JPopupMenu();
 		brushPopupMenu.add(new ActionMenuItem("Change Color...") {
@@ -217,7 +212,7 @@ public class DemoApp2
 		final DefaultListModel ilListModel = new DefaultListModel();
 		ilList.setModel(ilListModel);
 		
-		final int SIZE = 400;
+		final int SIZE = 800;
 		
 		final CanvasHolder ch = new CanvasHolder();
 		Canvas c = new Canvas(SIZE, SIZE);
@@ -234,9 +229,6 @@ public class DemoApp2
 		final JScrollPane ilListSp = new JScrollPane(ilList);
 		listPanels.add(ilListSp);
 		
-		f.getContentPane().add(listPanels, BorderLayout.EAST);
-		
-
 //		final ImageRenderer renderer = ImageRendererFactory.getInstance();
 		final PartialImageRenderer renderer = new ClippableImageRenderer();
 //		final ProgressiveImageRenderer renderer = new ProgressiveImageRenderer();
@@ -254,18 +246,6 @@ public class DemoApp2
 				int height = r.height;
 				double zoom = ch.getCanvas().getZoom();
 				
-//				g.drawImage(
-//						renderer.render(
-//								ch.getCanvas(),
-//								(int)(r.x / zoom),
-//								(int)(r.y / zoom),
-//								(int)(width / zoom),
-//								(int)(height / zoom)
-//						),
-//						r.x,
-//						r.y,
-//						null
-//				);
 				g.drawImage(
 						renderer.render(
 								ch.getCanvas(),
@@ -293,9 +273,12 @@ public class DemoApp2
 			}
 		};
 		
-		MouseAdapter ma = new MouseAdapter()
+		
+		class DrawEventHandler extends MouseAdapter implements BrushController.BrushDrawListener
 		{
-			long lastTime = System.currentTimeMillis();
+//		MouseAdapter ma = new MouseAdapter()
+//		{
+//			long lastTime = System.currentTimeMillis();
 			
 			public void mouseDragged(MouseEvent e)
 			{
@@ -321,12 +304,12 @@ public class DemoApp2
 						sy
 				);
 				
-				long timePast = System.currentTimeMillis() - lastTime;
-				if (timePast > 50)
-				{
-					p.repaint();
-					lastTime = System.currentTimeMillis();
-				}
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						p.repaint();
+					}
+				});
 			}
 			
 			public void mouseReleased(MouseEvent e)
@@ -368,7 +351,21 @@ public class DemoApp2
 						sy
 				);
 			}
+
+			@Override
+			public void doneDrawing()
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						p.repaint();
+					}
+				});
+			}
 		};
+		
+		DrawEventHandler ma = new DrawEventHandler();
+		bc.listener = ma;
 		
 		p.addMouseListener(ma);
 		p.addMouseMotionListener(ma);
@@ -591,6 +588,7 @@ public class DemoApp2
 					ilListModel.addElement(il);
 				}
 				p.repaint();
+				p.revalidate();
 			}
 		});
 
@@ -1187,11 +1185,17 @@ public class DemoApp2
 
 		bcMenu.setSelected(bc.getMovable());
 
-		f.setSize(600,450);
+		f.setSize(800, 600);
 		f.setLocation(200, 100);
-		f.getContentPane().add(sp);
+		
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setLeftComponent(sp);
+		splitPane.setRightComponent(listPanels);
+		f.getContentPane().add(splitPane);
+		
 		f.validate();
 		f.setVisible(true);
+		splitPane.setDividerLocation(0.7);
 	}
 
 	public static void main(String[] args)
