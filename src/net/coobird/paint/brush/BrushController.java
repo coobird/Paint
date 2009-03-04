@@ -1,7 +1,6 @@
 package net.coobird.paint.brush;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -98,13 +97,6 @@ public class BrushController
 			return this.state;
 			
 		}
-		
-		@Override
-		public String toString()
-		{
-			// TODO Auto-generated method stub
-			return "BrushAction: " + il + " " + x + " " + y + " " + state;
-		}
 	}
 
 	private static final int UNDEFINED = Integer.MIN_VALUE;
@@ -135,8 +127,10 @@ public class BrushController
 	 */
 	private void interpolatedDraw(BrushAction action)
 	{
-		// Constant used to determine the distance moved between one brush draw.
-		// By detault, the distance is 1/8 the size of the brush.
+		/*
+		 *  Constant used to determine the distance moved between one brush
+		 *  draw. By detault, the distance is 1/8 the size of the brush.
+		 */
 		final int STEP_DIVISION = 8;
 		
 		Graphics2D g = action.getLayer().getGraphics();
@@ -165,7 +159,7 @@ public class BrushController
 		);
 		
 		/*
-		 * Could improve rotating quality of brush is brush is recalculated
+		 * FIXME Could improve rotating quality of brush is brush is recalculated
 		 * for each step. The rotated brush creation would have to be in
 		 * the loop instead.
 		 */
@@ -344,7 +338,6 @@ public class BrushController
 	{
 		lastX = UNDEFINED;
 		lastY = UNDEFINED;
-		System.out.println("9 clear theta called");
 	}
 	
 	/**
