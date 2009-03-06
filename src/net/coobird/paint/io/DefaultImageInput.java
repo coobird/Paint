@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.Enumeration;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;

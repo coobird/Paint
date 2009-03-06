@@ -18,6 +18,10 @@ import net.coobird.paint.BlendingMode;
  */
 public class ImageLayer implements Serializable
 {
+	/*
+	 * TODO add a lock feature to prevent edits.
+	 */
+	
 	/**
 	 * 
 	 */
