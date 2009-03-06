@@ -9,19 +9,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 
+ * @author coobird
+ *
+ */
 public final class Canvas implements Serializable
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1550922019253804872L;
-	
+	private static final long serialVersionUID = 1975814667741951677L;
+
 	private transient List<ImageLayer> layers;
 	private int width;
 	private int height;
 	private double zoom;
-	
-	// private LayerNamer --> names the new layer
+	private int layerNumber;
 	
 	/**
 	 * Cannot instantiate a {@code Canvas} object without specification of size.
@@ -39,7 +40,17 @@ public final class Canvas implements Serializable
 		layers = new ArrayList<ImageLayer>();
 		this.width = width;
 		this.height = height;
-		this.zoom = 1;
+		zoom = 1;
+		layerNumber = 1;
+	}
+	
+	/**
+	 * Returns the layer name to use for the next ImageLayer.
+	 * @return
+	 */
+	public String getNextLayerName()
+	{
+		return "Layer " + layerNumber;
 	}
 
 	/**
@@ -138,12 +149,24 @@ public final class Canvas implements Serializable
 	}
 	
 	/**
+	 * Adds a new {@link ImageLayer} to the {@code Canvas} with a default
+	 * assigned image layer caption.
+	 */
+	public void addLayer()
+	{
+		ImageLayer il = new ImageLayer(width, height);
+		il.setCaption(getNextLayerName());
+		
+		addLayer(il);
+	}
+	
+	/**
 	 * Adds a specified layer to the canvas.
 	 * @param layer			The ImageLayer to add to the canvas.
 	 */
 	public void addLayer(ImageLayer layer)
 	{
-		layers.add(layer);
+		addLayer(layer, layers.size());
 	}
 
 	/**
@@ -160,6 +183,7 @@ public final class Canvas implements Serializable
 		{
 			layers.add(layer);
 		}
+		layerNumber++;
 	}
 	
 	/**
