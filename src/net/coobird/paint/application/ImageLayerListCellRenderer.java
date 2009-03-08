@@ -1,11 +1,14 @@
 package net.coobird.paint.application;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.SystemColor;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 import net.coobird.paint.image.ImageLayer;
@@ -17,13 +20,16 @@ import net.coobird.paint.image.ImageLayer;
  *
  */
 public class ImageLayerListCellRenderer
-	extends JLabel
+	extends JPanel
 	implements ListCellRenderer
 {
 	/**
 	 * Version string used for serialization.
 	 */
 	private static final long serialVersionUID = 8390058918154536766L;
+
+	private JLabel captionLabel;
+	private JLabel thumbnailLabel;
 
 	/**
 	 * Constructs an instance of {@code ImageLayerListCellRenderer}.
@@ -32,6 +38,17 @@ public class ImageLayerListCellRenderer
 	{
 		super();
 		this.setOpaque(true);
+		this.setBackground(SystemColor.text);
+		
+		captionLabel = new JLabel();
+		thumbnailLabel = new JLabel();
+		thumbnailLabel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		this.add(thumbnailLabel);
+		this.add(captionLabel);
+		
+		captionLabel.setOpaque(true);
+		thumbnailLabel.setOpaque(false);
 	}
 
 	/**
@@ -49,31 +66,33 @@ public class ImageLayerListCellRenderer
 	{
 		if (value instanceof ImageLayer)
 		{
-			ImageLayer il = (ImageLayer)value;
-			this.setText(il.getCaption());
-			this.setIcon(new ImageIcon(il.getThumbImage()));
-			
+			final ImageLayer il = (ImageLayer)value;
+			captionLabel.setText(il.getCaption());
+			thumbnailLabel.setIcon(new ImageIcon(il.getThumbImage()));
+
 			if (!((ImageLayer)value).isVisible())
 			{
-				this.setText(this.getText() + " - invisible");
+				captionLabel.setText(captionLabel.getText() + " - invisible");
 			}
 			
 			if (isSelected)
 			{
-				this.setOpaque(true);
 				this.setBackground(SystemColor.textHighlight);
 				this.setForeground(SystemColor.textHighlightText);
+				captionLabel.setBackground(SystemColor.textHighlight);
+				captionLabel.setForeground(SystemColor.textHighlightText);
 			}
 			else
 			{
-				this.setOpaque(true);
 				this.setBackground(SystemColor.text);
 				this.setForeground(SystemColor.textText);
+				captionLabel.setBackground(SystemColor.text);
+				captionLabel.setForeground(SystemColor.textText);
 			}
 		}
 		else
 		{
-			this.setText("Not an ImageLayer");
+			captionLabel.setText("Not an ImageLayer");
 		}
 		
 		return this;
