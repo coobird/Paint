@@ -1,10 +1,13 @@
 package net.coobird.paint.driver;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.dnd.DropTarget;
@@ -216,9 +219,9 @@ public class DemoApp2
 		
 		final CanvasHolder ch = new CanvasHolder();
 		Canvas c = new Canvas(SIZE, SIZE);
-		c.addLayer(new ImageLayer(SIZE, SIZE));
-		c.addLayer(new ImageLayer(SIZE, SIZE));
-		c.addLayer(new ImageLayer(SIZE, SIZE));
+		c.addLayer();
+		c.addLayer();
+		c.addLayer();
 		ch.setCanvas(c);
 
 		for (ImageLayer il : c.getLayers())
@@ -272,7 +275,6 @@ public class DemoApp2
 				return new Dimension(width, height);
 			}
 		};
-		
 		
 		class DrawEventHandler extends MouseAdapter implements BrushController.BrushDrawListener
 		{
@@ -442,15 +444,15 @@ public class DemoApp2
 		ilPopupMenu.add(new ActionMenuItem("New Layer") {
 			public void actionPerformed(ActionEvent e)
 			{
-				ch.getCanvas().addLayer(new ImageLayer(ch.getCanvas().getWidth(), ch.getCanvas().getHeight()));
+				ImageLayer il = new ImageLayer(
+						ch.getCanvas().getWidth(),
+						ch.getCanvas().getHeight()
+				);
+				il.setCaption(ch.getCanvas().getNextLayerName());
 				
-				ilListModel.removeAllElements();
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(il);
-				}
-				p.repaint();
-
+				ch.getCanvas().addLayer(il);
+				
+				updateGUI(ilListModel, ch, p);
 			}
 		});
 		
@@ -460,13 +462,7 @@ public class DemoApp2
 				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
 				ch.getCanvas().removeLayer(il);
 
-				ilListModel.removeAllElements();
-				for (ImageLayer layer : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(layer);
-				}
-				
-				p.repaint();
+				updateGUI(ilListModel, ch, p);
 			}
 		});
 		
@@ -487,13 +483,7 @@ public class DemoApp2
 				
 				ch.getCanvas().addLayer(ImageLayerUtils.mergeLayers(topIl, bottomIl), index);
 				
-				ilListModel.removeAllElements();
-				for (ImageLayer layer : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(layer);
-				}
-				
-				p.repaint();
+				updateGUI(ilListModel, ch, p);
 			}
 		});
 		
@@ -551,14 +541,7 @@ public class DemoApp2
 				c.addLayer(new ImageLayer(width, height));
 				ch.setCanvas(c);
 				
-				ilListModel.removeAllElements();
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(il);
-				}
-				
-				p.revalidate();
-				p.repaint();
+				updateGUI(ilListModel, ch, p);
 			}
 		});
 
@@ -582,13 +565,7 @@ public class DemoApp2
 				
 				ch.setCanvas(FormatManager.getImageInput(f).read(f));
 
-				ilListModel.removeAllElements();
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(il);
-				}
-				p.repaint();
-				p.revalidate();
+				updateGUI(ilListModel, ch, p);
 			}
 		});
 
@@ -640,12 +617,7 @@ public class DemoApp2
 					ch.getCanvas().addLayer(layer);
 				}
 
-				ilListModel.removeAllElements();
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(il);
-				}
-				p.repaint();
+				updateGUI(ilListModel, ch, p);
 			}
 		});
 		
@@ -678,13 +650,7 @@ public class DemoApp2
 			{
 				ch.getCanvas().addLayer(new ImageLayer(ch.getCanvas().getWidth(), ch.getCanvas().getHeight()));
 				
-				ilListModel.removeAllElements();
-				for (ImageLayer il : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(il);
-				}
-				p.repaint();
-
+				updateGUI(ilListModel, ch, p);
 			}
 		});
 		
@@ -699,13 +665,7 @@ public class DemoApp2
 				ImageLayer il = (ImageLayer)ilList.getSelectedValue();
 				ch.getCanvas().removeLayer(il);
 
-				ilListModel.removeAllElements();
-				for (ImageLayer layer : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(layer);
-				}
-				
-				p.repaint();
+				updateGUI(ilListModel, ch, p);
 			}
 		});
 		
@@ -731,13 +691,7 @@ public class DemoApp2
 				
 				ch.getCanvas().addLayer(ImageLayerUtils.mergeLayers(topIl, bottomIl), index);
 				
-				ilListModel.removeAllElements();
-				for (ImageLayer layer : ch.getCanvas().getLayers())
-				{
-					ilListModel.addElement(layer);
-				}
-				
-				p.repaint();
+				updateGUI(ilListModel, ch, p);
 			}
 		});
 		
@@ -1185,17 +1139,38 @@ public class DemoApp2
 
 		bcMenu.setSelected(bc.getMovable());
 
-		f.setSize(800, 600);
-		f.setLocation(200, 100);
-		
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setLeftComponent(sp);
-		splitPane.setRightComponent(listPanels);
+		f.setSize(640, 480);
+		f.setLocation(1, 1);
+		JSplitPane splitPane = new JSplitPane(
+				JSplitPane.HORIZONTAL_SPLIT,
+				true,
+				sp,
+				listPanels
+		);
 		f.getContentPane().add(splitPane);
 		
 		f.validate();
 		f.setVisible(true);
 		splitPane.setDividerLocation(0.7);
+	}
+
+	private void updateGUI(final DefaultListModel ilListModel,
+			final CanvasHolder ch, final JPanel p)
+	{
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			public void run()
+			{
+				ilListModel.removeAllElements();
+				for (ImageLayer il : ch.getCanvas().getLayers())
+				{
+					ilListModel.addElement(il);
+				}
+				
+				p.repaint();
+				p.revalidate();
+			}
+		});
 	}
 
 	public static void main(String[] args)
