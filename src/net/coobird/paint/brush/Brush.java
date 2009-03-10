@@ -22,7 +22,7 @@ public abstract class Brush
 	protected Color brushColor;
 	protected int size;
 	
-	protected static final int THUMB_SIZE = 20;
+	protected static final int THUMB_SIZE = 32;
 	protected static final int DEFAULT_BRUSH_TYPE = BufferedImage.TYPE_INT_ARGB;
 	
 	/**
@@ -42,12 +42,26 @@ public abstract class Brush
 	 */
 	protected void makeBrushThumbnail()
 	{
-		int size = Brush.THUMB_SIZE;
+		int thumbSize = Brush.THUMB_SIZE;
 	
-		thumbBrush = new BufferedImage(size, size, DEFAULT_BRUSH_TYPE);
+		thumbBrush = new BufferedImage(
+				thumbSize,
+				thumbSize,
+				DEFAULT_BRUSH_TYPE
+		);
 	
 		Graphics g = thumbBrush.createGraphics();
-		g.drawImage(brush, 0, 0, size, size, null);
+		
+		if (size > thumbSize)
+		{
+			g.drawImage(brush, 0, 0, thumbSize, thumbSize, null);
+		}
+		else
+		{
+			int center = (thumbSize - size) / 2;
+			g.drawImage(brush, center, center, size, size, null);
+		}
+		
 		g.dispose();
 	}
 

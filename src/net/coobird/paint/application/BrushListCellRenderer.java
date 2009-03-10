@@ -23,13 +23,21 @@ public class BrushListCellRenderer
 	 * Version string for this class, used for serialization. 
 	 */
 	private static final long serialVersionUID = -2298872884258272114L;
+	
+	private boolean showLabel;
 
 	/**
 	 * Constructs an instance of {@code BrushListCellRenderer}.
 	 */
 	public BrushListCellRenderer()
 	{
+		this(true);
+	}
+	
+	public BrushListCellRenderer(boolean showLabel)
+	{
 		super();
+		this.showLabel = showLabel;
 		this.setOpaque(true);
 	}
 	
@@ -49,7 +57,16 @@ public class BrushListCellRenderer
 		if (value instanceof Brush)
 		{
 			Brush b = (Brush)value;
-			this.setText(b.getName());
+			
+			if (showLabel)
+			{
+				this.setText(b.getName());
+			}
+			else
+			{
+				this.setToolTipText(b.getName());
+			}
+			
 			this.setIcon(new ImageIcon(b.getThumbImage()));
 			
 			if (isSelected)
