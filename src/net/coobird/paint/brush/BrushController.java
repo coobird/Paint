@@ -201,11 +201,14 @@ public class BrushController
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
 	at java.lang.Thread.run(Unknown Source)
 	 */
+	/*
+	 * Experimentally synchronizing the processBrush method.
+	 */
 	
 	/**
 	 * Processes a {@code BrushAction} in the queue.
 	 */
-	private void processBrush()
+	private synchronized void processBrush()
 	{
 		BrushAction action = actionQueue.remove();
 		
@@ -301,7 +304,7 @@ public class BrushController
 		
 		actionQueue.add(new BrushAction(il, b, x, y));
 		
-		if (!drawingThread.running )//&& timePast > 100)
+		if (!drawingThread.running)
 		{
 			executor.execute(drawingThread);
 		}
