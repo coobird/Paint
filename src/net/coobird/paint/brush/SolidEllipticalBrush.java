@@ -23,12 +23,6 @@ public class SolidEllipticalBrush extends Brush
 	private double ratio;
 	
 	/**
-	 * Cannot instantiate this class with the default constructor.
-	 */
-	@SuppressWarnings("unused")
-	private SolidEllipticalBrush() {}
-	
-	/**
 	 * Instantiates a {@code SolidEllipticalBrush} object with a specified
 	 * name, size, angle, brush size ratio, and brush color.
 	 * @param name			The name of the brush.
@@ -48,25 +42,10 @@ public class SolidEllipticalBrush extends Brush
 			Color brushColor
 	)
 	{
-		if (size < 1)
-		{
-			String msg = "The size of brush must be at least 1 pixel.";
-			throw new IllegalArgumentException(msg);
-		}
-
-		if (name == null)
-		{
-			this.setDefaultName();
-		}
-		else
-		{
-			this.setName(name);
-		}
+		super(name, size, brushColor);
 		
-		this.size = size;
 		this.angle = angle;
 		this.ratio = ratio;
-		this.brushColor = brushColor;
 		
 		makeBrushImage();
 	}

@@ -47,15 +47,6 @@ public class RegularCircularBrush extends RegularEllipticalBrush
 			Color brushColor) 
 	{
 		super(name, size, steps, 0, 1, brushColor);
-
-		if (name == null)
-		{
-			this.setDefaultName();
-		}
-		else
-		{
-			this.setName(name);
-		}
 	}
 	
 	/**

@@ -119,7 +119,7 @@ public class DemoApp2
 		brushListModel.addElement(new RegularCircularBrush(null, 4, Color.black));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 4, 0, 1, 1f));
 		brushListModel.addElement(new StagedBrush(null, 10, Color.black));
-		brushListModel.addElement(new RandomSplashBrush());
+		brushListModel.addElement(new RandomSplashBrush(null, 100, 5, Color.black));
 		
 		final JPopupMenu brushPopupMenu = new JPopupMenu();
 		brushPopupMenu.add(new ActionMenuItem("Change Color...") {
@@ -149,7 +149,7 @@ public class DemoApp2
 				
 				String s = JOptionPane.showInputDialog(f, "Size:");
 				
-				b.setSize(Integer.parseInt(s));				
+				b.setSize(Integer.parseInt(s));
 
 				brushList.repaint();
 			}
@@ -832,6 +832,26 @@ public class DemoApp2
 									0.0f,	0.1f,	 0.0f,
 									0.1f,	0.6f,	 0.1f,
 									0.0f,	0.1f,	 0.0f
+							}
+						)
+				);
+				
+				new FilterWithProgressBar(filter).run();
+			}
+		});
+		
+		filterMenu.add(new ActionMenuItem("Blur More Concurrent (1/9 all)") {
+			public void actionPerformed(ActionEvent e)
+			{
+				ImageFilter filter = new ImageFilterThreadingWrapper(
+						new RepeatableMatrixFilter(
+							3,
+							3,
+							10,
+							new float[] {
+									1f/9f,	1f/9f,	 1f/9f,
+									1f/9f,	1f/9f,	 1f/9f,
+									1f/9f,	1f/9f,	 1f/9f
 							}
 						)
 				);

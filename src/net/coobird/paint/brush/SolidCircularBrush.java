@@ -32,14 +32,6 @@ public class SolidCircularBrush extends SolidEllipticalBrush
 	{
 		super(name, size, 0, 1, brushColor);
 		
-		if (size < 1)
-		{
-			String msg = "The size of brush must be at least 1 pixel.";
-			throw new IllegalArgumentException(msg);
-		}
-
-		this.setDefaultName();
-		
 		makeBrushImage();
 	}
 	

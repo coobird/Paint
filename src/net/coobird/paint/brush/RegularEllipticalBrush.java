@@ -39,12 +39,6 @@ public class RegularEllipticalBrush extends Brush
 	private double ratio;
 
 	/**
-	 * Cannot instantiate this class with the default constructor.
-	 */
-	@SuppressWarnings("unused")
-	private RegularEllipticalBrush() {}
-	
-	/**
 	 * 
 	 * @param name
 	 * @param size
@@ -60,7 +54,14 @@ public class RegularEllipticalBrush extends Brush
 			Color brushColor
 	)
 	{
-		this(null, size, size / DEFAULT_STEPS_DIVISOR, angle, ratio, brushColor);
+		this(
+				null,
+				size,
+				size / DEFAULT_STEPS_DIVISOR,
+				angle,
+				ratio,
+				brushColor
+		);
 	}
 	
 	/**
@@ -81,26 +82,11 @@ public class RegularEllipticalBrush extends Brush
 			Color brushColor
 	)
 	{
-		if (size < 1)
-		{
-			String msg = "The size of brush must be at least 1 pixel.";
-			throw new IllegalArgumentException(msg);
-		}
-
-		this.size = size;
+		super(name, size, brushColor);
+		
 		this.steps = steps;
 		this.angle = angle;
 		this.ratio = ratio;
-		this.brushColor = brushColor;
-		
-		if (name == null)
-		{
-			this.setDefaultName();
-		}
-		else
-		{
-			this.setName(name);
-		}
 		
 		makeBrushImage();
 	}

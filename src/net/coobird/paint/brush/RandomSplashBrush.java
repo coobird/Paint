@@ -7,18 +7,25 @@ import java.util.Random;
 
 public class RandomSplashBrush extends Brush
 {
-	public RandomSplashBrush()
+	private int splashes;
+	
+	public RandomSplashBrush(
+			String name,
+			int size,
+			int splashes,
+			Color brushColor
+	)
 	{
-		this.size = 400;
-		this.brushColor = Color.black;
+		super(name, size, brushColor);
 		this.alpha = 0.5f;
-		this.setDefaultName();
-		
+		this.splashes = splashes;
+
 		makeBrushImage();
 	}
-	
-	
 
+	/**
+	 * On each call, the brush is redrawn.
+	 */
 	@Override
 	public BufferedImage getImage()
 	{
@@ -27,8 +34,9 @@ public class RandomSplashBrush extends Brush
 		return super.getImage();
 	}
 
-
-
+	/**
+	 * Generates the brush image.
+	 */
 	@Override
 	protected void makeBrushImage()
 	{
@@ -40,15 +48,23 @@ public class RandomSplashBrush extends Brush
 		
 		Graphics g = brush.createGraphics();
 		
-		for (int i = 0; i < 100; i++)
+		Random r = new Random();
+
+		for (int i = 0; i < splashes; i++)
 		{
-			Random r = new Random();
-			int x = r.nextInt(size/2)+(size/4);
-			int y = r.nextInt(size/2)+(size/4);
-			int t = r.nextInt(size/4);
+			int x = r.nextInt(size / 2) + (size / 4);
+			int y = r.nextInt(size / 2) + (size / 4);
+			int t = r.nextInt(size / 4);
 			
-			Color c = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), r.nextFloat());
+			Color c = new Color(
+					r.nextFloat(),
+					r.nextFloat(),
+					r.nextFloat(),
+					r.nextFloat()
+			);
+			
 			g.setColor(c);
+			
 			g.fillOval(x, y, t, t);
 		}
 		

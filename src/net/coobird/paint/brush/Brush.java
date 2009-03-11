@@ -18,12 +18,33 @@ public abstract class Brush
 	protected BufferedImage thumbBrush;
 	protected String name;
 	protected BlendingMode.Brush mode = BlendingMode.Brush.NORMAL;
-	protected float alpha = 1f;
+	protected float alpha;
 	protected Color brushColor;
 	protected int size;
 	
 	protected static final int THUMB_SIZE = 32;
 	protected static final int DEFAULT_BRUSH_TYPE = BufferedImage.TYPE_INT_ARGB;
+	
+	{
+		alpha = 1f;
+	}
+	
+	private Brush() {}
+	
+	protected Brush(String name, int size, Color brushColor)
+	{
+		this.size = size;
+		this.brushColor = brushColor;
+
+		if (name == null)
+		{
+			this.setDefaultName();
+		}
+		else
+		{
+			this.setName(name);
+		}
+	}
 	
 	/**
 	 * Sets the default name
@@ -182,7 +203,6 @@ public abstract class Brush
 	{
 		this.brushColor = c;
 		makeBrushImage();
-		setDefaultName();
 	}
 
 	/**
@@ -198,9 +218,15 @@ public abstract class Brush
 	 */
 	public void setSize(int size)
 	{
+		if (size < 1)
+		{
+			String msg = "The size of brush must be at least 1 pixel.";
+			throw new IllegalArgumentException(msg);
+		}
+
 		this.size = size;
+
 		makeBrushImage();
-		setDefaultName();
 	}
 
 	/**
