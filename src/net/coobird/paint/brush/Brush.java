@@ -37,12 +37,18 @@ public abstract class Brush
 	protected abstract void makeBrushImage();
 
 	/**
-	 * 
-	 * @param brushColor
+	 * Creates a thumbnail of the Brush.
+	 * @throws IllegalStateException is thrown when the brush has not
+	 * been initialized.
 	 */
 	protected void makeBrushThumbnail()
 	{
-		int thumbSize = Brush.THUMB_SIZE;
+		if (brush == null)
+		{
+			throw new IllegalStateException("Brush not initialized.");
+		}
+
+		int thumbSize = THUMB_SIZE;
 	
 		thumbBrush = new BufferedImage(
 				thumbSize,
@@ -64,68 +70,48 @@ public abstract class Brush
 		
 		g.dispose();
 	}
-
+	
 	/**
-	 * Creates a thumbnail of the Brush.
-	 * @throws IllegalStateException is thrown when the brush has not
-	 * been initialized.
+	 * Returns a copy of the provided instance of {@link BufferedImage}.
+	 * @param img
+	 * @return
 	 */
-	protected void makeThumbnail()
+	private static BufferedImage copyImage(BufferedImage img)
 	{
-		if (brush == null)
+		if (img == null)
 		{
-			throw new IllegalStateException("Brush not initialized.");
+			return null;
 		}
+
+		BufferedImage copyImg = new BufferedImage(
+				img.getWidth(),
+				img.getHeight(),
+				img.getType()
+		);
+		
+		Graphics2D g = copyImg.createGraphics();
+		g.drawImage(img, 0, 0, null);
+		g.dispose();
+		
+		return copyImg;
 	}
 
 	/**
 	 * Returns a copy of the brush.
-	 * Returns null if brush is not initialized.
-	 * @return
+	 * @return {@code null} if the brush is not initialized.
 	 */
 	public BufferedImage getImage()
 	{
-		if (brush == null)
-		{
-			return null;
-		}
-		
-		BufferedImage brushCopy = new BufferedImage(
-				brush.getWidth(),
-				brush.getHeight(),
-				brush.getType()
-		);
-		
-		Graphics2D g = brushCopy.createGraphics();
-		g.drawImage(brush, 0, 0, null);
-		g.dispose();
-		
-		return brushCopy;
+		return copyImage(brush);
 	}
 
 	/**
 	 * Returns a copy of the thumbnail of the brush.
-	 * Returns null if thumbnail of the brush is not initialized.
-	 * @return
+	 * @return {@code null} if the brush is not initialized.
 	 */
 	public BufferedImage getThumbImage()
 	{
-		if (thumbBrush == null)
-		{
-			return null;
-		}
-	
-		BufferedImage thumbBrushCopy = new BufferedImage(
-				thumbBrush.getWidth(),
-				thumbBrush.getHeight(),
-				thumbBrush.getType()
-		);
-		
-		Graphics2D g = thumbBrushCopy.createGraphics();
-		g.drawImage(thumbBrush, 0, 0, null);
-		g.dispose();
-	
-		return thumbBrushCopy;
+		return copyImage(thumbBrush);
 	}
 
 	/**
