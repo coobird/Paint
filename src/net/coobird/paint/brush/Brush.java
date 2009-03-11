@@ -17,18 +17,23 @@ public abstract class Brush
 	protected BufferedImage brush;
 	protected BufferedImage thumbBrush;
 	protected String name;
-	protected BlendingMode.Brush mode = BlendingMode.Brush.NORMAL;
+	protected BlendingMode.Brush mode;
 	protected float alpha;
 	protected Color brushColor;
 	protected int size;
+	private boolean hasUniqueName;
 	
 	protected static final int THUMB_SIZE = 32;
 	protected static final int DEFAULT_BRUSH_TYPE = BufferedImage.TYPE_INT_ARGB;
 	
 	{
 		alpha = 1f;
+		mode = BlendingMode.Brush.NORMAL;
 	}
 	
+	/**
+	 * Brush cannot be instantiated.
+	 */
 	private Brush() {}
 	
 	protected Brush(String name, int size, Color brushColor)
@@ -39,10 +44,20 @@ public abstract class Brush
 		if (name == null)
 		{
 			this.setDefaultName();
+			hasUniqueName = false;
 		}
 		else
 		{
 			this.setName(name);
+			hasUniqueName = true;
+		}
+	}
+	
+	private void updateName()
+	{
+		if (!hasUniqueName)
+		{
+			setDefaultName();
 		}
 	}
 	
@@ -180,10 +195,18 @@ public abstract class Brush
 	 * 						between {@code 0f} and {@code 1f}, where {@code 0f}
 	 * 						represents transparent, and {@code 1f} represents
 	 * 						opaque.
+	 * @throws IllegalArgumentException
 	 */
 	public void setAlpha(float alpha)
 	{
+		if (alpha < 0f || alpha > 1f)
+		{
+			String msg = "Value for alpha must be between 0f and 1f.";
+			throw new IllegalArgumentException(msg);
+		}
+		
 		this.alpha = alpha;
+		updateName();
 	}
 
 	/**
@@ -198,11 +221,19 @@ public abstract class Brush
 	/**
 	 * Sets the color of the brush.
 	 * @param c				The {@code Color} of the brush.
+	 * @throws NullPointerException
 	 */
 	public void setColor(Color c)
 	{
+		if (c == null)
+		{
+			String msg = "Color provided is null.";
+			throw new NullPointerException(msg);
+		}
+		
 		this.brushColor = c;
 		makeBrushImage();
+		updateName();
 	}
 
 	/**
@@ -215,6 +246,7 @@ public abstract class Brush
 
 	/**
 	 * @param size the size to set
+	 * @throws IllegalArgumentException
 	 */
 	public void setSize(int size)
 	{
@@ -227,6 +259,7 @@ public abstract class Brush
 		this.size = size;
 
 		makeBrushImage();
+		updateName();
 	}
 
 	/**
@@ -235,8 +268,8 @@ public abstract class Brush
 	 */
 	public String toString()
 	{
-		String brushString = "Brush: '" + name + "', Size: " +
-				brush.getWidth() + ", " + brush.getHeight();
+		String brushString = "Brush: '" + name + "', Size: " + size +
+				" Color: " + brushColor + " Alpha: " + alpha;
 				
 		return brushString;
 	}
