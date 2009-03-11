@@ -38,9 +38,11 @@ public final class Canvas implements Serializable
 	public Canvas(int width, int height)
 	{
 		layers = new ArrayList<ImageLayer>();
-		this.width = width;
-		this.height = height;
-		zoom = 1;
+		
+		setWidth(width);
+		setHeight(height);
+		setZoom(1);
+		
 		layerNumber = 1;
 	}
 	
@@ -54,15 +56,6 @@ public final class Canvas implements Serializable
 	}
 
 	/**
-	 * Returns the width of the {@link Canvas} object.
-	 * @return 				The width of the canvas.
-	 */
-	public int getWidth()
-	{
-		return width;
-	}
-
-	/**
 	 * @return the zoom
 	 */
 	public double getZoom()
@@ -72,18 +65,41 @@ public final class Canvas implements Serializable
 
 	/**
 	 * @param zoom the zoom to set
+	 * @throws IllegalArgumentException
 	 */
 	public void setZoom(double zoom)
 	{
+		if (zoom <= 0)
+		{
+			String msg = "Zoom must be greater than 0.";
+			throw new IllegalArgumentException(msg);
+		}
+		
 		this.zoom = zoom;
+	}
+
+	/**
+	 * Returns the width of the {@link Canvas} object.
+	 * @return 				The width of the canvas.
+	 */
+	public int getWidth()
+	{
+		return width;
 	}
 
 	/**
 	 * Sets the width of the {@link Canvas} object.
 	 * @param width 		The width to set the canvas to.
+	 * @throws IllegalArgumentException
 	 */
 	public void setWidth(int width)
 	{
+		if (width <= 0)
+		{
+			String msg = "Width must be at least 1 pixel.";
+			throw new IllegalArgumentException(msg);
+		}
+		
 		this.width = width;
 	}
 
@@ -102,6 +118,12 @@ public final class Canvas implements Serializable
 	 */
 	public void setHeight(int height)
 	{
+		if (height <= 0)
+		{
+			String msg = "Height must be at least 1 pixel.";
+			throw new IllegalArgumentException(msg);
+		}
+		
 		this.height = height;
 	}
 	
@@ -175,6 +197,16 @@ public final class Canvas implements Serializable
 	 */
 	public void addLayer(ImageLayer layer, int index)
 	{
+		if (layer == null)
+		{
+			String msg = "Cannot add an ImageLayer that is null.";
+			throw new NullPointerException(msg);
+		}
+		
+		/*
+		 * TODO determine whether to silently eat the problematic index, or
+		 * throw an exception, such as IndexOutOfBoundsException
+		 */
 		if (index < layers.size())
 		{
 			layers.add(index, layer);
@@ -183,6 +215,7 @@ public final class Canvas implements Serializable
 		{
 			layers.add(layer);
 		}
+		
 		layerNumber++;
 	}
 	
@@ -192,6 +225,12 @@ public final class Canvas implements Serializable
 	 */
 	public void removeLayer(ImageLayer layer)
 	{
+		if (layer == null)
+		{
+			String msg = "Cannot remove a null ImageLayer.";
+			throw new NullPointerException(msg);
+		}
+		
 		layers.remove(layer);
 	}
 	
@@ -208,7 +247,7 @@ public final class Canvas implements Serializable
 	
 	/**
 	 * Resizes the canvas to fit all layers.
-	 * TODO Test this method to see if this works.
+	 * TODO Test this method to see if this works correctly.
 	 */
 	public void pack()
 	{
