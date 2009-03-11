@@ -4,18 +4,29 @@ Bugs
 --------------------------------------------------------------------------------
 
 1. Resize concurrent not working
--> look at the ImageFilterThreadingWrapper to see if that's the problem.
--> Size not changing, and drawn in wrong places.
-added: 02-15-2008
+-> 	Look at the ImageFilterThreadingWrapper to see if that's the problem.
+->	Size not changing, and drawn in wrong places.
+added: 02-15-2009
+
+Note on 03-11-2009
+==================
+->	Problem is with inability to change the resulting image's size.
+	The change in size is not known to the Wrapper, so it cannot deal with
+	the change of the image before and after.
+
+->	This is going to be a limitation of the ImageFilterThreadingWrapper.
+	It will not allow filters which change the size of the resulting image
+	to utilize this facility.
+
 
 --------------------------------------------------------------------------------
 
 2. Crash when rendering Canvas with shifted layer.
--> Must be a problem with ClippedImageRenderer
--> Crash occurs when portion of BufferedImage beyond the size of layer is
-requested to be drawn. (Exception thrown saying that y + dy > height)
-added: 02-15-2008
-fixed: 02-15-2008
+->	Must be a problem with ClippedImageRenderer
+->	Crash occurs when portion of BufferedImage beyond the size of layer is
+	requested to be drawn. (Exception thrown saying that y + dy > height)
+added: 02-15-2009
+fixed: 02-15-2009
 
 Stack trace:
 Exception in thread "AWT-EventQueue-0" java.awt.image.RasterFormatException: (y + height) is outside raster
