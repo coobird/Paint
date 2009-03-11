@@ -34,8 +34,15 @@ public abstract class Brush
 	/**
 	 * Brush cannot be instantiated.
 	 */
+	@SuppressWarnings("unused")
 	private Brush() {}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param size
+	 * @param brushColor
+	 */
 	protected Brush(String name, int size, Color brushColor)
 	{
 		this.size = size;
@@ -53,6 +60,9 @@ public abstract class Brush
 		}
 	}
 	
+	/**
+	 * Performs an update on the name of the {@code Brush} object.
+	 */
 	private void updateName()
 	{
 		if (!hasUniqueName)
@@ -62,8 +72,13 @@ public abstract class Brush
 	}
 	
 	/**
-	 * Sets the default name
-	 * @return
+	 * <p>
+	 * Sets the default name of the {@code Brush} object.
+	 * </p>
+	 * <p>
+	 * Intended to be overridden by subclasses of {@code Brush} to use as the
+	 * identification of the instance of subclassed brush.
+	 * </p>
 	 */
 	protected abstract void setDefaultName();
 
@@ -94,6 +109,11 @@ public abstract class Brush
 	
 		Graphics g = thumbBrush.createGraphics();
 		
+		/*
+		 * The thumbnail of the brush will be shrunken to the size of the
+		 * thumbnail set by THUMB_SIZE. If the brush is smaller than the
+		 * thumbnail size, then the brush will be drawn as is in the thumbnail.
+		 */
 		if (size > thumbSize)
 		{
 			g.drawImage(brush, 0, 0, thumbSize, thumbSize, null);
