@@ -24,13 +24,12 @@ import net.coobird.paint.image.ImageLayer;
  */
 public class BrushController
 {
-	public static interface BrushDrawListener
+	private BrushRenderProgressListener listener;
+	
+	public void setBrushRenderProgressListener(BrushRenderProgressListener l)
 	{
-		public void doneDrawing();
+		listener = l;
 	}
-	
-	public BrushDrawListener listener;
-	
 	
 	/**
 	 * The {@code BrushAction} class represents an event to process.
@@ -40,7 +39,7 @@ public class BrushController
 	 * @author coobird
 	 *
 	 */
-	static class BrushAction
+	private static class BrushAction
 	{
 		private final Brush b;
 		private final ImageLayer il;
@@ -360,8 +359,9 @@ public class BrushController
 			while(!actionQueue.isEmpty())
 			{
 				processBrush();
+				listener.drawProgress(actionQueue.size());
 			}
-			listener.doneDrawing();
+			listener.drawComplete();
 			running = false;
 		}
 	}

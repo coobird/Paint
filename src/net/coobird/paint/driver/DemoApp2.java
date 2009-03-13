@@ -48,6 +48,7 @@ import net.coobird.paint.application.BrushListCellRenderer;
 import net.coobird.paint.application.ImageLayerListCellRenderer;
 import net.coobird.paint.brush.Brush;
 import net.coobird.paint.brush.BrushController;
+import net.coobird.paint.brush.BrushRenderProgressListener;
 import net.coobird.paint.brush.RandomSplashBrush;
 import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.RegularEllipticalBrush;
@@ -84,7 +85,15 @@ public class DemoApp2
 	{
 		final JFrame f = new JFrame("Paint Dot Jar Demonstration 2");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//f.getContentPane().setLayout(new BorderLayout());
+		f.getContentPane().setLayout(new BorderLayout());
+		
+		final JPanel statusBar = new JPanel(new BorderLayout());
+		final JLabel statusLabel = new JLabel("Ready.");
+		final JProgressBar progressBar = new JProgressBar();
+		statusBar.add(statusLabel, BorderLayout.WEST);
+		statusBar.add(progressBar, BorderLayout.EAST);
+		
+		f.getContentPane().add(statusBar, BorderLayout.SOUTH);
 		
 		ApplicationUtils.setMainComponent(f);
 		
@@ -116,7 +125,7 @@ public class DemoApp2
 		brushListModel.addElement(new RegularCircularBrush(null, 4, Color.black));
 		brushListModel.addElement(new RegularEllipticalEraser(null, 4, 0, 1, 1f));
 		brushListModel.addElement(new StagedBrush(null, 10, Color.black));
-		brushListModel.addElement(new RandomSplashBrush(null, 100, 5, Color.black));
+		brushListModel.addElement(new RandomSplashBrush(null, 400, 50, Color.black));
 		
 		final JPopupMenu brushPopupMenu = new JPopupMenu();
 		brushPopupMenu.add(new ActionMenuItem("Change Color...") {
@@ -279,11 +288,14 @@ public class DemoApp2
 			}
 		};
 		
-		class DrawEventHandler extends MouseAdapter implements BrushController.BrushDrawListener
+		class DrawEventHandler extends MouseAdapter
+			implements BrushRenderProgressListener
 		{
 //		MouseAdapter ma = new MouseAdapter()
 //		{
 //			long lastTime = System.currentTimeMillis();
+			
+			private int maxSteps = 0;
 			
 			public void mouseDragged(MouseEvent e)
 			{
@@ -358,19 +370,41 @@ public class DemoApp2
 			}
 
 			@Override
-			public void doneDrawing()
+			public void drawComplete()
 			{
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
 					{
 						p.repaint();
+						statusLabel.setText("Done.");
+						progressBar.setValue(0);
+						maxSteps = 0;
+					}
+				});
+			}
+
+			@Override
+			public void drawProgress(final int stepsLeft)
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run()
+					{
+						if (stepsLeft > maxSteps)
+						{
+							maxSteps = stepsLeft;
+							progressBar.setMaximum(maxSteps);
+						}
+						
+						statusLabel.setText("Rendering brush...");
+						progressBar.setValue(maxSteps - stepsLeft);
+						progressBar.setStringPainted(true);
 					}
 				});
 			}
 		};
 		
 		DrawEventHandler ma = new DrawEventHandler();
-		bc.listener = ma;
+		bc.setBrushRenderProgressListener(ma);
 		
 		p.addMouseListener(ma);
 		p.addMouseMotionListener(ma);
@@ -1153,7 +1187,7 @@ public class DemoApp2
 				sp,
 				listPanels
 		);
-		f.getContentPane().add(splitPane);
+		f.getContentPane().add(splitPane, BorderLayout.CENTER);
 		
 		f.validate();
 		f.setVisible(true);
