@@ -1,13 +1,10 @@
 package net.coobird.paint.driver;
 
-import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.dnd.DropTarget;
@@ -20,7 +17,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -162,6 +159,8 @@ public class DemoApp2
 				JPanel p = new JPanel(new BorderLayout());
 				JSlider brushSize = new JSlider(1, 200, b.getSize());
 				JSlider alpha = new JSlider(0, 100, Math.round(b.getAlpha() * 100));
+				JCheckBox rotatable = new JCheckBox("Rotatable brush");
+				rotatable.setSelected(b.isRotatable());
 				JColorChooser color = new JColorChooser(b.getColor());
 				
 				JPanel ip = new JPanel(new GridLayout(0,1));
@@ -170,6 +169,7 @@ public class DemoApp2
 				ip.add(brushSize);
 				ip.add(new JLabel("Alpha:"));
 				ip.add(alpha);
+				ip.add(rotatable);
 				
 				p.add(ip, BorderLayout.CENTER);
 				p.add(color, BorderLayout.SOUTH);
@@ -185,6 +185,7 @@ public class DemoApp2
 				b.setSize(brushSize.getValue());
 				b.setAlpha(((float)alpha.getValue()/100f));
 				b.setColor(color.getColor());
+				b.setRotatable(rotatable.isSelected());
 				
 				brushList.repaint();
 			}
@@ -508,7 +509,6 @@ public class DemoApp2
 		
 		final JMenuBar menubar = new JMenuBar();
 		final JMenu fileMenu = new JMenu("File");
-		final JMenu brushMenu = new JMenu("Brush");
 		final JMenu layerMenu = new JMenu("Layer");
 		final JMenu filterMenu = new JMenu("Filter");
 		
@@ -634,19 +634,6 @@ public class DemoApp2
 		
 		////////////////
 
-		final JCheckBoxMenuItem bcMenu = new JCheckBoxMenuItem("Rotatable Brush");
-		bcMenu.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0)
-			{
-				System.out.println("rotatable toggle");
-				bc.setMovable(!bc.getMovable());
-				bcMenu.setSelected(bc.getMovable());
-			}
-		});
-		brushMenu.add(bcMenu);
-		
-		///////////////
-		
 		layerMenu.add(new ActionMenuItem("New Layer") {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -1153,13 +1140,10 @@ public class DemoApp2
 		});
 
 		menubar.add(fileMenu);
-		menubar.add(brushMenu);
 		menubar.add(layerMenu);
 		menubar.add(filterMenu);
 		menubar.add(helpMenu);
 		f.setJMenuBar(menubar);
-
-		bcMenu.setSelected(bc.getMovable());
 
 		f.setSize(640, 480);
 		f.setLocation(1, 1);

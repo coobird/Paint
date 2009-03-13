@@ -21,6 +21,8 @@ public abstract class Brush
 	protected float alpha;
 	protected Color brushColor;
 	protected int size;
+	protected boolean rotatable;
+	
 	private boolean hasUniqueName;
 	
 	protected static final int THUMB_SIZE = 32;
@@ -29,6 +31,7 @@ public abstract class Brush
 	{
 		alpha = 1f;
 		mode = BlendingMode.Brush.NORMAL;
+		rotatable = true;
 	}
 	
 	/**
@@ -50,12 +53,12 @@ public abstract class Brush
 
 		if (name == null)
 		{
-			this.setDefaultName();
+			setDefaultName();
 			hasUniqueName = false;
 		}
 		else
 		{
-			this.setName(name);
+			setName(name);
 			hasUniqueName = true;
 		}
 	}
@@ -252,6 +255,7 @@ public abstract class Brush
 		}
 		
 		this.brushColor = c;
+		
 		makeBrushImage();
 		updateName();
 	}
@@ -280,6 +284,16 @@ public abstract class Brush
 
 		makeBrushImage();
 		updateName();
+	}
+	
+	public boolean isRotatable()
+	{
+		return rotatable;
+	}
+	
+	public void setRotatable(boolean rotatable)
+	{
+		this.rotatable = rotatable;
 	}
 
 	/**

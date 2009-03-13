@@ -106,7 +106,6 @@ public class BrushController
 	private int lastX = UNDEFINED;
 	private int lastY = UNDEFINED;
 	private Brush lastBrush = null;
-	private boolean rotatable = true;
 
 	private DrawingThread drawingThread = new DrawingThread();
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -165,7 +164,7 @@ public class BrushController
 		 */
 
 		Graphics2D brushg = rotatedBrushImage.createGraphics();
-		if (rotatable)
+		if (action.getBrush().isRotatable())
 		{
 			brushg.rotate(
 					-theta,
@@ -242,7 +241,7 @@ public class BrushController
 		// If not, handle the "single-click" painting of brush.
 		if (lastX != UNDEFINED)
 		{
-			if (rotatable)
+			if (action.getBrush().isRotatable())
 			{
 				calcTheta(action.getX(), action.getY());
 			}
@@ -343,26 +342,6 @@ public class BrushController
 		lastY = UNDEFINED;
 	}
 	
-	/**
-	 * Sets the state for allowing the brush to rotate depending on the movement
-	 * of the brush.
-	 * @param b				Whether or not to allow rotation of the brush.
-	 */
-	public void setMovable(boolean b)
-	{
-		this.rotatable = b;
-	}
-	
-	/**
-	 * Returns whether or not brush rotation is currently enabled.
-	 * @return				Returns {@code true} if brush rotation is allowed,
-	 * 						{@code false} otherwise.
-	 */
-	public boolean getMovable()
-	{
-		return this.rotatable;
-	}
-
 	/**
 	 * Thread for processing the {@link BrushAction} queue.
 	 * @author coobird
