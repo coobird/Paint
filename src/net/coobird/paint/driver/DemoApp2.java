@@ -404,7 +404,7 @@ public class DemoApp2
 		};
 		
 		DrawEventHandler ma = new DrawEventHandler();
-		bc.setBrushRenderProgressListener(ma);
+		bc.addBrushRenderProgressListener(ma);
 		
 		p.addMouseListener(ma);
 		p.addMouseMotionListener(ma);

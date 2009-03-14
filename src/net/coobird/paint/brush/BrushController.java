@@ -4,7 +4,9 @@ import java.awt.AlphaComposite;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,11 +26,15 @@ import net.coobird.paint.image.ImageLayer;
  */
 public class BrushController
 {
-	private BrushRenderProgressListener listener;
+	private List<BrushRenderProgressListener> listeners;
 	
-	public void setBrushRenderProgressListener(BrushRenderProgressListener l)
 	{
-		listener = l;
+		listeners = new ArrayList<BrushRenderProgressListener>();
+	}
+	
+	public void addBrushRenderProgressListener(BrushRenderProgressListener l)
+	{
+		listeners.add(l);
 	}
 	
 	/**
@@ -359,9 +365,16 @@ public class BrushController
 			while(!actionQueue.isEmpty())
 			{
 				processBrush();
-				listener.drawProgress(actionQueue.size());
+				
+				for (BrushRenderProgressListener listener : listeners)
+				{
+					listener.drawProgress(actionQueue.size());
+				}
 			}
-			listener.drawComplete();
+			for (BrushRenderProgressListener listener : listeners)
+			{
+				listener.drawComplete();
+			}
 			running = false;
 		}
 	}
