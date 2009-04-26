@@ -150,3 +150,9 @@ TextLayer -> ImageLayer
 ReferenceLayer -> ImageLayer
 ->	References another image. (Load the image on request, not each draw)
 ->	Each these new layers will store a BufferedImage to use for rendering.
+
+Printing
+--------
+Printing support should be added.
+Was this Graphics2D? Or just awt?
+Perhaps overhaul the image I/O system to handle printing as well as file output?
