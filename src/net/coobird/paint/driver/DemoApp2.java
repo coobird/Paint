@@ -90,6 +90,8 @@ public class DemoApp2
 		final JPanel statusBar = new JPanel(new BorderLayout());
 		final JLabel statusLabel = new JLabel("Ready.");
 		final JProgressBar progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
+		
 		statusBar.add(statusLabel, BorderLayout.WEST);
 		statusBar.add(progressBar, BorderLayout.EAST);
 		
@@ -376,6 +378,10 @@ public class DemoApp2
 					public void run()
 					{
 						p.repaint();
+						
+						((ImageLayer)ilList.getSelectedValue()).update();
+						ilList.repaint();
+						
 						statusLabel.setText("Done.");
 						progressBar.setValue(0);
 						maxSteps = 0;
@@ -397,7 +403,6 @@ public class DemoApp2
 						
 						statusLabel.setText("Rendering brush...");
 						progressBar.setValue(maxSteps - stepsLeft);
-						progressBar.setStringPainted(true);
 					}
 				});
 			}
