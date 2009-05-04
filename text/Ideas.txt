@@ -156,3 +156,8 @@ Printing
 Printing support should be added.
 Was this Graphics2D? Or just awt?
 Perhaps overhaul the image I/O system to handle printing as well as file output?
+
+Cancellable Effects
+-------------------
+Effects and image filters should be cancellable
+Make task-based. Use java.util.concurrent -> Callable? (support cancel())
