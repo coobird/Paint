@@ -18,11 +18,11 @@ public final class Canvas implements Serializable
 {
 	private static final long serialVersionUID = 1975814667741951677L;
 
-	private transient List<ImageLayer> layers;
+	private transient List<ImageLayer> layerList;
 	private int width;
 	private int height;
 	private double zoom;
-	private int layerNumber;
+	private int numLayers;
 	
 	/**
 	 * Cannot instantiate a {@code Canvas} object without specification of size.
@@ -37,13 +37,13 @@ public final class Canvas implements Serializable
 	 */
 	public Canvas(int width, int height)
 	{
-		layers = new ArrayList<ImageLayer>();
+		layerList = new ArrayList<ImageLayer>();
 		
 		setWidth(width);
 		setHeight(height);
 		setZoom(1);
 		
-		layerNumber = 1;
+		numLayers = 1;
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public final class Canvas implements Serializable
 	 */
 	public String getNextLayerName()
 	{
-		return "Layer " + layerNumber;
+		return "Layer " + numLayers;
 	}
 
 	/**
@@ -146,7 +146,7 @@ public final class Canvas implements Serializable
 	 */
 	public List<ImageLayer> getLayers()
 	{
-		return layers;
+		return layerList;
 	}
 	
 	/**
@@ -164,7 +164,7 @@ public final class Canvas implements Serializable
 	 */
 	public List<ImageLayer> getRenderOrder()
 	{
-		List<ImageLayer> renderOrderList = new ArrayList<ImageLayer>(layers);
+		List<ImageLayer> renderOrderList = new ArrayList<ImageLayer>(layerList);
 		Collections.reverse(renderOrderList);
 		
 		return renderOrderList; 
@@ -188,7 +188,7 @@ public final class Canvas implements Serializable
 	 */
 	public void addLayer(ImageLayer layer)
 	{
-		addLayer(layer, layers.size());
+		addLayer(layer, layerList.size());
 	}
 
 	/**
@@ -207,16 +207,16 @@ public final class Canvas implements Serializable
 		 * TODO determine whether to silently eat the problematic index, or
 		 * throw an exception, such as IndexOutOfBoundsException
 		 */
-		if (index < layers.size())
+		if (index < layerList.size())
 		{
-			layers.add(index, layer);
+			layerList.add(index, layer);
 		}
 		else
 		{
-			layers.add(layer);
+			layerList.add(layer);
 		}
 		
-		layerNumber++;
+		numLayers++;
 	}
 	
 	/**
@@ -231,7 +231,7 @@ public final class Canvas implements Serializable
 			throw new NullPointerException(msg);
 		}
 		
-		layers.remove(layer);
+		layerList.remove(layer);
 	}
 	
 	/**
@@ -241,8 +241,8 @@ public final class Canvas implements Serializable
 	 */
 	public void moveLayer(int fromIndex, int toIndex)
 	{
-		ImageLayer il = layers.remove(fromIndex);
-		layers.add(toIndex, il);
+		ImageLayer il = layerList.remove(fromIndex);
+		layerList.add(toIndex, il);
 	}
 	
 	/**
@@ -253,7 +253,7 @@ public final class Canvas implements Serializable
 	{
 		Rectangle r = new Rectangle();
 		
-		for (ImageLayer il : layers)
+		for (ImageLayer il : layerList)
 		{
 			r.add(new Rectangle(
 					il.getX(),
@@ -271,7 +271,7 @@ public final class Canvas implements Serializable
 	 */
 	public void clear()
 	{
-		layers.clear();
+		layerList.clear();
 	}
 	
 	/**
@@ -281,7 +281,7 @@ public final class Canvas implements Serializable
 		throws IOException, ClassNotFoundException
 	{
 		in.defaultReadObject();
-		layers = new ArrayList<ImageLayer>();
+		layerList = new ArrayList<ImageLayer>();
 	}
 
 	/**
@@ -295,8 +295,8 @@ public final class Canvas implements Serializable
 	@Override
 	public String toString()
 	{
-		String msg = "Canvas: items: " + layers.size() +
-				" " + Arrays.toString(layers.toArray());
+		String msg = "Canvas: items: " + layerList.size() +
+				" " + Arrays.toString(layerList.toArray());
 		
 		return msg;
 	}
