@@ -1,5 +1,6 @@
 package net.coobird.paint.application;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.SystemColor;
@@ -27,6 +28,8 @@ public class ImageLayerListCellRenderer
 	 * Version string used for serialization.
 	 */
 	private static final long serialVersionUID = 8390058918154536766L;
+	
+	private static final int GAP = 10;
 
 	private JLabel captionLabel;
 	private JLabel thumbnailLabel;
@@ -42,10 +45,16 @@ public class ImageLayerListCellRenderer
 		
 		captionLabel = new JLabel();
 		thumbnailLabel = new JLabel();
-		thumbnailLabel.setBorder(BorderFactory.createLineBorder(Color.black));
+		thumbnailLabel.setBorder(
+				BorderFactory.createCompoundBorder(
+						BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP),
+						BorderFactory.createLineBorder(Color.black)
+				)
+		);
 
-		this.add(thumbnailLabel);
-		this.add(captionLabel);
+		this.setLayout(new BorderLayout(GAP, GAP));
+		this.add(thumbnailLabel, BorderLayout.WEST);
+		this.add(captionLabel, BorderLayout.CENTER);
 		
 		captionLabel.setOpaque(true);
 		thumbnailLabel.setOpaque(false);
