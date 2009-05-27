@@ -161,3 +161,11 @@ Cancellable Effects
 -------------------
 Effects and image filters should be cancellable
 Make task-based. Use java.util.concurrent -> Callable? (support cancel())
+
+Viewer in a Jar
+---------------
+Create a JAR file encapsulating the image and viewer.
+Don't need editing features.
+
+
+** Make a Panel (View of MVC) so that can be embedded for picture display!
