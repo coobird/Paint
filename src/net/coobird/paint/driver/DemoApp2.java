@@ -250,53 +250,11 @@ public class DemoApp2
 		final PartialImageRenderer renderer = new ClippableImageRenderer();
 //		final ProgressiveImageRenderer renderer = new ProgressiveImageRenderer();
 		
-		final JPanel p = new JPanel() {
-			public void paintComponent(Graphics g)
-			{
-				super.paintComponent(g);
-				
-				Rectangle r = getVisibleRect();
-				
-//				g.drawImage(renderer.render(ch.getCanvas()), 0, 0, null);
-				
-				int width = r.width;
-				int height = r.height;
-				double zoom = ch.getCanvas().getZoom();
-				
-				g.drawImage(
-						renderer.render(
-								ch.getCanvas(),
-								(int)(r.x / zoom),
-								(int)(r.y / zoom),
-								(int)(width / zoom),
-								(int)(height / zoom)
-						),
-						r.x,
-						r.y,
-						null
-				);
-			}
-
-			/* (non-Javadoc)
-			 * @see javax.swing.JComponent#getPreferredSize()
-			 */
-			@Override
-			public Dimension getPreferredSize()
-			{
-				int width = (int)Math.round(ch.getCanvas().getWidth() * ch.getCanvas().getZoom());
-				int height = (int)Math.round(ch.getCanvas().getHeight() * ch.getCanvas().getZoom());
-
-				return new Dimension(width, height);
-			}
-		};
+		final CanvasViewPanel p = new CanvasViewPanel(renderer, c);
 		
 		class DrawEventHandler extends MouseAdapter
 			implements BrushRenderProgressListener
 		{
-//		MouseAdapter ma = new MouseAdapter()
-//		{
-//			long lastTime = System.currentTimeMillis();
-			
 			private int maxSteps = 0;
 			
 			public void mouseDragged(MouseEvent e)
@@ -416,7 +374,6 @@ public class DemoApp2
 
 		ilList.setDropTarget(new DropTarget()
 		{
-
 			/* (non-Javadoc)
 			 * @see java.awt.dnd.DropTarget#drop(java.awt.dnd.DropTargetDropEvent)
 			 */
