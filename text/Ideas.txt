@@ -169,3 +169,18 @@ Don't need editing features.
 
 
 ** Make a Panel (View of MVC) so that can be embedded for picture display!
+
+Brush interface
+---------------
+Have a brush be a function which draws onto a canvas
+
+e.g.
+
+brush.location(canvas, location, [vector: angle/magnitude], other info?)
+
+Kinda a functional way of looking at brushes.
+By default, no state for brushes, so it can be re-made using just the brush
+locations --> easier to undo
+
+This would need rethinking of Canvas display (view) structuring -->
+how to send location information to the brush.
