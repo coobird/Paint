@@ -54,8 +54,8 @@ public class ImageLayer implements Serializable
 	
 	/**
 	 * Instantiate a new {@code ImageLayer}.
-	 * @param width		The width of the ImageLayer.
-	 * @param height	The height of the ImageLayer.
+	 * @param width		The width of the ImageLayer in pixels.
+	 * @param height	The height of the ImageLayer in pixels.
 	 */
 	public ImageLayer(BufferedImage image)
 	{
@@ -67,8 +67,8 @@ public class ImageLayer implements Serializable
 	
 	/**
 	 * Instantiate a new {@code ImageLayer} from an existing image.
-	 * @param width		The width of the ImageLayer.
-	 * @param height	The height of the ImageLayer.
+	 * @param width		The width of the ImageLayer in pixels.
+	 * @param height	The height of the ImageLayer in pixels.
 	 */
 	public ImageLayer(int width, int height)
 	{

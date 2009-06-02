@@ -32,8 +32,8 @@ public final class Canvas implements Serializable
 	
 	/**
 	 * Instantiates a {@code Canvas} object with the specified dimensions.
-	 * @param width			The width of the canvas.
-	 * @param height		The height of the canvas.
+	 * @param width			The width of the canvas in pixels.
+	 * @param height		The height of the canvas in pixels.
 	 */
 	public Canvas(int width, int height)
 	{
@@ -80,7 +80,7 @@ public final class Canvas implements Serializable
 
 	/**
 	 * Returns the width of the {@link Canvas} object.
-	 * @return 				The width of the canvas.
+	 * @return 				The width of the canvas in pixels.
 	 */
 	public int getWidth()
 	{
@@ -89,7 +89,7 @@ public final class Canvas implements Serializable
 
 	/**
 	 * Sets the width of the {@link Canvas} object.
-	 * @param width 		The width to set the canvas to.
+	 * @param width 		The width in pixels to set the canvas to.
 	 * @throws IllegalArgumentException
 	 */
 	public void setWidth(int width)
@@ -105,7 +105,7 @@ public final class Canvas implements Serializable
 
 	/**
 	 * Returns the height of the {@link Canvas} object.
-	 * @return 				The height of the canvas.
+	 * @return 				The height in pixels of the canvas.
 	 */
 	public int getHeight()
 	{
@@ -114,7 +114,7 @@ public final class Canvas implements Serializable
 
 	/**
 	 * Sets the height of the {@link Canvas} object.
-	 * @param height 		The height to set the canvas to.
+	 * @param height 		The height in pixels to set the canvas to.
 	 */
 	public void setHeight(int height)
 	{
