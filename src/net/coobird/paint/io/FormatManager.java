@@ -65,7 +65,7 @@ public final class FormatManager
 	 * @param f				{@code File} object for which to find an
 	 * 						{@code ImageInput} for.
 	 * @return				The {@code ImageInput} which can read the given
-	 * 						file, or {@code null} if an adaquate
+	 * 						file, or {@code null} if an adequate
 	 * 						{@code ImageInput} cannot be found.
 	 */
 	public static ImageInput getImageInput(File f)
@@ -87,7 +87,7 @@ public final class FormatManager
 	 * @param f				{@code File} object for which to find an
 	 * 						{@code ImageOutput} for.
 	 * @return				The {@code ImageOutput} which can read the given
-	 * 						file, or {@code null} if an adaquate
+	 * 						file, or {@code null} if an adequate
 	 * 						{@code ImageOutput} cannot be found.
 	 */
 	public static ImageOutput getImageOutput(File f)

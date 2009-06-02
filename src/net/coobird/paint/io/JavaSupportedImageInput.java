@@ -69,6 +69,7 @@ public final class JavaSupportedImageInput extends ImageInput
 		}
 		catch (IOException e)
 		{
+			// TODO! DONT EAT EXCEPTIONS!!
 			ApplicationUtils.showExceptionMessage(e);
 		}
 		

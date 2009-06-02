@@ -107,6 +107,7 @@ public final class JavaSupportedImageOutput extends ImageOutput
 		}
 		catch (IOException e)
 		{
+			// TODO! DONT EAT EXCEPTIONS!!
 			ApplicationUtils.showExceptionMessage(e);
 		}
 	}
