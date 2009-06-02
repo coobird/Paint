@@ -12,6 +12,7 @@ public final class ImageRendererFactory
 	 * Single instance of {@code ImageRenderer}.
 	 */
 	private static ImageRenderer renderer;
+	private static Object rendererLock = new Object();
 	
 	/**
 	 * Disallow instantiation of this class.
@@ -25,9 +26,12 @@ public final class ImageRendererFactory
 	 */
 	public static ImageRenderer getInstance()
 	{
-		if (renderer == null)
+		synchronized (rendererLock)
 		{
-			renderer = new DefaultImageRenderer();
+			if (renderer == null)
+			{
+				renderer = new DefaultImageRenderer();
+			}
 		}
 		
 		return renderer;

@@ -1051,7 +1051,6 @@ public class DemoApp2
 						p.repaint();
 						ilList.repaint();
 						p.revalidate();
-						filter = null;
 					}
 				}).start();
 			}
@@ -1134,7 +1133,6 @@ public class DemoApp2
 						p.repaint();
 						ilList.repaint();
 						p.revalidate();
-						filter = null;
 					}
 				}).start();
 			}
