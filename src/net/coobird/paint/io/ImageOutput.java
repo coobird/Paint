@@ -51,8 +51,10 @@ public abstract class ImageOutput
 	 * filter. 
 	 * @param c				The {@code Canvas} object to write.
 	 * @param f				The {@code File} object to write to.
+	 * @throws ImageInputOutputException			add description
 	 */
-	public abstract void write(Canvas c, File f);
+	public abstract void write(Canvas c, File f)
+		throws ImageInputOutputException;
 
 	/**
 	 * Writes the contents of the {@link Canvas} object to file specified in
@@ -62,8 +64,10 @@ public abstract class ImageOutput
 	 * @param f				The {@code File} object to write to.
 	 * @param format		A {@code String} holding the name of the format to
 	 * 						write the image in.
+	 * @throws ImageInputOutputException			add description
 	 */
-	public abstract void write(Canvas c, File f, String format);
+	public abstract void write(Canvas c, File f, String format)
+		throws ImageInputOutputException;
 	
 	/**
 	 * 

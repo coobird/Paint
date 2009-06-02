@@ -59,12 +59,17 @@ public final class DefaultImageInput extends ImageInput
 	 * @return				The {@code Canvas} object.
 	 * 						If something goes wrong, the method will return
 	 * 						{@code null}.
+
+	 * 
 	 * @throws NullPointerException		If {@code f} is {@code null}.
 	 * @throws IOException				If an error occurs while reading in
 	 * 									the serialzed data from a file.
+
+	 * 
 	 */
 	@Override
 	public Canvas read(File f)
+		throws ImageInputOutputException
 	{
 		Canvas c = null;
 		
@@ -163,15 +168,18 @@ public final class DefaultImageInput extends ImageInput
 		}
 		catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			throw new ImageInputOutputException(e);
+			//e.printStackTrace();
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new ImageInputOutputException(e);
+			//e.printStackTrace();
 		}
 		catch (ClassNotFoundException e)
 		{
-			e.printStackTrace();
+			throw new ImageInputOutputException(e);
+			//e.printStackTrace();
 		}
 		
 		return c;

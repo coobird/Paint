@@ -2,8 +2,6 @@ package net.coobird.paint.driver;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -66,6 +64,9 @@ import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageLayerUtils;
 import net.coobird.paint.image.PartialImageRenderer;
 import net.coobird.paint.io.FormatManager;
+import net.coobird.paint.io.ImageInput;
+import net.coobird.paint.io.ImageInputOutputException;
+import net.coobird.paint.io.ImageOutput;
 
 public class DemoApp2
 {
@@ -554,16 +555,35 @@ public class DemoApp2
 					fc.addChoosableFileFilter(filter);
 				}
 				
-				int option = fc.showOpenDialog(f);
-				
-				if (option != JFileChooser.APPROVE_OPTION)
-					return;
-				
-				File f = fc.getSelectedFile();
-				
-				ch.setCanvas(FormatManager.getImageInput(f).read(f));
-
-				updateGUI(ilListModel, ch, p);
+				while (true)
+				{
+					int option = fc.showOpenDialog(f);
+					
+					if (option != JFileChooser.APPROVE_OPTION)
+						return;
+					
+					File inFile = fc.getSelectedFile();
+					
+					ImageInput input = FormatManager.getImageInput(inFile); 
+					
+					if (input != null)
+					{
+						try
+						{
+							ch.setCanvas(input.read(inFile));
+						}
+						catch (ImageInputOutputException e1)
+						{
+							ApplicationUtils.showExceptionMessage(e1);
+						}
+						updateGUI(ilListModel, ch, p);
+						return;
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(f, "Could not open file: " + inFile);
+					}
+				}
 			}
 		});
 
@@ -577,16 +597,37 @@ public class DemoApp2
 				}
 				fc.setFileFilter(fc.getAcceptAllFileFilter());
 				
-				int option = fc.showSaveDialog(f);
-				
-				if (option != JFileChooser.APPROVE_OPTION)
+				while (true)
 				{
-					return;
+					int option = fc.showSaveDialog(f);
+					
+					if (option != JFileChooser.APPROVE_OPTION)
+					{
+						return;
+					}
+					
+					File outFile = fc.getSelectedFile();
+					ImageOutput output = FormatManager.getImageOutput(outFile);
+					
+					// fc.getFileFilter();
+					
+					if (output != null)
+					{
+						try
+						{
+							output.write(ch.getCanvas(), outFile);
+						}
+						catch (ImageInputOutputException e1)
+						{
+							ApplicationUtils.showExceptionMessage(e1);
+						}
+						return;
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(f, "Could not write file" + outFile);
+					}
 				}
-				
-				File outFile = fc.getSelectedFile();
-				
-				FormatManager.getImageOutput(outFile).write(ch.getCanvas(), outFile);
 			}
 		});
 		
@@ -601,21 +642,43 @@ public class DemoApp2
 					fc.addChoosableFileFilter(filter);
 				}
 				
-				int option = fc.showOpenDialog(f);
-				
-				if (option != JFileChooser.APPROVE_OPTION)
-					return;
-				
-				File f = fc.getSelectedFile();
-				
-				Canvas c = FormatManager.getImageInput(f).read(f);
-				
-				for (ImageLayer layer : c.getLayers())
+				while (true)
 				{
-					ch.getCanvas().addLayer(layer);
-				}
+					int option = fc.showOpenDialog(f);
+					
+					if (option != JFileChooser.APPROVE_OPTION)
+						return;
+					
+					File inFile = fc.getSelectedFile();
+					
+					ImageInput input = FormatManager.getImageInput(inFile);
+					
+					if (input != null)
+					{
+						
+						Canvas c;
+						try
+						{
+							c = input.read(inFile);
 
-				updateGUI(ilListModel, ch, p);
+							for (ImageLayer layer : c.getLayers())
+							{
+								ch.getCanvas().addLayer(layer);
+							}
+			
+							updateGUI(ilListModel, ch, p);
+						}
+						catch (ImageInputOutputException e1)
+						{
+							ApplicationUtils.showExceptionMessage(e1);
+						}
+						return;
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(f, "ZCould not open file: " + inFile);
+					}
+				}
 			}
 		});
 		

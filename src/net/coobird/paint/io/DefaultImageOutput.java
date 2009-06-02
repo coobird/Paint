@@ -46,6 +46,7 @@ public final class DefaultImageOutput extends ImageOutput
 	 */
 	@Override
 	public void write(Canvas c, File f)
+		throws ImageInputOutputException
 	{
 		if (c == null || f == null)
 		{
@@ -82,11 +83,13 @@ public final class DefaultImageOutput extends ImageOutput
 		}
 		catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			throw new ImageInputOutputException(e);
+			//e.printStackTrace();
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new ImageInputOutputException(e);
+			//e.printStackTrace();
 		}
 	}
 	
@@ -94,6 +97,7 @@ public final class DefaultImageOutput extends ImageOutput
 	 * 
 	 */
 	public void write(Canvas c, File f, String format)
+		throws ImageInputOutputException
 	{
 		write(c, f);
 	}

@@ -8,7 +8,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import net.coobird.paint.application.ApplicationUtils;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageRendererFactory;
 
@@ -61,6 +60,7 @@ public final class JavaSupportedImageOutput extends ImageOutput
 	
 	@Override
 	public void write(Canvas c, File f)
+		throws ImageInputOutputException
 	{
 		/*
 		 * Determine format string from file extension.
@@ -70,6 +70,7 @@ public final class JavaSupportedImageOutput extends ImageOutput
 	
 	@Override
 	public void write(Canvas c, File f, String format)
+		throws ImageInputOutputException
 	{
 		/*
 		 * Note: saving as JPEG causes image to look over saturated.
@@ -108,7 +109,8 @@ public final class JavaSupportedImageOutput extends ImageOutput
 		catch (IOException e)
 		{
 			// TODO! DONT EAT EXCEPTIONS!!
-			ApplicationUtils.showExceptionMessage(e);
+			//ApplicationUtils.showExceptionMessage(e);
+			throw new ImageInputOutputException(e);
 		}
 	}
 	

@@ -48,8 +48,10 @@ public abstract class ImageInput
 	 * 
 	 * @param f
 	 * @return
+	 * @throws ImageInputOutputException
 	 */
-	public abstract Canvas read(File f);
+	public abstract Canvas read(File f)
+		throws ImageInputOutputException;
 	
 	/**
 	 * 

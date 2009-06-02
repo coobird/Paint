@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import net.coobird.paint.application.ApplicationUtils;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 
@@ -54,6 +53,7 @@ public final class JavaSupportedImageInput extends ImageInput
 	 */
 	@Override
 	public final Canvas read(File f)
+		throws ImageInputOutputException
 	{
 		BufferedImage img = null;
 		Canvas c = null;
@@ -70,7 +70,8 @@ public final class JavaSupportedImageInput extends ImageInput
 		catch (IOException e)
 		{
 			// TODO! DONT EAT EXCEPTIONS!!
-			ApplicationUtils.showExceptionMessage(e);
+			//ApplicationUtils.showExceptionMessage(e);
+			throw new ImageInputOutputException(e);
 		}
 		
 		return c;
