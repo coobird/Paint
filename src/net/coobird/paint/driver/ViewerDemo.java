@@ -10,6 +10,7 @@ import javax.swing.event.ChangeListener;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.io.DefaultImageInput;
+import net.coobird.paint.io.ImageInputOutputException;
 
 /**
  * A picture view for Canvas in a Jar(name TBD)
@@ -35,7 +36,14 @@ public class ViewerDemo
 		
 		if (option == JFileChooser.APPROVE_OPTION)
 		{
-			c = new DefaultImageInput().read(fc.getSelectedFile());
+			try
+			{
+				c = new DefaultImageInput().read(fc.getSelectedFile());
+			}
+			catch (ImageInputOutputException e1)
+			{
+				e1.printStackTrace();
+			}
 		}
 		
 		CanvasViewPanel p = new CanvasViewPanel(new ClippableImageRenderer(), c);

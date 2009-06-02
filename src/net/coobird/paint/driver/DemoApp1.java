@@ -35,6 +35,7 @@ import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ProgressiveImageRenderer;
 import net.coobird.paint.io.DefaultImageInput;
 import net.coobird.paint.io.DefaultImageOutput;
+import net.coobird.paint.io.ImageInputOutputException;
 
 public class DemoApp1
 {
@@ -174,7 +175,14 @@ public class DemoApp1
 			{
 				ilListModel.removeAllElements();
 				System.out.println("open");
-				ch.setCanvas(new DefaultImageInput().read(new File("output.zip")));
+				try
+				{
+					ch.setCanvas(new DefaultImageInput().read(new File("output.zip")));
+				}
+				catch (ImageInputOutputException e1)
+				{
+					e1.printStackTrace();
+				}
 				for (ImageLayer il : ch.getCanvas().getLayers())
 				{
 					ilListModel.addElement(il);
@@ -187,7 +195,14 @@ public class DemoApp1
 			public void actionPerformed(ActionEvent arg0)
 			{
 				System.out.println("save");
-				new DefaultImageOutput().write(ch.getCanvas(), new File("output.zip"));
+				try
+				{
+					new DefaultImageOutput().write(ch.getCanvas(), new File("output.zip"));
+				}
+				catch (ImageInputOutputException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		});
 

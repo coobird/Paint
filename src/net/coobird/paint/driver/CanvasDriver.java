@@ -15,6 +15,7 @@ import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRendererFactory;
 import net.coobird.paint.io.DefaultImageOutput;
+import net.coobird.paint.io.ImageInputOutputException;
 
 public class CanvasDriver
 {
@@ -74,7 +75,15 @@ public class CanvasDriver
 		f.validate();
 		f.setVisible(true);
 		
-		new DefaultImageOutput().write(c, new File(""));
+		try
+		{
+			new DefaultImageOutput().write(c, new File(""));
+		}
+		catch (ImageInputOutputException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
