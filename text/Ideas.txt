@@ -184,3 +184,16 @@ locations --> easier to undo
 
 This would need rethinking of Canvas display (view) structuring -->
 how to send location information to the brush.
+
+
+Variable-intensity Selection
+----------------------------
+Using a gradient to apply an effect
+Have a "Selection Layer", which is a map of "selection intensity"
+
+Map percentage on "selection layer" and apply the effect onto the target layer
+with selection
+
+[Selection Layer] + [Effected Target Layer] -> [Actual Result on Layer]
+
+ex. pixel: (255, 255, 255) + effected pixel: (0,0,0) -> Result: (128,128,128)
