@@ -11,6 +11,8 @@ import net.coobird.paint.image.PartialImageRenderer;
 
 public class CanvasViewPanel extends JPanel
 {
+	private static final long serialVersionUID = -3102666235735470779L;
+	
 	private PartialImageRenderer renderer;
 	private Canvas c;
 	
@@ -24,24 +26,42 @@ public class CanvasViewPanel extends JPanel
 	{
 		super.paintComponent(g);
 		
+		/*
+		 * Possibly clean up.
+		 */
 		Rectangle r = getVisibleRect();
 		
-//		g.drawImage(renderer.render(ch.getCanvas()), 0, 0, null);
-		
-		int width = r.width;
-		int height = r.height;
+		int visibleX = r.x;
+		int visibleY = r.y;
+		int visibleWidth = r.width;
+		int visibleHeight = r.height;
+
 		double zoom = c.getZoom();
 		
+		int viewX = (int)(visibleX / zoom);
+		int viewY = (int)(visibleY / zoom);
+		int viewWidth = (int)(visibleWidth / zoom);
+		int viewHeight = (int)(visibleHeight / zoom);
+		
+		int canvasWidth = (int)(c.getWidth() * zoom);
+		int canvasHeight = (int)(c.getHeight() * zoom);
+		
+		int x = visibleX;
+		int y = visibleY;
+		
+		if (visibleWidth > canvasWidth)
+		{
+			x = (visibleWidth / 2) - (canvasWidth / 2);
+		}
+		if (visibleHeight > canvasHeight)
+		{
+			y = (visibleHeight / 2) - (canvasHeight / 2);
+		}
+		
 		g.drawImage(
-				renderer.render(
-						c,
-						(int)(r.x / zoom),
-						(int)(r.y / zoom),
-						(int)(width / zoom),
-						(int)(height / zoom)
-				),
-				r.x,
-				r.y,
+				renderer.render(c, viewX, viewY, viewWidth, viewHeight),
+				x,
+				y,
 				null
 		);
 	}
