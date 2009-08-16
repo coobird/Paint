@@ -1,16 +1,30 @@
 package net.coobird.paint.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
-import javax.swing.JButton;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import net.coobird.paint.driver.CanvasViewPanel;
+import net.coobird.paint.image.Canvas;
+import net.coobird.paint.image.ClippableImageRenderer;
+import net.coobird.paint.io.FormatManager;
+import net.coobird.paint.io.ImageInput;
+import net.coobird.paint.io.ImageInputOutputException;
 
 public class PaintApplication
 {
@@ -20,19 +34,63 @@ public class PaintApplication
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setLayout(new BorderLayout());
 		
-		JTabbedPane tp = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		final JTabbedPane tp = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 		JLabel label = new JLabel("Status bar");
-		tp.add(new JPanel() {{setName("Tab 1");}});
-		tp.add(new JPanel() {{setName("Tab 2");}});
+		
+		JMenuBar menuBar = new JMenuBar();
+		
+		JMenu fileMenu = new JMenu("File");
+		Action fileOpenAction = new AbstractAction("Open...") {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				final JFileChooser fc = new JFileChooser();
+				int option = fc.showOpenDialog(mainFrame);
+				
+				if (option != JFileChooser.APPROVE_OPTION)
+				{
+					return;
+				}
+				
+				File f = fc.getSelectedFile();
+				ImageInput input = FormatManager.getImageInput(f);
+				
+				if (input != null)
+				{
+					try
+					{
+						Canvas c = input.read(f);
+						ClippableImageRenderer r = new ClippableImageRenderer();
+						CanvasViewPanel p = new CanvasViewPanel(r, c);
+						JScrollPane sp = new JScrollPane(p);
+						sp.setRowHeaderView(new JLabel("helloo"));
+						sp.setColumnHeaderView(new JLabel("helloo"));
+						tp.add(f.getName(), sp);
+						tp.setSelectedIndex(tp.getTabCount()-1);
+					}
+					catch (ImageInputOutputException e1)
+					{
+						e1.printStackTrace();
+					}
+				}
+			}
+		};
+		JMenuItem fileOpenMenu = new JMenuItem(fileOpenAction);
+		fileMenu.add(fileOpenMenu);
+		
+		menuBar.add(fileMenu);
+		
+		
+		mainFrame.setJMenuBar(menuBar);
+		
 		
 		JToolBar tb = new JToolBar();
-		tb.add(new JButton("ha"));
+		tb.add(fileOpenAction);
 		tb.setFloatable(false);
 		
 		mainFrame.getContentPane().add(tb, BorderLayout.NORTH);
 		mainFrame.getContentPane().add(tp, BorderLayout.CENTER);
 		mainFrame.getContentPane().add(label, BorderLayout.SOUTH);
-
 
 		mainFrame.setLocation(200, 200);
 		mainFrame.setSize(400, 400);
@@ -57,22 +115,18 @@ public class PaintApplication
 		}
 		catch (ClassNotFoundException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (InstantiationException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (IllegalAccessException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (UnsupportedLookAndFeelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -82,6 +136,5 @@ public class PaintApplication
 				new PaintApplication().makeGUI();
 			}
 		});
-
 	}
 }
