@@ -3,6 +3,7 @@ package net.coobird.paint.driver;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -65,6 +66,7 @@ import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageLayerUtils;
 import net.coobird.paint.image.PartialImageRenderer;
+import net.coobird.paint.image.TextLayer;
 import net.coobird.paint.io.FormatManager;
 
 public class DemoApp2
@@ -234,6 +236,7 @@ public class DemoApp2
 		c.addLayer();
 		c.addLayer();
 		c.addLayer();
+		c.addLayer(new TextLayer(200, 200, "hahahaha", new Font("SansSerif", Font.BOLD, 24)));
 		ch.setCanvas(c);
 
 		for (ImageLayer il : c.getLayers())
@@ -739,6 +742,21 @@ public class DemoApp2
 		layerMenu.add(new ActionMenuItem("Resize Canvas...") {
 			public void actionPerformed(ActionEvent e)
 			{
+			}
+		});
+		
+		layerMenu.addSeparator();
+		
+		layerMenu.add(new ActionMenuItem("Select Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				((ImageLayer)(ilList.getSelectedValue())).getGraphics().setClip(50,50,300,300);
+			}
+		});
+		layerMenu.add(new ActionMenuItem("Deselect Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				((ImageLayer)(ilList.getSelectedValue())).getGraphics().setClip(null);
 			}
 		});
 		
