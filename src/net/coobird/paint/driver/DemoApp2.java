@@ -1218,7 +1218,7 @@ public class DemoApp2
 	}
 
 	private void updateGUI(final DefaultListModel ilListModel,
-			final CanvasHolder ch, final JPanel p)
+			final CanvasHolder ch, final CanvasViewPanel p)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
 			
@@ -1230,6 +1230,7 @@ public class DemoApp2
 					ilListModel.addElement(il);
 				}
 				
+				p.setCanvas(ch.getCanvas());
 				p.repaint();
 				p.revalidate();
 			}

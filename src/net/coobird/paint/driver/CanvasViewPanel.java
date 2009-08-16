@@ -22,6 +22,11 @@ public class CanvasViewPanel extends JPanel
 		this.c = c;
 	}
 	
+	public void setCanvas(Canvas c)
+	{
+		this.c = c;
+	}
+	
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
