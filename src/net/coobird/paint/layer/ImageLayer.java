@@ -112,7 +112,7 @@ public class ImageLayer implements Serializable
 	/**
 	 * Creates a thumbnail image.
 	 */
-	private void renderThumbnail()
+	protected void renderThumbnail()
 	{
 		int thumbWidth = this.width / THUMBNAIL_SCALE;
 		int thumbHeight = this.height / THUMBNAIL_SCALE;

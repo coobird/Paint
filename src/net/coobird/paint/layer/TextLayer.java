@@ -2,7 +2,8 @@ package net.coobird.paint.layer;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 /**
@@ -108,10 +109,14 @@ public class TextLayer extends ImageLayer
 	 */
 	private void updateImage()
 	{
-		Graphics g = getGraphics();
+		Graphics2D g = getGraphics();
+		
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g.setFont(textFont);
 		g.setColor(textColor);
 		g.drawString(text, locX, locY);
-		super.getThumbImage();
+		
+		renderThumbnail();
 	}
 }

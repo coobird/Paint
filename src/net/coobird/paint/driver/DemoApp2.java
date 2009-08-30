@@ -67,6 +67,7 @@ import net.coobird.paint.image.PartialImageRenderer;
 import net.coobird.paint.io.FormatManager;
 import net.coobird.paint.layer.ImageLayer;
 import net.coobird.paint.layer.ImageLayerUtils;
+import net.coobird.paint.layer.ReferenceLayer;
 import net.coobird.paint.layer.TextLayer;
 
 public class DemoApp2
@@ -233,10 +234,16 @@ public class DemoApp2
 		
 		final CanvasHolder ch = new CanvasHolder();
 		Canvas c = new Canvas(SIZE, SIZE);
+		
+		ImageLayer layer0 = new ImageLayer(SIZE, SIZE);
+		
 		c.addLayer();
 		c.addLayer();
 		c.addLayer();
-		c.addLayer(new TextLayer(200, 200, "hahahaha", new Font("SansSerif", Font.BOLD, 24)));
+		c.addLayer(layer0);
+		c.addLayer(new TextLayer(SIZE, SIZE, "Hello World!", new Font("Serif", Font.BOLD, 48)));
+		c.addLayer(new ReferenceLayer(layer0));
+		
 		ch.setCanvas(c);
 
 		for (ImageLayer il : c.getLayers())
