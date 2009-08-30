@@ -5,6 +5,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+/**
+ * Represents a layer which can contain text and display it.
+ * 
+ * @author coobird
+ *
+ */
 public class TextLayer extends ImageLayer
 {
 
@@ -20,15 +26,26 @@ public class TextLayer extends ImageLayer
 	private int locY;
 	
 	private static final Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 12); 
+	private static final String DEFAULT_TEXT = "";
 
+	/**
+	 * Initializes the text layer to contain the specified image.
+	 * 
+	 * @param image
+	 */
 	public TextLayer(BufferedImage image)
 	{
 		super(image);
 	}
 
+	/**
+	 * 
+	 * @param width
+	 * @param height
+	 */
 	public TextLayer(int width, int height)
 	{
-		this(width, height, "");
+		this(width, height, DEFAULT_TEXT);
 	}
 	
 	public TextLayer(int width, int height, String text)
@@ -83,10 +100,12 @@ public class TextLayer extends ImageLayer
 	public BufferedImage getImage()
 	{
 		updateImage();
-		// TODO Auto-generated method stub
 		return super.getImage();
 	}
 
+	/**
+	 * Updates the appearance of the text layer.
+	 */
 	private void updateImage()
 	{
 		Graphics g = getGraphics();
