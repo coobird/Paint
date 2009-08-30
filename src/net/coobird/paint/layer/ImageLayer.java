@@ -14,40 +14,51 @@ import net.coobird.paint.image.ImageRenderer;
  */
 
 /**
- * Represents a image layer within the Untitled Image Manipulation Application
+ * Represents a image layer within the Untitled Image Manipulation Application.
+ * 
  * @author coobird
  *
  */
 public class ImageLayer implements Serializable
 {
 
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6969332672194331399L;
 	
-	private static final int THUMBNAIL_SCALE = 8;
-	private static final int DEFAULT_IMAGE_TYPE = BufferedImage.TYPE_INT_ARGB;
-	
-	private transient BufferedImage image;
-	private transient BufferedImage thumbImage;
-	private transient Graphics2D g;
-	private String caption;
-	private boolean visible = true;
-	private boolean locked = false;
-	
-	private int x;
-	private int y;
-	private int width;
-	private int height;
-	
-	private float alpha = 1.0f;
-	private BlendingMode.Layer mode = BlendingMode.Layer.NORMAL;
+	/**
+	 * The scaling factor to shrink the actual image of the layer by when the
+	 * thumbnail is displayed. The scaling factor of 8 means that the thumbnail
+	 * is 1/8 the size of the actual image in the image layer.
+	 */
+	protected static final int THUMBNAIL_SCALE = 8;
 	
 	/**
-	 * {@code ImageLayer} must be constructed with a width and height parameter.
-	 * TODO fix this javadoc:
+	 * The default image type used for the BufferedImage which contains the
+	 * image information for this image layer.
+	 */
+	protected static final int DEFAULT_IMAGE_TYPE = BufferedImage.TYPE_INT_ARGB;
+	
+	protected transient BufferedImage image;
+	protected transient BufferedImage thumbImage;
+	protected transient Graphics2D g;
+	protected String caption;
+	protected boolean visible = true;
+	protected boolean locked = false;
+	
+	protected int x;
+	protected int y;
+	protected int width;
+	protected int height;
+	
+	protected float alpha = 1.0f;
+	protected BlendingMode.Layer mode = BlendingMode.Layer.NORMAL;
+	
+	/**
+	 * {@code ImageLayer} must be constructed with the width and height
+	 * parameters specified.
+	 * 
 	 * @see ImageLayer(int,int)
 	 */
 	@SuppressWarnings("unused")
@@ -55,6 +66,7 @@ public class ImageLayer implements Serializable
 	
 	/**
 	 * Instantiate a new {@code ImageLayer}.
+	 * 
 	 * @param width		The width of the ImageLayer.
 	 * @param height	The height of the ImageLayer.
 	 */
@@ -68,6 +80,7 @@ public class ImageLayer implements Serializable
 	
 	/**
 	 * Instantiate a new {@code ImageLayer} from an existing image.
+	 * 
 	 * @param width		The width of the ImageLayer.
 	 * @param height	The height of the ImageLayer.
 	 */
@@ -157,6 +170,7 @@ public class ImageLayer implements Serializable
 	/**
 	 * Returns the {@link Graphics2D} object associated with the image contained
 	 * in the {@code ImageLayer} object.
+	 * 
 	 * @return				The {@code Graphics2D} object associated with the
 	 * 						image contained in the {@code ImageLayer} object.
 	 */
@@ -247,6 +261,7 @@ public class ImageLayer implements Serializable
 
 	/**
 	 * Sets the visibility of this ImageLayer.
+	 * 
 	 * @param visible	The visibility of this ImageLayer.
 	 */
 	public void setVisible(boolean visible)
@@ -256,6 +271,7 @@ public class ImageLayer implements Serializable
 	
 	/**
 	 * Returns the caption of the ImageLayer.
+	 * 
 	 * @return	The caption of the ImageLayer.
 	 */
 	public String getCaption()
@@ -265,6 +281,7 @@ public class ImageLayer implements Serializable
 
 	/**
 	 * Sets the caption of the ImageLayer.
+	 * 
 	 * @param caption	The caption to set the ImageLayer to.
 	 */
 	public void setCaption(String caption)
@@ -274,6 +291,7 @@ public class ImageLayer implements Serializable
 
 	/**
 	 * Returns the width of the ImageLayer.
+	 * 
 	 * @return	The width of the ImageLayer.
 	 */
 	public int getWidth()
@@ -283,6 +301,7 @@ public class ImageLayer implements Serializable
 
 	/**
 	 * Returns the height of the ImageLayer.
+	 * 
 	 * @return	The height of the ImageLayer.
 	 */
 	public int getHeight()
@@ -342,15 +361,37 @@ public class ImageLayer implements Serializable
 	}
 
 	/**
-	 * @param alpha the alpha to set
-	 */
+	 * <p>
+	 * Sets the transparency of his image layer.
+	 * </p>
+	 * <p>
+	 * The value for transparency must be in the range of {@code 0.0f} to 
+	 * {@code 1.0f}, where {@code 0.0f} is completely transparent, and 
+	 * {@code 1.0f} is completely opaque.
+	 * </p>
+	 * 
+	 * @param alpha 	The transparency level to set the layer to, in the range
+	 * 					of {@code 0.0f} to {@code 1.0f}, where {@code 0.0f} is
+	 * 					completely transparent, and {@code 1.0f} is completely
+	 * 					opaque.
+	 * @throws IllegalArgumentException		Thrown when the {@code alpha} is
+	 * 										specified outside the range of
+	 * 										{@code 0.0f} to {@code 1.0f}.
+	 */	
 	public void setAlpha(float alpha)
 	{
+		if (alpha > 1.0f || alpha < 0.0f)
+		{
+			throw new IllegalArgumentException(
+					"Alpha must be in the range of 0.0f to 1.0f."
+			);
+		}
+		
 		this.alpha = alpha;
 	}
 	
 	/**
-	 * 
+	 * Returns the blending {@link AlphaComposite} used for this layer.
 	 * @return
 	 */
 	public AlphaComposite getAlphaComposite()
@@ -362,6 +403,8 @@ public class ImageLayer implements Serializable
 	}
 
 	/**
+	 * Returns the blending mode for this layer.
+	 * 
 	 * @return the mode
 	 */
 	public BlendingMode.Layer getMode()
@@ -370,6 +413,8 @@ public class ImageLayer implements Serializable
 	}
 
 	/**
+	 * Sets the blending mode for this layer.
+	 * 
 	 * @param mode the mode to set
 	 */
 	public void setMode(BlendingMode.Layer mode)
@@ -391,9 +436,14 @@ public class ImageLayer implements Serializable
 	}
 
 	/**
+	 * <p>
 	 * Returns the default image type of layers of this class.
+	 * </p>
+	 * <p>
 	 * The value returned is a class constant from the {@link BufferedImage} 
 	 * class which defines the type of an image.
+	 * </p>
+	 * 
 	 * @return			The default image type of this class.
 	 */
 	public static int getDefaultType()
@@ -402,20 +452,24 @@ public class ImageLayer implements Serializable
 	}
 
 	/**
-	 * Sets whether the layer is to be locked from editing. 
+	 * Sets whether the layer is to be locked from editing.
+	 * 
 	 * @param locked	When {@code true}, the layer will be locked from
 	 * 					editing.
 	 */
-	public void setLocked(boolean locked) {
+	public void setLocked(boolean locked)
+	{
 		this.locked = locked;
 	}
 
 	/**
 	 * Returns whether the layer is locked from editing.
+	 * 
 	 * @return			{@code true} if the layer is locked, {@code false}
 	 * 					if not.
 	 */
-	public boolean isLocked() {
+	public boolean isLocked()
+	{
 		return locked;
 	}
 }
