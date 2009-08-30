@@ -20,9 +20,7 @@ import net.coobird.paint.image.ImageRenderer;
  */
 public class ImageLayer implements Serializable
 {
-	/*
-	 * TODO add a lock feature to prevent edits.
-	 */
+
 	
 	/**
 	 * 
@@ -37,6 +35,7 @@ public class ImageLayer implements Serializable
 	private transient Graphics2D g;
 	private String caption;
 	private boolean visible = true;
+	private boolean locked = false;
 	
 	private int x;
 	private int y;
@@ -392,11 +391,31 @@ public class ImageLayer implements Serializable
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Returns the default image type of layers of this class.
+	 * The value returned is a class constant from the {@link BufferedImage} 
+	 * class which defines the type of an image.
+	 * @return			The default image type of this class.
 	 */
 	public static int getDefaultType()
 	{
 		return DEFAULT_IMAGE_TYPE;
+	}
+
+	/**
+	 * Sets whether the layer is to be locked from editing. 
+	 * @param locked	When {@code true}, the layer will be locked from
+	 * 					editing.
+	 */
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
+
+	/**
+	 * Returns whether the layer is locked from editing.
+	 * @return			{@code true} if the layer is locked, {@code false}
+	 * 					if not.
+	 */
+	public boolean isLocked() {
+		return locked;
 	}
 }
