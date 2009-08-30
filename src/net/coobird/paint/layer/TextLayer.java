@@ -1,4 +1,4 @@
-package net.coobird.paint.image;
+package net.coobird.paint.layer;
 
 import java.awt.Color;
 import java.awt.Font;

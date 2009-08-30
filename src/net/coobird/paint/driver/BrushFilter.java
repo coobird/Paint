@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import net.coobird.paint.brush.Brush;
-import net.coobird.paint.image.ImageLayer;
+import net.coobird.paint.layer.ImageLayer;
 
 /*
  * Moved from net.coobird.paint.brush package.

@@ -1,4 +1,4 @@
-package net.coobird.paint.image;
+package net.coobird.paint.layer;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 import net.coobird.paint.BlendingMode;
+import net.coobird.paint.image.Canvas;
+import net.coobird.paint.image.ImageRenderer;
 
 /*************************
  * TODO Clean up this class!!

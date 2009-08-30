@@ -17,9 +17,9 @@ import javax.swing.SwingUtilities;
 
 import net.coobird.paint.application.ImageLayerListCellRenderer;
 import net.coobird.paint.image.Canvas;
-import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRenderer;
 import net.coobird.paint.image.ImageRendererFactory;
+import net.coobird.paint.layer.ImageLayer;
 
 public class ImageLayerDriver
 {

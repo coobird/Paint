@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import net.coobird.paint.layer.ImageLayer;
+
 /**
  * 
  * @author coobird

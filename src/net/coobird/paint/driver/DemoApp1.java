@@ -31,10 +31,10 @@ import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.brush.RegularEllipticalBrush;
 import net.coobird.paint.brush.SolidCircularBrush;
 import net.coobird.paint.image.Canvas;
-import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ProgressiveImageRenderer;
 import net.coobird.paint.io.DefaultImageInput;
 import net.coobird.paint.io.DefaultImageOutput;
+import net.coobird.paint.layer.ImageLayer;
 
 public class DemoApp1
 {

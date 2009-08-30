@@ -63,11 +63,11 @@ import net.coobird.paint.filter.RepeatableMatrixFilter;
 import net.coobird.paint.filter.ResizeFilter;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ClippableImageRenderer;
-import net.coobird.paint.image.ImageLayer;
-import net.coobird.paint.image.ImageLayerUtils;
 import net.coobird.paint.image.PartialImageRenderer;
-import net.coobird.paint.image.TextLayer;
 import net.coobird.paint.io.FormatManager;
+import net.coobird.paint.layer.ImageLayer;
+import net.coobird.paint.layer.ImageLayerUtils;
+import net.coobird.paint.layer.TextLayer;
 
 public class DemoApp2
 {

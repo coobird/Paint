@@ -12,9 +12,9 @@ import javax.swing.SwingUtilities;
 
 import net.coobird.paint.brush.RegularCircularBrush;
 import net.coobird.paint.image.Canvas;
-import net.coobird.paint.image.ImageLayer;
 import net.coobird.paint.image.ImageRendererFactory;
 import net.coobird.paint.io.DefaultImageOutput;
+import net.coobird.paint.layer.ImageLayer;
 
 public class CanvasDriver
 {

@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import net.coobird.paint.layer.ImageLayer;
+
 /**
  * Progressively renders the canvas.
  * Canvas is divided into N fields and rendered independently by separate

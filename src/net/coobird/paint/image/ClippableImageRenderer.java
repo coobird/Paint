@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.List;
 
+import net.coobird.paint.layer.ImageLayer;
+
 /**
  * The {@code ClippableImageRenderer} class is an {@code PartialImageRenderer}
  * which supports rendering of a certain section of a {@link Canvas} object

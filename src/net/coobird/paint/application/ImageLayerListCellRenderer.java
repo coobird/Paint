@@ -11,7 +11,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
-import net.coobird.paint.image.ImageLayer;
+import net.coobird.paint.layer.ImageLayer;
 
 /**
  * The {@code ImageLayerListCellRenderer} class is the {@link ListCellRenderer}

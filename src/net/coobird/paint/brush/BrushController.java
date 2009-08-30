@@ -11,7 +11,7 @@ import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import net.coobird.paint.image.ImageLayer;
+import net.coobird.paint.layer.ImageLayer;
 
 /*
  * FIXME Threading issues?
