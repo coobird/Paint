@@ -53,7 +53,7 @@ public class BrushController
 		private final int y;
 		private final State state;
 
-		private enum State
+		private static enum State
 		{
 			DRAW,
 			RELEASE;

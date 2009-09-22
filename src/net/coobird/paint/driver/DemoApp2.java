@@ -102,6 +102,9 @@ public class DemoApp2
 		
 		JPanel listPanels = new JPanel(new GridLayout(0, 1));
 		
+		/*
+		 * Brush initializations
+		 */
 		final JList brushList = new JList();
 		brushList.setCellRenderer(new BrushListCellRenderer());
 		final DefaultListModel brushListModel = new DefaultListModel();
@@ -230,8 +233,11 @@ public class DemoApp2
 		final DefaultListModel ilListModel = new DefaultListModel();
 		ilList.setModel(ilListModel);
 		
-		final int SIZE = 800;
 		
+		/*
+		 * Canvas and ImageLayer initializations.
+		 */
+		final int SIZE = 800;
 		final CanvasHolder ch = new CanvasHolder();
 		Canvas c = new Canvas(SIZE, SIZE);
 		
@@ -241,7 +247,15 @@ public class DemoApp2
 		c.addLayer();
 		c.addLayer();
 		c.addLayer(layer0);
-		c.addLayer(new TextLayer(SIZE, SIZE, "Hello World!", new Font("Serif", Font.BOLD, 48)));
+		c.addLayer(
+				new TextLayer(
+						SIZE,
+						SIZE,
+						"Hello World!",
+						new Font("Serif", Font.BOLD, 48)
+				)
+		);
+		
 		c.addLayer(new ReferenceLayer(layer0));
 		
 		ch.setCanvas(c);
@@ -291,20 +305,25 @@ public class DemoApp2
 			@Override
 			public Dimension getPreferredSize()
 			{
-				int width = (int)Math.round(ch.getCanvas().getWidth() * ch.getCanvas().getZoom());
-				int height = (int)Math.round(ch.getCanvas().getHeight() * ch.getCanvas().getZoom());
+				int width = (int)Math.round(
+						ch.getCanvas().getWidth() * ch.getCanvas().getZoom()
+				);
+				
+				int height = (int)Math.round(
+						ch.getCanvas().getHeight() * ch.getCanvas().getZoom()
+				);
 
 				return new Dimension(width, height);
 			}
 		};
 		
+
+		
 		class DrawEventHandler extends MouseAdapter
 			implements BrushRenderProgressListener
 		{
-//		MouseAdapter ma = new MouseAdapter()
-//		{
-//			long lastTime = System.currentTimeMillis();
-			
+			// Counter used to keep track of maximum number of steps in the
+			// queue for background drawing.
 			private int maxSteps = 0;
 			
 			public void mouseDragged(MouseEvent e)
@@ -324,12 +343,7 @@ public class DemoApp2
 				int sx = (int)Math.round((e.getX() - offsetX) / zoom); 
 				int sy = (int)Math.round((e.getY() - offsetY) / zoom); 
 				
-				bc.drawBrush(
-						il,
-						b,
-						sx,
-						sy
-				);
+				bc.drawBrush(il, b, sx, sy);
 				
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
@@ -371,14 +385,12 @@ public class DemoApp2
 				int sx = (int)Math.round((e.getX() - offsetX) / zoom); 
 				int sy = (int)Math.round((e.getY() - offsetY) / zoom); 
 				
-				bc.drawBrush(
-						il,
-						b,
-						sx,
-						sy
-				);
+				bc.drawBrush(il, b, sx, sy);
 			}
 
+			/**
+			 * callback for background drawing completing
+			 */
 			@Override
 			public void drawComplete()
 			{
@@ -393,6 +405,9 @@ public class DemoApp2
 				});
 			}
 
+			/**
+			 * callback for drawing progress occurring in the background.
+			 */
 			@Override
 			public void drawProgress(final int stepsLeft)
 			{
@@ -408,6 +423,10 @@ public class DemoApp2
 						statusLabel.setText("Rendering brush...");
 						progressBar.setValue(maxSteps - stepsLeft);
 						progressBar.setStringPainted(true);
+						
+						// update imagelayer thumbnail and imagelayer list
+						((ImageLayer)ilList.getSelectedValue()).update();
+						ilList.repaint();
 					}
 				});
 			}
@@ -418,6 +437,8 @@ public class DemoApp2
 		
 		p.addMouseListener(ma);
 		p.addMouseMotionListener(ma);
+		
+		
 
 		ilList.setDropTarget(new DropTarget()
 		{
