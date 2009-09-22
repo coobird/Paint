@@ -14,7 +14,7 @@ public class FutureTaskTest
 	 */
 	public static void main(String[] args)
 	{
-		FutureTask task = new FutureTask<Void>(new Callable<Void>() {
+		FutureTask<Void> task = new FutureTask<Void>(new Callable<Void>() {
 
 			boolean keepRunning = true;
 			
