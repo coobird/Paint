@@ -4,10 +4,14 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.coobird.paint.BlendingMode;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ImageRenderer;
+import net.coobird.paint.layer.event.LayerChangeEventType;
+import net.coobird.paint.layer.event.LayerChangeListener;
 
 /*************************
  * TODO Clean up this class!!
@@ -21,12 +25,12 @@ import net.coobird.paint.image.ImageRenderer;
  */
 public class ImageLayer implements Serializable
 {
-
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6969332672194331399L;
-	
+	private static final long serialVersionUID = -6993626021146695425L;
+
 	/**
 	 * The scaling factor to shrink the actual image of the layer by when the
 	 * thumbnail is displayed. The scaling factor of 8 means that the thumbnail
@@ -54,6 +58,22 @@ public class ImageLayer implements Serializable
 	
 	protected float alpha = 1.0f;
 	protected BlendingMode.Layer mode = BlendingMode.Layer.NORMAL;
+	
+	protected List<LayerChangeListener> listeners;
+	
+	private static enum EventType
+	{
+		LAYER_CHANGED,
+		LAYER_UPDATED;
+	};
+	
+	
+	/**
+	 * Initializes the instance.
+	 */
+	{
+		listeners = new ArrayList<LayerChangeListener>();
+	}
 	
 	/**
 	 * {@code ImageLayer} must be constructed with the width and height
@@ -165,6 +185,7 @@ public class ImageLayer implements Serializable
 		// Perform action to keep imagelayer up to date
 		// Here, renderThumbnail to synch the image and thumbImage representation
 		renderThumbnail();
+		changeOccured(EventType.LAYER_UPDATED);
 	}
 	
 	/**
@@ -180,18 +201,40 @@ public class ImageLayer implements Serializable
 	}
 
 	/**
-	 * Checks if this {@code ImageLayer} is set as visible.
 	 * 
-	 * When an {@code ImageLayer} object is marked as visible, the image layer
-	 * will be rendered when it is included in a {@link Canvas} object which is
-	 * being rendered by an {@link ImageRenderer}.
-	 * 
-	 * @return				{@code true} if the {@code ImageLayer} object is
-	 * 						visible, {@code false} otherwise.
+	 * @param listener
 	 */
-	public boolean isVisible()
+	public void addLayerChangeListener(LayerChangeListener listener)
 	{
-		return visible;
+		listeners.add(listener);
+	}
+
+	/**
+	 * 
+	 * @param listener
+	 */
+	public void removeLayerChangeListener(LayerChangeListener listener)
+	{
+		listeners.remove(listener);
+	}
+
+	/**
+	 * 
+	 * @param il
+	 */
+	protected void changeOccured(EventType type)
+	{
+		for (LayerChangeListener listener : listeners)
+		{
+			if (type == EventType.LAYER_CHANGED)
+			{
+				listener.layerChanged(this, LayerChangeEventType.LAYER_CHANGED);
+			}
+			else
+			{
+				listener.layerChanged(this, LayerChangeEventType.LAYER_CHANGED);
+			}
+		}
 	}
 
 	/**
@@ -257,6 +300,21 @@ public class ImageLayer implements Serializable
 	public void setThumbImage(BufferedImage thumbImage)
 	{
 		this.thumbImage = thumbImage;
+	}
+
+	/**
+	 * Checks if this {@code ImageLayer} is set as visible.
+	 * 
+	 * When an {@code ImageLayer} object is marked as visible, the image layer
+	 * will be rendered when it is included in a {@link Canvas} object which is
+	 * being rendered by an {@link ImageRenderer}.
+	 * 
+	 * @return				{@code true} if the {@code ImageLayer} object is
+	 * 						visible, {@code false} otherwise.
+	 */
+	public boolean isVisible()
+	{
+		return visible;
 	}
 
 	/**

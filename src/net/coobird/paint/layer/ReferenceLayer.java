@@ -4,6 +4,20 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import net.coobird.paint.layer.event.LayerChangeEventType;
+import net.coobird.paint.layer.event.LayerChangeListener;
+
+/*
+ * 
+ * reference to a deleted layer --> how to detect a layer is delted?
+ * -> use a listener that indicates that layer is going to be deleted?
+ * 
+ * this can lead to memory leaks where reference to the origianl layer
+ * which ahs been deleted is retained.
+ * 
+ * 
+ */
+
 /**
  * Representation of a reference layer, which is a reference to another layer.
  * 
@@ -23,7 +37,7 @@ import java.awt.image.BufferedImage;
  * @author coobird
  *
  */
-public class ReferenceLayer extends ImageLayer
+public class ReferenceLayer extends ImageLayer implements LayerChangeListener
 {
 	
 	private ImageLayer referencedLayer = null;
@@ -38,11 +52,13 @@ public class ReferenceLayer extends ImageLayer
 	{
 		this.referencedLayer = layer;
 		setImage(layer.getImage());
+		this.setCaption("reference of " + layer.getCaption());
+		layer.addLayerChangeListener(this);
 		
-		if (layer == null)
-		{
-			refreshFields();
-		}
+//		if (layer == null)
+//		{
+//			refreshFields();
+//		}
 	}
 
 	public ImageLayer getReferencedLayer()
@@ -78,6 +94,14 @@ public class ReferenceLayer extends ImageLayer
 		
 		return super.getGraphics();
 	}
-	
-	
+
+	@Override
+	public void layerChanged(ImageLayer source, LayerChangeEventType event)
+	{
+		if (source == referencedLayer)
+		{
+			// Reference changed, so update this layer's contents.
+			update();
+		}
+	}
 }
