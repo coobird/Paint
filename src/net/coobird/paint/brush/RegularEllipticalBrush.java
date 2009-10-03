@@ -39,12 +39,18 @@ public class RegularEllipticalBrush extends Brush
 	private double ratio;
 
 	/**
+	 * Creates an instance of {@code RegularEllipticalBrush} with specified
+	 * name, brush size, rotation angle and color in drawing the brush.
 	 * 
-	 * @param name
-	 * @param size
-	 * @param angle
-	 * @param ratio
-	 * @param brushColor
+	 * @param name			The name of the brush.
+	 * @param size			The size of the brush, as the width. For a circular
+	 * 						brush, this will correspond to the diameter.
+	 * @param angle			The rotation angle of the brush, in radians.
+	 * @param ratio			The ratio between the semiminor and semimajor axes
+	 * 						of the elliptical brush. Must be in the range
+	 * 						{@code 0d} and {@code 1d}. A round brush would have
+	 * 						a value of {@code 1d}. 
+	 * @param brushColor	The color of the brush.
 	 */
 	public RegularEllipticalBrush(
 			String name,
@@ -54,6 +60,11 @@ public class RegularEllipticalBrush extends Brush
 			Color brushColor
 	)
 	{
+		/*
+		 * TODO Add information in the Javadoc about how the number of steps is
+		 * being calculated. 
+		 */
+		
 		this(
 				null,
 				size,
@@ -65,13 +76,21 @@ public class RegularEllipticalBrush extends Brush
 	}
 	
 	/**
+	 * Creates an instance of {@code RegularEllipticalBrush} with specified
+	 * name, brush size, rotation angle, color and number of steps in drawing
+	 * the brush.
 	 * 
-	 * @param name
-	 * @param size
-	 * @param steps
-	 * @param angle
-	 * @param ratio
-	 * @param brushColor
+	 * @param name			The name of the brush.
+	 * @param size			The size of the brush, as the width. For a circular
+	 * 						brush, this will correspond to the diameter.
+	 * @param angle			The rotation angle of the brush, in radians.
+	 * @param steps			The number of steps (number of times a circle is
+	 * 						drawn) in order to draw the brush.
+	 * @param ratio			The ratio between the semiminor and semimajor axes
+	 * 						of the elliptical brush. Must be in the range
+	 * 						{@code 0d} and {@code 1d}. A round brush would have
+	 * 						a value of {@code 1d}. 
+	 * @param brushColor	The color of the brush.
 	 */
 	public RegularEllipticalBrush(
 			String name,

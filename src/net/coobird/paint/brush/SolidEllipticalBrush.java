@@ -31,7 +31,8 @@ public class SolidEllipticalBrush extends Brush
 	 * @param angle			The rotation angle of the brush, in radians.
 	 * @param ratio			The ratio between the semiminor and semimajor axes
 	 * 						of the elliptical brush. Must be in the range
-	 * 						{@code 0d} and {@code 1d}. 
+	 * 						{@code 0d} and {@code 1d}. A round brush would have
+	 * 						a value of {@code 1d}. 
 	 * @param brushColor	The color of the brush.
 	 */
 	public SolidEllipticalBrush(

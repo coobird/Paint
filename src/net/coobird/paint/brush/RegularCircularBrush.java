@@ -16,6 +16,7 @@ public class RegularCircularBrush extends RegularEllipticalBrush
 	 * Creates an instance of {@code RegularCircularBrush} with specified brush
 	 * size and color. Number of steps is determined by dividing the size of the
 	 * brush by {@code DEFAULT_STEPS_DIVISOR} constant.
+	 * 
 	 * @param name			Identification for the new
 							{@code RegularCircularBrush} object.
 	 * @param size			The diameter of the {@code RegularCircularBrush}.
@@ -33,6 +34,7 @@ public class RegularCircularBrush extends RegularEllipticalBrush
 	/**
 	 * Creates an instance of {@code RegularCircularBrush} with specified brush
 	 * size, color and number of steps in drawing the brush.
+	 * 
 	 * @param name			Identification for the new
 							{@code RegularCircularBrush} object.
 	 * @param size			The diameter of the {@code RegularCircularBrush}.
