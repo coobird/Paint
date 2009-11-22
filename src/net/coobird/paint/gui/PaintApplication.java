@@ -2,10 +2,12 @@ package net.coobird.paint.gui;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,6 +27,8 @@ import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.io.FormatManager;
 import net.coobird.paint.io.ImageInput;
 import net.coobird.paint.io.ImageInputOutputException;
+import net.coobird.thumbnailator.builders.BufferedImageBuilder;
+import net.coobird.thumbnailator.resizers.BilinearResizer;
 
 public class PaintApplication
 {
@@ -35,7 +39,7 @@ public class PaintApplication
 		mainFrame.getContentPane().setLayout(new BorderLayout());
 		
 		final JTabbedPane tp = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
-		JLabel label = new JLabel("Status bar");
+		final StatusBar statusBar = new StatusBar();
 		
 		JMenuBar menuBar = new JMenuBar();
 		
@@ -52,26 +56,49 @@ public class PaintApplication
 					return;
 				}
 				
-				File f = fc.getSelectedFile();
-				ImageInput input = FormatManager.getImageInput(f);
+				final File f = fc.getSelectedFile();
+				final ImageInput input = FormatManager.getImageInput(f);
 				
 				if (input != null)
 				{
-					try
-					{
-						Canvas c = input.read(f);
-						ClippableImageRenderer r = new ClippableImageRenderer();
-						CanvasViewPanel p = new CanvasViewPanel(r, c);
-						JScrollPane sp = new JScrollPane(p);
-						sp.setRowHeaderView(new JLabel("helloo"));
-						sp.setColumnHeaderView(new JLabel("helloo"));
-						tp.add(f.getName(), sp);
-						tp.setSelectedIndex(tp.getTabCount()-1);
-					}
-					catch (ImageInputOutputException e1)
-					{
-						e1.printStackTrace();
-					}
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run()
+						{
+							try
+							{
+								Canvas c = input.read(f);
+								
+								statusBar.setStatus("Opening " + f.getName() + ".", StatusBar.INFO);
+								ClippableImageRenderer r = new ClippableImageRenderer();
+								CanvasViewPanel p = new CanvasViewPanel(r, c);
+								
+								JScrollPane sp = new JScrollPane(p);
+								sp.setRowHeaderView(new JLabel("Ruler"));
+								sp.setColumnHeaderView(new JLabel("Ruler"));
+								
+								
+								BufferedImage img = new BufferedImageBuilder(24, 24).build();
+								BilinearResizer.getInstance().resize(r.render(c), img);
+								
+								tp.insertTab(f.getName(), 
+										new ImageIcon(img),
+										sp,
+										f.getName(),
+										0
+								);
+							
+								tp.setSelectedIndex(0);
+								
+								//tp.setSelectedIndex(tp.getTabCount() - 1);
+								statusBar.setStatus("Successfully opened " + f.getName() + ".", StatusBar.INFO);
+							}
+							catch (ImageInputOutputException e1)
+							{
+								e1.printStackTrace();
+							}
+						}
+					});
+					
 				}
 			}
 		};
@@ -90,7 +117,7 @@ public class PaintApplication
 		
 		mainFrame.getContentPane().add(tb, BorderLayout.NORTH);
 		mainFrame.getContentPane().add(tp, BorderLayout.CENTER);
-		mainFrame.getContentPane().add(label, BorderLayout.SOUTH);
+		mainFrame.getContentPane().add(statusBar, BorderLayout.SOUTH);
 
 		mainFrame.setLocation(200, 200);
 		mainFrame.setSize(400, 400);
