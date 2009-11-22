@@ -1,8 +1,8 @@
 package net.coobird.paint.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.swing.AbstractAction;
@@ -27,8 +27,6 @@ import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.io.FormatManager;
 import net.coobird.paint.io.ImageInput;
 import net.coobird.paint.io.ImageInputOutputException;
-import net.coobird.thumbnailator.builders.BufferedImageBuilder;
-import net.coobird.thumbnailator.resizers.BilinearResizer;
 
 public class PaintApplication
 {
@@ -77,8 +75,8 @@ public class PaintApplication
 								sp.setColumnHeaderView(new JLabel("Ruler"));
 								
 								
-								BufferedImage img = new BufferedImageBuilder(24, 24).build();
-								BilinearResizer.getInstance().resize(r.render(c), img);
+								// Poor performance to have to render each time.
+								Image img = r.render(c).getScaledInstance(24, 24, Image.SCALE_DEFAULT);
 								
 								tp.insertTab(f.getName(), 
 										new ImageIcon(img),
