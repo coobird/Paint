@@ -3,6 +3,7 @@ package net.coobird.paint.brush;
 import java.awt.AlphaComposite;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -169,6 +170,11 @@ public class BrushController
 		 */
 
 		Graphics2D brushg = rotatedBrushImage.createGraphics();
+		
+		// FIXME improve rotation rendering quality. performance impact?
+//		brushg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//		brushg.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		
 		if (action.getBrush().isRotatable())
 		{
 			brushg.rotate(
