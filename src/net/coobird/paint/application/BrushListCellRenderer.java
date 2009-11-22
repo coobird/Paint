@@ -22,18 +22,28 @@ public class BrushListCellRenderer
 	/**
 	 * Version string for this class, used for serialization. 
 	 */
-	private static final long serialVersionUID = -2298872884258272114L;
+	private static final long serialVersionUID = -1935391746701897141L;
 	
+	/**
+	 * Specifies whether or not to display the brush name.
+	 */
 	private boolean showLabel;
 
 	/**
 	 * Constructs an instance of {@code BrushListCellRenderer}.
+	 * The brush name will be displayed.
 	 */
 	public BrushListCellRenderer()
 	{
 		this(true);
 	}
 	
+	/**
+	 * Constructor which specifies whether or not to display the name of the
+	 * brush on the cell.
+	 *  
+	 * @param showLabel		Whether or not to display the brush name.
+	 */
 	public BrushListCellRenderer(boolean showLabel)
 	{
 		super();
@@ -60,31 +70,35 @@ public class BrushListCellRenderer
 			
 			if (showLabel)
 			{
+				this.setToolTipText("");
 				this.setText(b.getName());
 			}
 			else
 			{
 				this.setToolTipText(b.getName());
+				this.setText("");
 			}
 			
 			this.setIcon(new ImageIcon(b.getThumbImage()));
 			
-			if (isSelected)
-			{
-				this.setOpaque(true);
-				this.setBackground(list.getSelectionBackground());
-				this.setForeground(list.getSelectionForeground());
-			}
-			else
-			{
-				this.setOpaque(true);
-				this.setBackground(list.getBackground());
-				this.setForeground(list.getForeground());
-			}
 		}
 		else
 		{
+			this.setIcon(null);
 			this.setText("Not a Brush.");
+		}
+		
+		if (isSelected)
+		{
+			this.setOpaque(true);
+			this.setBackground(list.getSelectionBackground());
+			this.setForeground(list.getSelectionForeground());
+		}
+		else
+		{
+			this.setOpaque(true);
+			this.setBackground(list.getBackground());
+			this.setForeground(list.getForeground());
 		}
 
 		return this;
