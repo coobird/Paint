@@ -1,7 +1,10 @@
-package net.coobird.paint.image;
+package net.coobird.paint.layer;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
+import net.coobird.paint.image.Canvas;
+import net.coobird.paint.image.ImageRendererFactory;
 
 /**
  * Utility class for {@link ImageLayer} processing.

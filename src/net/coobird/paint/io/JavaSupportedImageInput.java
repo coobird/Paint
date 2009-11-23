@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import net.coobird.paint.image.Canvas;
-import net.coobird.paint.image.ImageLayer;
+import net.coobird.paint.layer.ImageLayer;
 
 /**
  * An image import filter for formats supported by the Java Image IO library.

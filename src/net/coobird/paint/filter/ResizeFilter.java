@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.coobird.paint.image.ImageLayer;
+import net.coobird.paint.layer.ImageLayer;
 
 public class ResizeFilter extends ImageFilter
 {

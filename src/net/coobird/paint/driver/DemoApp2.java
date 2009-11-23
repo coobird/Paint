@@ -2,6 +2,7 @@ package net.coobird.paint.driver;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -60,13 +61,15 @@ import net.coobird.paint.filter.RepeatableMatrixFilter;
 import net.coobird.paint.filter.ResizeFilter;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ClippableImageRenderer;
-import net.coobird.paint.image.ImageLayer;
-import net.coobird.paint.image.ImageLayerUtils;
 import net.coobird.paint.image.PartialImageRenderer;
 import net.coobird.paint.io.FormatManager;
 import net.coobird.paint.io.ImageInput;
 import net.coobird.paint.io.ImageInputOutputException;
 import net.coobird.paint.io.ImageOutput;
+import net.coobird.paint.layer.ImageLayer;
+import net.coobird.paint.layer.ImageLayerUtils;
+import net.coobird.paint.layer.ReferenceLayer;
+import net.coobird.paint.layer.TextLayer;
 
 public class DemoApp2
 {
@@ -102,6 +105,9 @@ public class DemoApp2
 		
 		JPanel listPanels = new JPanel(new GridLayout(0, 1));
 		
+		/*
+		 * Brush initializations
+		 */
 		final JList brushList = new JList();
 		brushList.setCellRenderer(new BrushListCellRenderer());
 		final DefaultListModel brushListModel = new DefaultListModel();
@@ -230,13 +236,31 @@ public class DemoApp2
 		final DefaultListModel ilListModel = new DefaultListModel();
 		ilList.setModel(ilListModel);
 		
-		final int SIZE = 800;
 		
+		/*
+		 * Canvas and ImageLayer initializations.
+		 */
+		final int SIZE = 800;
 		final CanvasHolder ch = new CanvasHolder();
 		Canvas c = new Canvas(SIZE, SIZE);
+		
+		ImageLayer layer0 = new ImageLayer(SIZE, SIZE);
+		
 		c.addLayer();
 		c.addLayer();
 		c.addLayer();
+		c.addLayer(layer0);
+		c.addLayer(
+				new TextLayer(
+						SIZE,
+						SIZE,
+						"Hello World!",
+						new Font("Serif", Font.BOLD, 48)
+				)
+		);
+		
+		c.addLayer(new ReferenceLayer(layer0));
+		
 		ch.setCanvas(c);
 
 		for (ImageLayer il : c.getLayers())
@@ -256,6 +280,8 @@ public class DemoApp2
 		class DrawEventHandler extends MouseAdapter
 			implements BrushRenderProgressListener
 		{
+			// Counter used to keep track of maximum number of steps in the
+			// queue for background drawing.
 			private int maxSteps = 0;
 			
 			public void mouseDragged(MouseEvent e)
@@ -275,12 +301,7 @@ public class DemoApp2
 				int sx = (int)Math.round((e.getX() - offsetX) / zoom); 
 				int sy = (int)Math.round((e.getY() - offsetY) / zoom); 
 				
-				bc.drawBrush(
-						il,
-						b,
-						sx,
-						sy
-				);
+				bc.drawBrush(il, b, sx, sy);
 				
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
@@ -322,14 +343,12 @@ public class DemoApp2
 				int sx = (int)Math.round((e.getX() - offsetX) / zoom); 
 				int sy = (int)Math.round((e.getY() - offsetY) / zoom); 
 				
-				bc.drawBrush(
-						il,
-						b,
-						sx,
-						sy
-				);
+				bc.drawBrush(il, b, sx, sy);
 			}
 
+			/**
+			 * callback for background drawing completing
+			 */
 			@Override
 			public void drawComplete()
 			{
@@ -348,6 +367,9 @@ public class DemoApp2
 				});
 			}
 
+			/**
+			 * callback for drawing progress occurring in the background.
+			 */
 			@Override
 			public void drawProgress(final int stepsLeft)
 			{
@@ -362,6 +384,10 @@ public class DemoApp2
 						
 						statusLabel.setText("Rendering brush...");
 						progressBar.setValue(maxSteps - stepsLeft);
+						
+						// update imagelayer thumbnail and imagelayer list
+						((ImageLayer)ilList.getSelectedValue()).update();
+						ilList.repaint();
 					}
 				});
 			}
@@ -372,6 +398,8 @@ public class DemoApp2
 		
 		p.addMouseListener(ma);
 		p.addMouseMotionListener(ma);
+		
+		
 
 		ilList.setDropTarget(new DropTarget()
 		{
@@ -764,6 +792,21 @@ public class DemoApp2
 		layerMenu.add(new ActionMenuItem("Resize Canvas...") {
 			public void actionPerformed(ActionEvent e)
 			{
+			}
+		});
+		
+		layerMenu.addSeparator();
+		
+		layerMenu.add(new ActionMenuItem("Select Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				((ImageLayer)(ilList.getSelectedValue())).getGraphics().setClip(50,50,300,300);
+			}
+		});
+		layerMenu.add(new ActionMenuItem("Deselect Layer") {
+			public void actionPerformed(ActionEvent e)
+			{
+				((ImageLayer)(ilList.getSelectedValue())).getGraphics().setClip(null);
 			}
 		});
 		

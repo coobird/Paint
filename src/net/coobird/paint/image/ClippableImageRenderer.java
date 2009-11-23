@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.List;
 
+import net.coobird.paint.layer.ImageLayer;
+
 /**
  * The {@code ClippableImageRenderer} class is an {@code PartialImageRenderer}
  * which supports rendering of a certain section of a {@link Canvas} object
@@ -136,8 +138,12 @@ public final class ClippableImageRenderer
 			 */
 			/*
 			 * TODO Is subW/H < 0 check needed?
+			 * FIXME
 			 */
 			BufferedImage layerImg = layer.getImage();
+			int layerX = layer.getX();
+			int layerY = layer.getY();
+			
 			int subWidth = width;
 			int subHeight = height;
 			
@@ -170,6 +176,20 @@ public final class ClippableImageRenderer
 						subWidth,
 						subHeight
 				);
+				
+				System.out.print(layerImg.toString());
+				System.out.println(Arrays.toString(
+						new int[]{
+								x,
+								y,
+								subWidth,
+								subHeight,
+								layerImg.getWidth(), 
+								layerImg.getHeight()
+								}
+						)
+				);
+
 
 				g.drawImage(layerSubImage, layer.getX(), layer.getY(), null);
 			}

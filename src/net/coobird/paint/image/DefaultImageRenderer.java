@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import net.coobird.paint.layer.ImageLayer;
+
 public final class DefaultImageRenderer implements ImageRenderer
 {
 	/*
