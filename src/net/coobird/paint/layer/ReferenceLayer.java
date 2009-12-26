@@ -9,11 +9,11 @@ import net.coobird.paint.layer.event.LayerChangeListener;
 
 /*
  * 
- * reference to a deleted layer --> how to detect a layer is delted?
+ * reference to a deleted layer --> how to detect a layer is deleted?
  * -> use a listener that indicates that layer is going to be deleted?
  * 
- * this can lead to memory leaks where reference to the origianl layer
- * which ahs been deleted is retained.
+ * this can lead to memory leaks where reference to the original layer
+ * which has been deleted is retained.
  * 
  * 
  */
@@ -39,6 +39,7 @@ import net.coobird.paint.layer.event.LayerChangeListener;
  */
 public class ReferenceLayer extends ImageLayer implements LayerChangeListener
 {
+	private static final long serialVersionUID = -5376681761124760586L;
 	
 	private ImageLayer referencedLayer = null;
 	
@@ -86,7 +87,6 @@ public class ReferenceLayer extends ImageLayer implements LayerChangeListener
 	@Override
 	public Graphics2D getGraphics()
 	{
-		// TODO Auto-generated method stub
 		if (referencedLayer != null)
 		{
 			referencedLayer.update();
