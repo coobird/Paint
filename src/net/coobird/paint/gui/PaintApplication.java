@@ -30,16 +30,23 @@ import net.coobird.paint.io.ImageInputOutputException;
 
 public class PaintApplication
 {
+	
+	private class ApplicationComponents
+	{
+		StatusBar statusBar = new StatusBar();
+		JMenuBar menuBar = new JMenuBar();
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		JToolBar toolBar = new JToolBar();
+		BrushComposer brushComposer = new BrushComposer();
+	}
+	
+	private ApplicationComponents appComponents = new ApplicationComponents(); 
+	
 	private void makeGUI()
 	{
 		final JFrame mainFrame = new JFrame();
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setLayout(new BorderLayout());
-		
-		final JTabbedPane tp = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
-		final StatusBar statusBar = new StatusBar();
-		
-		JMenuBar menuBar = new JMenuBar();
 		
 		JMenu fileMenu = new JMenu("File");
 		Action fileOpenAction = new AbstractAction("Open...") {
@@ -66,29 +73,37 @@ public class PaintApplication
 							{
 								Canvas c = input.read(f);
 								
-								statusBar.setStatus("Opening " + f.getName() + ".", StatusBar.INFO);
+								appComponents.statusBar.setStatus("Opening " + f.getName() + ".", StatusBar.INFO);
 								ClippableImageRenderer r = new ClippableImageRenderer();
 								CanvasViewPanel p = new CanvasViewPanel(r, c);
 								
+								
 								JScrollPane sp = new JScrollPane(p);
-								sp.setRowHeaderView(new JLabel("Ruler"));
-								sp.setColumnHeaderView(new JLabel("Ruler"));
+								
+								VerticalRuler vr = new VerticalRuler();
+								HorizontalRuler hr = new HorizontalRuler();
+								
+								p.addPositionListener(hr);
+								p.addPositionListener(hr);
+								
+								sp.setRowHeaderView(vr);
+								sp.setColumnHeaderView(hr);
 								
 								
 								// Poor performance to have to render each time.
-								Image img = r.render(c).getScaledInstance(24, 24, Image.SCALE_DEFAULT);
+								Image img = r.render(c).getScaledInstance(16, 16, Image.SCALE_DEFAULT);
 								
-								tp.insertTab(f.getName(), 
+								appComponents.tabbedPane.insertTab(f.getName(), 
 										new ImageIcon(img),
 										sp,
 										f.getName(),
 										0
 								);
 							
-								tp.setSelectedIndex(0);
+								appComponents.tabbedPane.setSelectedIndex(0);
 								
 								//tp.setSelectedIndex(tp.getTabCount() - 1);
-								statusBar.setStatus("Successfully opened " + f.getName() + ".", StatusBar.INFO);
+								appComponents.statusBar.setStatus("Successfully opened " + f.getName() + ".", StatusBar.INFO);
 							}
 							catch (ImageInputOutputException e1)
 							{
@@ -103,19 +118,17 @@ public class PaintApplication
 		JMenuItem fileOpenMenu = new JMenuItem(fileOpenAction);
 		fileMenu.add(fileOpenMenu);
 		
-		menuBar.add(fileMenu);
+		appComponents.menuBar.add(fileMenu);
 		
 		
-		mainFrame.setJMenuBar(menuBar);
+		mainFrame.setJMenuBar(appComponents.menuBar);
 		
+		appComponents.toolBar.add(fileOpenAction);
+		appComponents.toolBar.setFloatable(false);
 		
-		JToolBar tb = new JToolBar();
-		tb.add(fileOpenAction);
-		tb.setFloatable(false);
-		
-		mainFrame.getContentPane().add(tb, BorderLayout.NORTH);
-		mainFrame.getContentPane().add(tp, BorderLayout.CENTER);
-		mainFrame.getContentPane().add(statusBar, BorderLayout.SOUTH);
+		mainFrame.getContentPane().add(appComponents.toolBar, BorderLayout.NORTH);
+		mainFrame.getContentPane().add(appComponents.tabbedPane, BorderLayout.CENTER);
+		mainFrame.getContentPane().add(appComponents.statusBar, BorderLayout.SOUTH);
 
 		mainFrame.setLocation(200, 200);
 		mainFrame.setSize(400, 400);
@@ -123,7 +136,7 @@ public class PaintApplication
 		mainFrame.setVisible(true);
 		
 		JFrame f = new JFrame();
-		f.getContentPane().add(new BrushComposer());
+		f.getContentPane().add(appComponents.brushComposer);
 		f.setLocation(50, 50);
 		f.pack();
 		f.setVisible(true);
@@ -156,8 +169,7 @@ public class PaintApplication
 		}
 		
 		SwingUtilities.invokeLater(new Runnable() {
-			public void run()
-			{
+			public void run() {
 				new PaintApplication().makeGUI();
 			}
 		});

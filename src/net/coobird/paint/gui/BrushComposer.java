@@ -4,19 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.coobird.paint.application.BrushListCellRenderer;
 import net.coobird.paint.brush.RegularCircularBrush;
@@ -38,6 +40,29 @@ public class BrushComposer extends JPanel
 	 */
 	private Color fgColor;
 	private Color bgColor;
+	
+	
+	private List<BrushComposerListener> listeners = 
+		new ArrayList<BrushComposerListener>();
+	
+	
+	public void addBrushComposerListener(BrushComposerListener listener)
+	{
+		listeners.add(listener);
+	}
+	
+	public boolean removeBrushComposerListener(BrushComposerListener listener)
+	{
+		return listeners.remove(listener);
+	}
+	
+	private void notifyBrushComposerListeners()
+	{
+		for (BrushComposerListener listener : listeners)
+		{
+			listener.brushChanged(0);
+		}
+	}
 	
 	public BrushComposer()
 	{
@@ -98,10 +123,18 @@ public class BrushComposer extends JPanel
 		colorBox.setPreferredSize(new Dimension(200,200));
 		
 		
-		
 		JList brushList = new JList();
 		brushList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		brushList.setVisibleRowCount(-1);
+		
+		brushList.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e)
+			{
+				notifyBrushComposerListeners();
+				System.out.println("changed");
+			}
+		});
 		
 		
 		brushList.setCellRenderer(new ListCellRenderer() {
