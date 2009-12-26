@@ -23,6 +23,8 @@ public final class ClippableImageRenderer
 {
 	private static final double SHOW_GRID_ZOOM_LEVEL = 2.0;
 	
+	private boolean debug = false;
+	
 	/**
 	 * Render the canvas.
 	 * @param c				The canvas to render.
@@ -177,36 +179,41 @@ public final class ClippableImageRenderer
 						subHeight
 				);
 				
-				System.out.print(layerImg.toString());
-				System.out.println(Arrays.toString(
-						new int[]{
-								x,
-								y,
-								subWidth,
-								subHeight,
-								layerImg.getWidth(), 
-								layerImg.getHeight()
-								}
-						)
-				);
+				if (debug)
+				{
+					System.out.println(Arrays.toString(
+							new int[]{
+									x,
+									y,
+									subWidth,
+									subHeight,
+									layerImg.getWidth(), 
+									layerImg.getHeight()
+									}
+							)
+					);
+				}
 
 
-				g.drawImage(layerSubImage, layer.getX(), layer.getY(), null);
+				g.drawImage(layerSubImage, layerX, layerY, null);
 			}
 			catch (Exception e)
 			{
-				System.out.println(e.toString());
-				System.out.println(Arrays.toString(
-						new int[]{
-								x,
-								y,
-								subWidth,
-								subHeight,
-								layerImg.getWidth(), 
-								layerImg.getHeight()
-								}
-						)
-				);
+				if (debug)
+				{
+					System.out.println(e.toString());
+					System.out.println(Arrays.toString(
+							new int[]{
+									x,
+									y,
+									subWidth,
+									subHeight,
+									layerImg.getWidth(), 
+									layerImg.getHeight()
+							}
+					)
+					);
+				}
 			}
 		}
 		
@@ -283,9 +290,13 @@ public final class ClippableImageRenderer
 			for (int j = (-y % 20); j < y + height + 20; j += 20)
 			{
 				if (((i + x) + (j + y)) % 40 == 0)
+				{
 					g.setColor(Color.gray);
+				}
 				else
+				{
 					g.setColor(Color.white);
+				}
 			
 				g.fillRect(i, j, 20, 20);
 			}
