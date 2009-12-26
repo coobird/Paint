@@ -171,9 +171,20 @@ public class BrushController
 
 		Graphics2D brushg = rotatedBrushImage.createGraphics();
 		
-		// FIXME improve rotation rendering quality. performance impact?
-//		brushg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//		brushg.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		/*
+		 *  TODO
+		 *  The following lines will improve the rendering quality of
+		 *  rotated brushes. However, the performance impact is not known,
+		 *  so it should be evaluated at sometime.
+		 */
+		brushg.setRenderingHint(
+				RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON
+		);
+		brushg.setRenderingHint(
+				RenderingHints.KEY_RENDERING,
+				RenderingHints.VALUE_RENDER_QUALITY
+		);
 		
 		if (action.getBrush().isRotatable())
 		{
