@@ -59,6 +59,7 @@ import net.coobird.paint.filter.ImageFilterThreadingWrapper;
 import net.coobird.paint.filter.MatrixImageFilter;
 import net.coobird.paint.filter.RepeatableMatrixFilter;
 import net.coobird.paint.filter.ResizeFilter;
+import net.coobird.paint.gui.PositionListener;
 import net.coobird.paint.image.Canvas;
 import net.coobird.paint.image.ClippableImageRenderer;
 import net.coobird.paint.image.PartialImageRenderer;
@@ -240,7 +241,7 @@ public class DemoApp2
 		/*
 		 * Canvas and ImageLayer initializations.
 		 */
-		final int SIZE = 800;
+		final int SIZE = 400;
 		final CanvasHolder ch = new CanvasHolder();
 		Canvas c = new Canvas(SIZE, SIZE);
 		
@@ -277,7 +278,7 @@ public class DemoApp2
 		
 		final CanvasViewPanel p = new CanvasViewPanel(renderer, c);
 		
-		class DrawEventHandler extends MouseAdapter
+		class DrawEventListener extends MouseAdapter
 			implements BrushRenderProgressListener
 		{
 			// Counter used to keep track of maximum number of steps in the
@@ -393,11 +394,11 @@ public class DemoApp2
 			}
 		};
 		
-		DrawEventHandler ma = new DrawEventHandler();
-		bc.addBrushRenderProgressListener(ma);
+		DrawEventListener drawEventListener = new DrawEventListener();
+		bc.addBrushRenderProgressListener(drawEventListener);
 		
-		p.addMouseListener(ma);
-		p.addMouseMotionListener(ma);
+		p.addMouseListener(drawEventListener);
+		p.addMouseMotionListener(drawEventListener);
 		
 		
 
@@ -1245,7 +1246,8 @@ public class DemoApp2
 		menubar.add(helpMenu);
 		f.setJMenuBar(menubar);
 
-		f.setSize(640, 480);
+		f.setSize(800, 600);
+		f.setLocation(100, 100);
 		f.setLocation(1, 1);
 		JSplitPane splitPane = new JSplitPane(
 				JSplitPane.HORIZONTAL_SPLIT,
