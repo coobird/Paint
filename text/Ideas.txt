@@ -92,6 +92,10 @@ as a Shape.
 from iterating over using PathIterator) with the brush rotated to be
 perpendicular to the stroke shape.
 
+-> Rotate the canvas
+--> draw with the canvas rotated; one wouldnt want to draw with the canvas
+    aligned all the time, right? 
+
 Text Rendering
 --------------
 -> Add text rendering --> TextLayer?
@@ -197,3 +201,12 @@ with selection
 [Selection Layer] + [Effected Target Layer] -> [Actual Result on Layer]
 
 ex. pixel: (255, 255, 255) + effected pixel: (0,0,0) -> Result: (128,128,128)
+
+
+User interface (UI)
+-------------------
+* Tab-based
+* Allow user to save current state before leaving
+-> This will allow the user to return to the state they were working at, such
+   as open tabs, current brush settings, etc.
+=> Need to figure out a way to serialize all the settings of the UI.
