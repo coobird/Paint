@@ -148,7 +148,7 @@ public final class Canvas implements Serializable
 	 */
 	public List<ImageLayer> getLayers()
 	{
-		return layerList;
+		return Collections.unmodifiableList(layerList);
 	}
 	
 	/**
@@ -169,7 +169,7 @@ public final class Canvas implements Serializable
 		List<ImageLayer> renderOrderList = new ArrayList<ImageLayer>(layerList);
 		Collections.reverse(renderOrderList);
 		
-		return renderOrderList; 
+		return Collections.unmodifiableList(renderOrderList); 
 	}
 	
 	/**
