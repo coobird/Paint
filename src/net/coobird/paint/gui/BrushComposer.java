@@ -35,6 +35,8 @@ import net.coobird.paint.brush.StagedBrush;
  */
 public class BrushComposer extends JPanel
 {
+	private static final long serialVersionUID = -8529626322597188153L;
+	
 	/*
 	 * Use JLayeredPane to overlap two color panels?
 	 */

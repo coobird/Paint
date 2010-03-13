@@ -7,7 +7,8 @@ import java.awt.Rectangle;
 
 public class VerticalRuler extends Ruler implements PositionListener
 {
-	
+	private static final long serialVersionUID = 8792420606330660116L;
+
 	@Override
 	protected void paintComponent(Graphics g)
 	{

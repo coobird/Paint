@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 
 public class StatusBar extends JLabel
 {
+	private static final long serialVersionUID = 7750574233058155542L;
 	
 	public static final int INFO = 0;
 	public static final int ERROR = 1;
@@ -34,6 +35,4 @@ public class StatusBar extends JLabel
 		
 		this.setText(s);
 	}
-
-
 }

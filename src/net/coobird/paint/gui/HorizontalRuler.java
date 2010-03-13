@@ -7,6 +7,8 @@ import java.awt.Rectangle;
 
 public class HorizontalRuler extends Ruler implements PositionListener
 {
+	private static final long serialVersionUID = -7604764885375202193L;
+	
 	private int mouseX;
 	
 	@Override

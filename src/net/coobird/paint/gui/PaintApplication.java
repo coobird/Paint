@@ -10,7 +10,6 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -19,7 +18,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import net.coobird.paint.driver.CanvasViewPanel;
 import net.coobird.paint.image.Canvas;
@@ -28,10 +26,9 @@ import net.coobird.paint.io.FormatManager;
 import net.coobird.paint.io.ImageInput;
 import net.coobird.paint.io.ImageInputOutputException;
 
-public class PaintApplication
+public final class PaintApplication
 {
-	
-	private class ApplicationComponents
+	private static class ApplicationComponents
 	{
 		StatusBar statusBar = new StatusBar();
 		JMenuBar menuBar = new JMenuBar();
@@ -151,19 +148,7 @@ public class PaintApplication
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InstantiationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
-		catch (UnsupportedLookAndFeelException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
